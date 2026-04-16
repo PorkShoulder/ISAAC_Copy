@@ -7,7 +7,7 @@
 
 class GameEngine : public Singleton<GameEngine>
 {
-
+	SINGLETON(GameEngine)
 
 
 

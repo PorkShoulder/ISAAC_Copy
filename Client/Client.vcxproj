@@ -141,16 +141,18 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common\Singleton.h" />
+    <ClInclude Include="Core\Defines.h" />
+    <ClInclude Include="Core\Device.h" />
     <ClInclude Include="Core\GameEngine.h" />
-    <ClInclude Include="Defines.h" />
+    <ClInclude Include="Core\Info.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="Info.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Core\Device.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

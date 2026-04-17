@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="Client.h" />
     <ClInclude Include="Common\Singleton.h" />
+    <ClInclude Include="Common\Vector2D.h" />
     <ClInclude Include="Core\Defines.h" />
     <ClInclude Include="Core\Device.h" />
     <ClInclude Include="Core\GameEngine.h" />
@@ -152,6 +153,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Common\Vector2D.cpp" />
     <ClCompile Include="Core\Device.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
     <ClCompile Include="pch.cpp">

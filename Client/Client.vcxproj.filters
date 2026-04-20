@@ -80,10 +80,10 @@
     <ClInclude Include="Core\Defines.h">
       <Filter>01_Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Info.h">
+    <ClInclude Include="Common\Vector2D.h">
       <Filter>00_Common</Filter>
     </ClInclude>
-    <ClInclude Include="Common\Vector2D.h">
+    <ClInclude Include="Common\Info.h">
       <Filter>00_Common</Filter>
     </ClInclude>
   </ItemGroup>

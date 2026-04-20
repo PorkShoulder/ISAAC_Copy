@@ -140,12 +140,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Client.h" />
+    <ClInclude Include="Common\Info.h" />
     <ClInclude Include="Common\Singleton.h" />
     <ClInclude Include="Common\Vector2D.h" />
     <ClInclude Include="Core\Defines.h" />
     <ClInclude Include="Core\Device.h" />
     <ClInclude Include="Core\GameEngine.h" />
-    <ClInclude Include="Core\Info.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />

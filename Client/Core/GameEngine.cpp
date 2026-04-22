@@ -11,14 +11,24 @@ void GameEngine::Destroy()
 
 bool GameEngine::Init(HINSTANCE inst, const wchar_t* name)
 {
-    
+    _hInst = inst;
+
     
     // lstrcpy(복사대상, 원본문자열);
     lstrcpy(_className, name);                  // 클래스 이름
     lstrcpy(_titleName, L"ISAAC_Copy");         // 윈도우 타이틀 이름 (이름 바꿨음)
-
+    
+    RegisterWindowClass();                      // 클래스 정보 등록 
+    if (!Create())
+        return false;
         
+    _hdc    = GetDC(_hWnd);                     // Dx에서 그릴때 필요할 수도 있으니까 가져옴
+    //_bIsRun = InitManager();                    // 
+    //_world = New<world>();
+    //_world->Init("")
 
+
+    return Run();
 }
 
 int GameEngine::Run()
@@ -27,13 +37,50 @@ int GameEngine::Run()
     
     while (_bIsRun)
     {
-        
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            Logic();
+        }
     }
+    return (int)msg.wParam;
 }
 
+// 레지스터에 등록한 정보를 바탕으로 실제 창을 만든다.
 bool GameEngine::Create()
 {
+    // 창 만들기 
+    _hWnd = CreateWindowW(_className, _titleName, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, _hInst, nullptr);
     
+    //창을 만들기에 실패 할경우 진입 -> 안전장치
+    if (!_hWnd)
+    {
+        return false;
+    }
+
+    // 윈도우 창 크기설정
+    RECT windowRect = { 0, 0, 1280, 720 };                      
+    
+    // (윈도우 창 크기설정, 메뉴바) 이를 바탕으로 제외된 크기 계산해서 다시 넣어줌
+    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false);
+    
+    // 계산된 크기를 기반으로 크기를 조절함.
+    SetWindowPos(_hWnd, HWND_TOPMOST, 0, 0,
+                 windowRect.right - windowRect.left,
+                 windowRect.bottom - windowRect.top,
+                 SWP_NOMOVE | SWP_NOZORDER);        
+                //NOMOVE : 위치를 안바꾼다. NOZORDER : 창 순서는 안바꾼다.
+    
+    // 최종적으로 생성한 윈도우 창을 화면에 보이도록 설정
+    ShowWindow(_hWnd, SW_SHOW);
+    UpdateWindow(_hWnd);
+
+    return true;
 }
 
 
@@ -81,5 +128,29 @@ void GameEngine::Render()
 
 bool GameEngine::InitManager()
 {
-    return false;
+    return true;
 }
+
+LRESULT GameEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    switch (message)
+    {
+    case WM_PAINT:                          // 창을 다시 그리는 메시지창.  
+    {
+        PAINTSTRUCT ps;
+        HDC hdc = BeginPaint(hWnd, &ps);    // 창을 그리기 시작.
+        EndPaint(hWnd, &ps);                // 창을 그리기 끝.
+    }
+    break;
+    case WM_DESTROY:                        // 창이 닫혔다 라는 메시지 X버튼을 누리면 false로 게임루프를 멈춤.
+    {
+        _bIsRun = false;                    // 게임루프 종료
+        PostQuitMessage(0);                 // OS한테 프로그램 종료한다 고 알려줌.
+    }
+    break;
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
+    }
+    return 0;
+}
+

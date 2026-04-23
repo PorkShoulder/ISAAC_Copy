@@ -17,14 +17,14 @@ class GameEngine : public Singleton<GameEngine>
 	SINGLETON(GameEngine)
 
 private:
-	HINSTANCE	_hInst = nullptr;					// 운영체제가 발급해주는 ID
-	HWND		_hWnd = nullptr;					// 창마다 생기는 핸들 (복수 가능)
-	HDC			_hdc  = nullptr;					// 그리기 위한 핸들
-	TCHAR		_className[256] = {};				// 클래스 이름
-	TCHAR		_titleName[256] = {};				// 윈도우 창 타이틀 이름
-	float		_clearColor[4] = { 1,1,1,1 };		// 바탕을 초기화 할 색상
+	HINSTANCE	m_hInst = nullptr;					// 운영체제가 발급해주는 ID
+	HWND		m_hWnd = nullptr;					// 창마다 생기는 핸들 (복수 가능)
+	HDC			m_hdc  = nullptr;					// 그리기 위한 핸들
+	TCHAR		m_className[256] = {};				// 클래스 이름
+	TCHAR		m_titleName[256] = {};				// 윈도우 창 타이틀 이름
+	float		m_clearColor[4] = { 1,1,1,1 };		// 바탕을 초기화 할 색상
 
-	static bool _bIsRun;
+	static bool m_bIsRun;
 
 public:
 	void Destroy() override;					// Singleton::Destroy() 구현 — 내부 리소스 해제
@@ -36,9 +36,9 @@ public:
 	int Run();
 
 	// 여기서 const -> 읽기만 가능 
-	HDC GetHDC() const { return _hdc; }					// 프로그램 자체의 핸들->윈도우가 이 프로그램이 누구인지 식별하는 ID
-	HINSTANCE GetHINSTANCE() const { return _hInst; }	// 윈도우(창) 핸들 특정 창을 가리키는 ID 창크기,메세지, 다이렉트 초기화때 스왑체인에 알려주는 역할
-	HWND GetHWND() const { return _hWnd; }				// Device Context 핸들 창의 그리기 도구 Dx사용시 거의 안쓰임.
+	HDC GetHDC() const { return m_hdc; }					// 프로그램 자체의 핸들->윈도우가 이 프로그램이 누구인지 식별하는 ID
+	HINSTANCE GetHINSTANCE() const { return m_hInst; }	// 윈도우(창) 핸들 특정 창을 가리키는 ID 창크기,메세지, 다이렉트 초기화때 스왑체인에 알려주는 역할
+	HWND GetHWND() const { return m_hWnd; }				// Device Context 핸들 창의 그리기 도구 Dx사용시 거의 안쓰임.
 
 
 
@@ -55,10 +55,10 @@ private:
 
 
 	// static 인 이유 -> 특정 객체 없이 함수 자체만 필요로 하기 때문에.
-	static LRESULT CALLBACK WndProc(HWND hWnd,		// 메시지가 발생한 창 핸들
-									UINT message,	// 메시지 종류 (WM_CLOSE, WM_KEYDOWN)
-									WPARAM wParam,	// 메시지 부가 정보 1 (눌린 키 값)
-									LPARAM lParam);	// 메시지 부가 정보 2 (마우스 좌표)
+	static LRESULT CALLBACK WndProc(HWND _hWnd,		// 메시지가 발생한 창 핸들
+									UINT _message,	// 메시지 종류 (WM_CLOSE, WM_KEYDOWN)
+									WPARAM _wParam,	// 메시지 부가 정보 1 (눌린 키 값)
+									LPARAM _lParam);	// 메시지 부가 정보 2 (마우스 좌표)
 
 
 

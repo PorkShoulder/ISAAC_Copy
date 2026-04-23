@@ -51,6 +51,9 @@
     <Filter Include="90_Shader">
       <UniqueIdentifier>{412e493e-9e5c-41a0-8e72-503cf4e36460}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01_Core\01.Directory">
+      <UniqueIdentifier>{a8b17ad3-5aed-4114-b9e5-b71e79198c55}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Client.h">
@@ -86,6 +89,9 @@
     <ClInclude Include="Common\Info.h">
       <Filter>00_Common</Filter>
     </ClInclude>
+    <ClInclude Include="Core\DirectoryManager.h">
+      <Filter>01_Core\01.Directory</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp">
@@ -102,6 +108,9 @@
     </ClCompile>
     <ClCompile Include="Common\Vector2D.cpp">
       <Filter>00_Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\DirectoryManager.cpp">
+      <Filter>01_Core\01.Directory</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

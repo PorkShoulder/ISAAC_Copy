@@ -2,7 +2,7 @@
 #include "GameEngine.h"
 
 
-bool GameEngine::_bIsRun = false;
+bool GameEngine::m_bIsRun = false;
 
 void GameEngine::Destroy()
 {
@@ -11,19 +11,19 @@ void GameEngine::Destroy()
 
 bool GameEngine::Init(HINSTANCE inst, const wchar_t* name)
 {
-    _hInst = inst;
+    m_hInst = inst;
 
     
     // lstrcpy(복사대상, 원본문자열);
-    lstrcpy(_className, name);                  // 클래스 이름
-    lstrcpy(_titleName, L"ISAAC_Copy");         // 윈도우 타이틀 이름 (이름 바꿨음)
+    lstrcpy(m_className, name);                  // 클래스 이름
+    lstrcpy(m_titleName, L"ISAAC_Copy");         // 윈도우 타이틀 이름 (이름 바꿨음)
     
     RegisterWindowClass();                      // 클래스 정보 등록 
     if (!Create())
         return false;
         
-    _hdc    = GetDC(_hWnd);                     // Dx에서 그릴때 필요할 수도 있으니까 가져옴
-    //_bIsRun = InitManager();                    // 
+    m_hdc    = GetDC(m_hWnd);                     // Dx에서 그릴때 필요할 수도 있으니까 가져옴
+    m_bIsRun = InitManager();                    // 
     //_world = New<world>();
     //_world->Init("")
 
@@ -35,7 +35,7 @@ int GameEngine::Run()
 {
     MSG msg = {};
     
-    while (_bIsRun)
+    while (m_bIsRun)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
@@ -54,11 +54,11 @@ int GameEngine::Run()
 bool GameEngine::Create()
 {
     // 창 만들기 
-    _hWnd = CreateWindowW(_className, _titleName, WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, _hInst, nullptr);
+    m_hWnd = CreateWindowW(m_className, m_titleName, WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, m_hInst, nullptr);
     
     //창을 만들기에 실패 할경우 진입 -> 안전장치
-    if (!_hWnd)
+    if (!m_hWnd)
     {
         return false;
     }
@@ -70,15 +70,15 @@ bool GameEngine::Create()
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false);
     
     // 계산된 크기를 기반으로 크기를 조절함.
-    SetWindowPos(_hWnd, HWND_TOPMOST, 0, 0,
+    SetWindowPos(m_hWnd, HWND_TOPMOST, 0, 0,
                  windowRect.right - windowRect.left,
                  windowRect.bottom - windowRect.top,
                  SWP_NOMOVE | SWP_NOZORDER);        
                 //NOMOVE : 위치를 안바꾼다. NOZORDER : 창 순서는 안바꾼다.
     
     // 최종적으로 생성한 윈도우 창을 화면에 보이도록 설정
-    ShowWindow(_hWnd, SW_SHOW);
-    UpdateWindow(_hWnd);
+    ShowWindow(m_hWnd, SW_SHOW);
+    UpdateWindow(m_hWnd);
 
     return true;
 }
@@ -97,12 +97,12 @@ void GameEngine::RegisterWindowClass()
     wcex.lpfnWndProc = WndProc;             // 함수 포인터로 윈도우 메시지 처리함수
     wcex.cbClsExtra = 0;
     wcex.cbWndExtra = 0;
-    wcex.hInstance = _hInst;                // 운영체제가 부여해준 ID
-    wcex.hIcon = LoadIcon(_hInst, MAKEINTRESOURCE(IDI_CLIENT)); // 리소스 아이콘
+    wcex.hInstance = m_hInst;                // 운영체제가 부여해준 ID
+    wcex.hIcon = LoadIcon(m_hInst, MAKEINTRESOURCE(IDI_CLIENT)); // 리소스 아이콘
     wcex.hCursor = LoadCursor(nullptr, IDC_ARROW);              // 마우스 포인터 변경
     wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);             
     wcex.lpszMenuName = nullptr;                                // 메뉴 리소스 이름 -> 창 상단 메뉴바를 자동으로 붙일 수 있음(파일,편집,도움말)
-    wcex.lpszClassName = _className;                            // 윈도우 클래스 이름.
+    wcex.lpszClassName = m_className;                            // 윈도우 클래스 이름.
     wcex.hIconSm = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));    // 작은 크기의 아이콘 
 
 
@@ -144,7 +144,7 @@ LRESULT GameEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     break;
     case WM_DESTROY:                        // 창이 닫혔다 라는 메시지 X버튼을 누리면 false로 게임루프를 멈춤.
     {
-        _bIsRun = false;                    // 게임루프 종료
+        m_bIsRun = false;                    // 게임루프 종료
         PostQuitMessage(0);                 // OS한테 프로그램 종료한다 고 알려줌.
     }
     break;

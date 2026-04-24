@@ -49,7 +49,7 @@ using int64 = long long;
 //dx11 객체들의 스마트 포인터
 #include "wrl.h"							
 using namespace Microsoft::WRL;
-
+using namespace std;
 #include <Common/Vector2D.h>
 
 

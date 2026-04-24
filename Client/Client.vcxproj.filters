@@ -29,9 +29,6 @@
     <Filter Include="08_World">
       <UniqueIdentifier>{8ea4814b-5cd8-4f1d-8a89-ba89ebcd9bd7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="09_Object">
-      <UniqueIdentifier>{82a4acf0-11d6-4ae1-8148-392703158ba8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="10_">
       <UniqueIdentifier>{6c113e9e-b221-4b7d-a169-6c2dd84aff0c}</UniqueIdentifier>
     </Filter>
@@ -51,8 +48,11 @@
     <Filter Include="90_Shader">
       <UniqueIdentifier>{412e493e-9e5c-41a0-8e72-503cf4e36460}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01_Core\01.Directory">
+    <Filter Include="01_Core\02.Directory">
       <UniqueIdentifier>{a8b17ad3-5aed-4114-b9e5-b71e79198c55}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01_Core\01_Object">
+      <UniqueIdentifier>{82a4acf0-11d6-4ae1-8148-392703158ba8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -90,7 +90,10 @@
       <Filter>00_Common</Filter>
     </ClInclude>
     <ClInclude Include="Core\DirectoryManager.h">
-      <Filter>01_Core\01.Directory</Filter>
+      <Filter>01_Core\02.Directory</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Object.h">
+      <Filter>01_Core\01_Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -110,7 +113,10 @@
       <Filter>00_Common</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectoryManager.cpp">
-      <Filter>01_Core\01.Directory</Filter>
+      <Filter>01_Core\02.Directory</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Object.cpp">
+      <Filter>01_Core\01_Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

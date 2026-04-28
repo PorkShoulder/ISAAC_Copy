@@ -1,153 +1,205 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="10_">
-      <UniqueIdentifier>{6c113e9e-b221-4b7d-a169-6c2dd84aff0c}</UniqueIdentifier>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{d7838d78-869f-4d76-a66f-27b8c33b938a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="11_">
-      <UniqueIdentifier>{ef12ac58-5afe-4f4a-9f8c-350a08dc264a}</UniqueIdentifier>
+    <Filter Include="Shader\HLSL">
+      <UniqueIdentifier>{1f230a6e-a537-4045-9f9d-8cf74d06f7a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="90_HLSL">
-      <UniqueIdentifier>{4ffc3519-b724-44c1-9061-f1b056a8291e}</UniqueIdentifier>
+    <Filter Include="Shader\ShaderClass">
+      <UniqueIdentifier>{1539414a-f540-4c19-a3c8-1693c9beaf6b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="90_Shader">
-      <UniqueIdentifier>{412e493e-9e5c-41a0-8e72-503cf4e36460}</UniqueIdentifier>
+    <Filter Include="Shader\ConstantBuffer">
+      <UniqueIdentifier>{96884340-f375-417e-aef6-7f01744da3a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="00_header">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="Main">
+      <UniqueIdentifier>{f3b8a986-ff73-4e78-994a-5998e63fb0f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="main">
-      <UniqueIdentifier>{6153b20e-77bd-4e90-a375-d636c56dbee1}</UniqueIdentifier>
+    <Filter Include="Component">
+      <UniqueIdentifier>{dcb2bf47-b1dc-47c2-aa24-4bda3d6f72ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="01_Common">
-      <UniqueIdentifier>{873bcf51-8755-48cc-b058-cfc22af3f54f}</UniqueIdentifier>
+    <Filter Include="World">
+      <UniqueIdentifier>{401b8e6c-12af-46c5-8d76-f9df26a5b258}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="Input">
+      <UniqueIdentifier>{1f27d4ae-d0fe-4ee0-8fc3-b3f37cc63685}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core\02.Directory">
-      <UniqueIdentifier>{a8b17ad3-5aed-4114-b9e5-b71e79198c55}</UniqueIdentifier>
+    <Filter Include="Component\ActorComponent">
+      <UniqueIdentifier>{8011055d-cb83-4742-8430-368c2f5d333c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="03_Render">
-      <UniqueIdentifier>{02145277-3795-4379-a165-f0711ca38dfe}</UniqueIdentifier>
+    <Filter Include="Component\SceneComponent">
+      <UniqueIdentifier>{a7c90ee7-6e9a-4afe-a4db-b942f8e8487a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04_Input">
-      <UniqueIdentifier>{d3471c4a-3c3b-426f-8df6-7fbba6328a65}</UniqueIdentifier>
+    <Filter Include="Controller">
+      <UniqueIdentifier>{c70e632a-c345-4796-901f-cb5f69dbfc9e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="05_Collision">
-      <UniqueIdentifier>{6162004d-3dcd-44f5-886c-40742047e097}</UniqueIdentifier>
+    <Filter Include="Collision">
+      <UniqueIdentifier>{7d397958-181a-4e14-b999-39224881acc7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="06_Animation">
-      <UniqueIdentifier>{fb1a50c7-84c2-4722-a0a5-e154d6904f0d}</UniqueIdentifier>
+    <Filter Include="Component\SceneComponent\Collider">
+      <UniqueIdentifier>{c81f4a9d-95a3-42fb-8424-10686cc342a7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="07_Component">
-      <UniqueIdentifier>{5152908b-2e49-4624-ac96-7b742dd02663}</UniqueIdentifier>
+    <Filter Include="02.Common">
+      <UniqueIdentifier>{bcb62b17-d8af-4fd3-9997-955e3783f370}</UniqueIdentifier>
     </Filter>
-    <Filter Include="08_Controller">
-      <UniqueIdentifier>{20188964-ff6b-4e31-9458-1b2a4c86ae89}</UniqueIdentifier>
+    <Filter Include="02.Common\Vector">
+      <UniqueIdentifier>{50413959-ca38-4231-a5ca-9d925bde4031}</UniqueIdentifier>
     </Filter>
-    <Filter Include="09_World">
-      <UniqueIdentifier>{8ea4814b-5cd8-4f1d-8a89-ba89ebcd9bd7}</UniqueIdentifier>
+    <Filter Include="01.Core">
+      <UniqueIdentifier>{061b8a99-b1b0-40be-a83b-34aa82bef69d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core\01.Device">
-      <UniqueIdentifier>{82a4acf0-11d6-4ae1-8148-392703158ba8}</UniqueIdentifier>
+    <Filter Include="01.Core\Memory">
+      <UniqueIdentifier>{8ee59e68-76d8-4140-9fe3-61f7e649dd74}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core\03.Log">
-      <UniqueIdentifier>{7387647b-f7a6-4279-b21b-1346fa0842bb}</UniqueIdentifier>
+    <Filter Include="01.Core\Time">
+      <UniqueIdentifier>{40b8f930-9875-4d17-970b-3cbafb6c70dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core\04.Object">
-      <UniqueIdentifier>{b4756727-ec3a-441f-9194-0296948c6410}</UniqueIdentifier>
+    <Filter Include="01.Core\Directory">
+      <UniqueIdentifier>{385fbc06-fb59-44a4-98e9-b613cadb04a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="02_Core\00.Engine">
-      <UniqueIdentifier>{1d3531d6-09dd-4dc5-9fb8-ae957f1a9054}</UniqueIdentifier>
+    <Filter Include="01.Core\Object">
+      <UniqueIdentifier>{3c98b017-853c-4893-bb9e-29ca628905f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Log">
+      <UniqueIdentifier>{0e0c4752-0dce-4a60-87c0-8bc08741f3ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Engine">
+      <UniqueIdentifier>{83549556-0bdc-4a79-a177-c6c96e56b5ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\DX11">
+      <UniqueIdentifier>{b19b4218-4f3b-4938-a05a-6d8ab0afdf64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Asset">
+      <UniqueIdentifier>{e209ecfe-ea90-4018-bcfa-4caf617bbc08}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Asset\Mesh">
+      <UniqueIdentifier>{682465ae-f977-4f03-8ddc-05f6a25c6ffc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="00.headeer">
+      <UniqueIdentifier>{fe80a05f-b49e-4c78-8db4-159d7cdfadca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object">
+      <UniqueIdentifier>{940ad56f-0e5b-4e45-996f-6e7b63f9e55f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Common\Info.h">
+      <Filter>02.Common</Filter>
+    </ClInclude>
     <ClInclude Include="Common\Singleton.h">
-      <Filter>01_Common</Filter>
+      <Filter>02.Common</Filter>
     </ClInclude>
     <ClInclude Include="Core\Defines.h">
-      <Filter>02_Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\Vector2D.h">
-      <Filter>01_Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\Info.h">
-      <Filter>01_Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\DirectoryManager.h">
-      <Filter>02_Core\02.Directory</Filter>
-    </ClInclude>
-    <ClInclude Include="Client.h">
-      <Filter>00_header</Filter>
-    </ClInclude>
-    <ClInclude Include="framework.h">
-      <Filter>00_header</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>00_header</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>00_header</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>00_header</Filter>
+      <Filter>01.Core</Filter>
     </ClInclude>
     <ClInclude Include="Common\LogManager.h">
-      <Filter>01_Common</Filter>
+      <Filter>02.Common</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Logger.h">
-      <Filter>02_Core\03.Log</Filter>
+    <ClInclude Include="Core\TimeManager.h">
+      <Filter>01.Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\DirectoryManager.h">
+      <Filter>01.Core\Directory</Filter>
     </ClInclude>
     <ClInclude Include="Core\Object.h">
-      <Filter>02_Core\04.Object</Filter>
+      <Filter>01.Core\Object</Filter>
     </ClInclude>
-    <ClInclude Include="Core\Device.h">
-      <Filter>02_Core\01.Device</Filter>
+    <ClInclude Include="Core\Logger.h">
+      <Filter>01.Core\Log</Filter>
     </ClInclude>
     <ClInclude Include="Core\GameEngine.h">
-      <Filter>02_Core\00.Engine</Filter>
+      <Filter>01.Core\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Device.h">
+      <Filter>01.Core\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>00.headeer</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>00.headeer</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>00.headeer</Filter>
+    </ClInclude>
+    <ClInclude Include="framework.h">
+      <Filter>00.headeer</Filter>
+    </ClInclude>
+    <ClInclude Include="Client.h">
+      <Filter>00.headeer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Timer.h">
+      <Filter>01.Core\Time</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Vector2D.h">
+      <Filter>02.Common\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Vector3D.h">
+      <Filter>02.Common\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Matrix.h">
+      <Filter>02.Common\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\EngineMath.h">
+      <Filter>02.Common\Vector</Filter>
+    </ClInclude>
+    <ClInclude Include="Common\Vector4D.h">
+      <Filter>02.Common\Vector</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Common\Vector2D.cpp">
-      <Filter>01_Common</Filter>
+    <ClCompile Include="Common\LogManager.cpp">
+      <Filter>02.Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TimeManager.cpp">
+      <Filter>01.Core\Time</Filter>
     </ClCompile>
     <ClCompile Include="Core\DirectoryManager.cpp">
-      <Filter>02_Core\02.Directory</Filter>
-    </ClCompile>
-    <ClCompile Include="pch.cpp">
-      <Filter>00_header</Filter>
-    </ClCompile>
-    <ClCompile Include="Client.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="Common\LogManager.cpp">
-      <Filter>01_Common</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Device.cpp">
-      <Filter>02_Core\01.Device</Filter>
+      <Filter>01.Core\Directory</Filter>
     </ClCompile>
     <ClCompile Include="Core\Object.cpp">
-      <Filter>02_Core\04.Object</Filter>
+      <Filter>01.Core\Object</Filter>
     </ClCompile>
     <ClCompile Include="Core\GameEngine.cpp">
-      <Filter>02_Core\00.Engine</Filter>
+      <Filter>01.Core\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Device.cpp">
+      <Filter>01.Core\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>00.headeer</Filter>
+    </ClCompile>
+    <ClCompile Include="Client.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Timer.cpp">
+      <Filter>01.Core\Time</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Vector2D.cpp">
+      <Filter>02.Common\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Vector3D.cpp">
+      <Filter>02.Common\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Matrix.cpp">
+      <Filter>02.Common\Vector</Filter>
+    </ClCompile>
+    <ClCompile Include="Common\Vector4D.cpp">
+      <Filter>02.Common\Vector</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
-      <Filter>00_header</Filter>
+      <Filter>00.headeer</Filter>
     </Image>
     <Image Include="small.ico">
-      <Filter>00_header</Filter>
+      <Filter>00.headeer</Filter>
     </Image>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Client.rc">
-      <Filter>00_header</Filter>
+      <Filter>00.headeer</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>

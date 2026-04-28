@@ -27,7 +27,7 @@ private:
 	static bool _bIsRun;
 
 public:
-	void Destroy() override;					// Singleton::Destroy() 구현 — 내부 리소스 해제
+	virtual void Destroy() override;					// Singleton::Destroy() 구현 — 내부 리소스 해제
 
 	// 초기화 함수
 	bool Init(HINSTANCE inst, const wchar_t* name);

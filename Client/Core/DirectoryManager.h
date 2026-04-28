@@ -28,7 +28,7 @@ private:
 	
 public:
 	void Init();										// 루트 경로 설정하고 자주 쓰는 경로들을 등록(초기화)
-	void Destroy() override;							// 캐싱된 경로 정리 
+	virtual void Destroy() override;							// 캐싱된 경로 정리 
 	const std::filesystem::path& GetRootPath() const	// 루트 경로 반환
 	{ return _rootPath; }
 	std::optional<std::filesystem::path> GetCachePath(const std::string& pathName) const;	// 캐싱된 경로를 이름으로 찾아서 반환 

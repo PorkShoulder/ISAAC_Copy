@@ -3,12 +3,9 @@
 #include "Defines.h"
 #include <memory>
 
-
-
 //========================
 // 모든 객체의 최상위 관리자
 //========================
-
 
 class Object : public std::enable_shared_from_this<Object>		// 이걸 상속 받을 시 자기자신을 안전하게 shared_ptr 가능
 {

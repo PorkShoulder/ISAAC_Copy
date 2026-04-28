@@ -48,7 +48,7 @@ public:
 	void Render();			// 스왑체인의 Present()를 호출해서 백버퍼에 그린 그림을 실제 화면에 출력
 
 
-	void Destroy() override;
+	virtual void Destroy() override;
 };	
 #define DEVICE Device::Instance().GetDevice()
 #define CONTEXT Device::Instance().GetContext()

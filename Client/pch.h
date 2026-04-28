@@ -51,7 +51,7 @@ using int64 = long long;
 using namespace Microsoft::WRL;
 
 #include <Common/Vector2D.h>
-//#include <Common/Vector3D.h>
-//#include <Common/Vector4D.h>
-//#include <Common/Matrix.h>
+#include <Common/Vector3D.h>
+#include <Common/Vector4D.h>
+#include <Common/Matrix.h>
 

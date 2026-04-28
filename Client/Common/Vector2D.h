@@ -101,8 +101,6 @@ struct FVector2D
 
 	static FVector2D Zero;
 
-
-
 };
 
 

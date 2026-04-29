@@ -31,6 +31,10 @@ void Timer::Tick(float deltaTime)
 
 void Timer::Stop()
 {
+	_run = false;
+	_accTime = 0.f;
+
+
 }
 
 void Timer::Destroy()

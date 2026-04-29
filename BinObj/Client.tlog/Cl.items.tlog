@@ -1,0 +1,17 @@
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Client.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Client.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Common\LogManager.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\LogManager.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Common\Matrix.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Matrix.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Common\Vector2D.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Vector2D.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Common\Vector3D.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Vector3D.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Common\Vector4D.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Vector4D.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Asset.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Asset.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Device.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Device.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\DirectoryManager.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\DirectoryManager.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\GameEngine.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\GameEngine.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Mesh.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Mesh.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\MeshManager.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\MeshManager.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Object.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Object.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\SubManager.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\SubManager.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\TimeManager.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\TimeManager.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Timer.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Timer.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\pch.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\pch.obj

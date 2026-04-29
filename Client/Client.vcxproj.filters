@@ -147,6 +147,14 @@
     <ClInclude Include="Common\Vector4D.h">
       <Filter>02.Common\Vector</Filter>
     </ClInclude>
+    <ClInclude Include="Core\Asset.h">
+      <Filter>01.Core\Asset</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Mesh.h">
+      <Filter>01.Core\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MeshManager.h" />
+    <ClInclude Include="Core\SubManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -188,6 +196,14 @@
     <ClCompile Include="Common\Vector4D.cpp">
       <Filter>02.Common\Vector</Filter>
     </ClCompile>
+    <ClCompile Include="Core\Asset.cpp">
+      <Filter>01.Core\Asset</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Mesh.cpp">
+      <Filter>01.Core\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MeshManager.cpp" />
+    <ClCompile Include="Core\SubManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

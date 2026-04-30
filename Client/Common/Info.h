@@ -51,3 +51,26 @@ struct FIndexBuffer
     std::vector<byte> _data;
 
 };
+
+//정점 구조체(색, 위치)
+struct FVertexColor
+{
+    FVector3D _pos;
+    FVector4D _color;
+
+    FVertexColor(){} //매개변수없이 만들때 -> 멤버 변수가 기본값으로 초기화
+    FVertexColor(const FVector3D& pos, const FVector4D& color) : _pos(pos), _color(color)
+    { }
+    FVertexColor(float x, float y, float z, float r, float g, float b, float a)
+    {
+        _pos._x = x;
+        _pos._y = y;
+        _pos._z = z;
+
+        _color._x = r;
+        _color._y = g;
+        _color._z = b;
+        _color._w = a;
+
+    }
+};

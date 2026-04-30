@@ -22,8 +22,5 @@ public:
 
 	virtual bool Init() override;
 	virtual void Destroy() override;
-
-
-
 };
 

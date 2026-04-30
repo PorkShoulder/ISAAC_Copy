@@ -69,6 +69,32 @@ bool Mesh::CreateBuffer(ComPtr<ID3D11Buffer>& buffer, D3D11_BIND_FLAG flag, void
 
 void Mesh::Render()
 {
+	uint32 stride = _vertexBuffer._size;	// 정점 하나의 크기
+	uint32 offset = 0;						// 버퍼의 어디부터 읽을 지 0은 처음부터 읽겠다는 뜻임.
+
+	// GPu에게 정점을 어떤 도형 규칙으로 해석할지.
+	Device::Instance().GetContext()->IASetPrimitiveTopology(_primitive);
+	// GPU에게 정점 버퍼 세팅
+	Device::Instance().GetContext()->IASetVertexBuffers(0, 1, _vertexBuffer._buffer.GetAddressOf(), &stride, &offset);
+
+	// 실제 그리는 명령
+	size_t size = _meshSlots.size();	// 인덱스 버퍼와 머테리얼을 묶음
+	if (size > 0)						// 인덱스 버퍼가 있는 경우
+	{
+		for (size_t i = 0; i < size; ++i)
+		{
+			Device::Instance().GetContext()->IASetIndexBuffer(_meshSlots[i]._indexBuffer._buffer.Get(), _meshSlots[i]._indexBuffer._fmt, 0);
+			Device::Instance().GetContext()->DrawIndexed(_meshSlots[i]._indexBuffer._count, 0, 0);
+		}
+	}
+	else
+	{
+		Device::Instance().GetContext()->IASetIndexBuffer(nullptr, DXGI_FORMAT_UNKNOWN, 0);
+		Device::Instance().GetContext()->Draw(_vertexBuffer._count, 0);
+	
+
+	}
+
 }
 
 void Mesh::RenderInstacing(int32 count)

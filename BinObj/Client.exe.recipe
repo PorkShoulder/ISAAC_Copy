@@ -5,7 +5,11 @@
       <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Client.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\ColorMesh.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

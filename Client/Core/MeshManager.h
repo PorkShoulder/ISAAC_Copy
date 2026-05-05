@@ -2,6 +2,10 @@
 #include "SubManager.h"
 #include <unordered_map>
 
+//===================================
+// 메쉬들 관리 등록, 찾기, 초기화, 삭제
+//===================================
+
 class MeshManager : public SubManager
 {
 public:

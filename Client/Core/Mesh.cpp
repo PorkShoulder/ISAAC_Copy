@@ -2,6 +2,8 @@
 #include "Mesh.h"
 #include "Device.h"
 
+//#include "Asset"
+
 
 
 Mesh::Mesh()
@@ -97,8 +99,19 @@ void Mesh::Render()
 
 }
 
-void Mesh::RenderInstacing(int32 count)
+void Mesh::RenderInstacing(int32 count) // _meshSlots[0]._indexBuffer._count 개의 인덱스를 사용하는 메쉬 1개를 count개 만큼 반복해서 그려라.
 {
+	uint32 stride = _vertexBuffer._size;	// 정점 하나의 크기
+	uint32 offset = 0;						// 시작 오프셋 설정.
+	// IA : Input Assembler -> 조립한다.
+	// 어떤 도형 규칙으로 해석할지
+	Device::Instance().GetContext()->IASetPrimitiveTopology(_primitive); 
+	// 정점 버퍼 조립 단계에서 바인딩.
+	Device::Instance().GetContext()->IASetVertexBuffers(0, 1, _vertexBuffer._buffer.GetAddressOf(), &stride, &offset);
+	// 인덱스 버퍼 조립 단계에서 바인딩.
+	Device::Instance().GetContext()->IASetIndexBuffer(_meshSlots[0]._indexBuffer._buffer.Get(), _meshSlots[0]._indexBuffer._fmt, 0);
+	// count 개 만큼 그리기.
+	Device::Instance().GetContext()->DrawIndexedInstanced(_meshSlots[0]._indexBuffer._count, count, 0, 0, 0);
 }
 
 void Mesh::Destroy()

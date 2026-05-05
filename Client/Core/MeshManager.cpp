@@ -70,6 +70,11 @@ bool MeshManager::Init()
 
 void MeshManager::Destroy()
 {
-
-
+    for (auto& it : _meshes)
+    {
+        if (nullptr == it.second)
+            continue;
+        DESTROY(it.second)
+    }
+    _meshes.clear();
 }

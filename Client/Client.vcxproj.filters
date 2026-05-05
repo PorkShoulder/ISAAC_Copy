@@ -16,29 +16,17 @@
     <Filter Include="Main">
       <UniqueIdentifier>{f3b8a986-ff73-4e78-994a-5998e63fb0f4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component">
-      <UniqueIdentifier>{dcb2bf47-b1dc-47c2-aa24-4bda3d6f72ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="World">
       <UniqueIdentifier>{401b8e6c-12af-46c5-8d76-f9df26a5b258}</UniqueIdentifier>
     </Filter>
     <Filter Include="Input">
       <UniqueIdentifier>{1f27d4ae-d0fe-4ee0-8fc3-b3f37cc63685}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Component\ActorComponent">
-      <UniqueIdentifier>{8011055d-cb83-4742-8430-368c2f5d333c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\SceneComponent">
-      <UniqueIdentifier>{a7c90ee7-6e9a-4afe-a4db-b942f8e8487a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Controller">
       <UniqueIdentifier>{c70e632a-c345-4796-901f-cb5f69dbfc9e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Collision">
       <UniqueIdentifier>{7d397958-181a-4e14-b999-39224881acc7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Component\SceneComponent\Collider">
-      <UniqueIdentifier>{c81f4a9d-95a3-42fb-8424-10686cc342a7}</UniqueIdentifier>
     </Filter>
     <Filter Include="02.Common">
       <UniqueIdentifier>{bcb62b17-d8af-4fd3-9997-955e3783f370}</UniqueIdentifier>
@@ -82,6 +70,18 @@
     <Filter Include="03.Object">
       <UniqueIdentifier>{940ad56f-0e5b-4e45-996f-6e7b63f9e55f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="04.Component">
+      <UniqueIdentifier>{dcb2bf47-b1dc-47c2-aa24-4bda3d6f72ae}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\ActorComponent">
+      <UniqueIdentifier>{8011055d-cb83-4742-8430-368c2f5d333c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\SceneComponent">
+      <UniqueIdentifier>{a7c90ee7-6e9a-4afe-a4db-b942f8e8487a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\SceneComponent\Collider">
+      <UniqueIdentifier>{c81f4a9d-95a3-42fb-8424-10686cc342a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Info.h">
@@ -110,9 +110,6 @@
     </ClInclude>
     <ClInclude Include="Core\GameEngine.h">
       <Filter>01.Core\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\Device.h">
-      <Filter>01.Core\DX11</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
       <Filter>00.headeer</Filter>
@@ -153,8 +150,17 @@
     <ClInclude Include="Core\Mesh.h">
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Core\MeshManager.h" />
     <ClInclude Include="Core\SubManager.h" />
+    <ClInclude Include="Core\Device.h">
+      <Filter>01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MeshManager.h">
+      <Filter>01.Core\Asset\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\Shader.h">
+      <Filter>Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -171,9 +177,6 @@
     </ClCompile>
     <ClCompile Include="Core\GameEngine.cpp">
       <Filter>01.Core\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\Device.cpp">
-      <Filter>01.Core\DX11</Filter>
     </ClCompile>
     <ClCompile Include="pch.cpp">
       <Filter>00.headeer</Filter>
@@ -202,8 +205,17 @@
     <ClCompile Include="Core\Mesh.cpp">
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Core\MeshManager.cpp" />
     <ClCompile Include="Core\SubManager.cpp" />
+    <ClCompile Include="Core\Device.cpp">
+      <Filter>01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MeshManager.cpp">
+      <Filter>01.Core\Asset\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\Shader.cpp">
+      <Filter>Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -217,5 +229,13 @@
     <ResourceCompile Include="Client.rc">
       <Filter>00.headeer</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="..\HLSL\Share.fx">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\ColorMesh.fx">
+      <Filter>Shader\HLSL</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -15,7 +15,7 @@ public:
 	MeshManager(MeshManager&&) = delete;
 	MeshManager& operator=(const MeshManager&) = delete;
 private:
-	std::unordered_map<std::string, Ptr<class Mesh>> _meshes;
+	std::unordered_map<std::string, Ptr<class Mesh>> _meshes; // 메쉬를 이름으로 관리하기 위함.
 
 public:
 	Ptr<class Mesh> FindMesh(const std::string& name);

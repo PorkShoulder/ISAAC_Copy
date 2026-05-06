@@ -161,6 +161,7 @@
       <Filter>Shader\ShaderClass</Filter>
     </ClInclude>
     <ClInclude Include="Shader\ShaderManager.h" />
+    <ClInclude Include="Shader\GraphicShader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -216,6 +217,7 @@
       <Filter>Shader\ShaderClass</Filter>
     </ClCompile>
     <ClCompile Include="Shader\ShaderManager.cpp" />
+    <ClCompile Include="Shader\GraphicShader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

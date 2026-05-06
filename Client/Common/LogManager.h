@@ -38,6 +38,8 @@ public:
 private:
     void OpenNewFile();
 
+public:
+
     template<typename T, typename ...Args>
     void Debug(const T& data, const Args& ...args)
     {

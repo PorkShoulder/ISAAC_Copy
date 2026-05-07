@@ -119,13 +119,14 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Client\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\;$(SolutionDir)ThirdParty\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,13 +138,14 @@
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>$(SolutionDir)Client\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Client\;$(SolutionDir)ThirdParty\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)ThirdParty\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -157,23 +159,38 @@
     <ClInclude Include="Common\Vector3D.h" />
     <ClInclude Include="Common\Vector4D.h" />
     <ClInclude Include="Core\Asset.h" />
+    <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\Defines.h" />
     <ClInclude Include="Core\Device.h" />
     <ClInclude Include="Core\DirectoryManager.h" />
     <ClInclude Include="Core\GameEngine.h" />
     <ClInclude Include="Core\Logger.h" />
+    <ClInclude Include="Core\Material.h" />
+    <ClInclude Include="Core\MaterialManager.h" />
     <ClInclude Include="Core\Mesh.h" />
     <ClInclude Include="Core\MeshManager.h" />
     <ClInclude Include="Core\Object.h" />
     <ClInclude Include="Core\SubManager.h" />
+    <ClInclude Include="Core\Texture.h" />
+    <ClInclude Include="Core\TextureManager.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Shader\CBuffer.h" />
+    <ClInclude Include="Shader\CBufferData.h" />
+    <ClInclude Include="Shader\ColorCBuffer.h" />
+    <ClInclude Include="Shader\ColorMeshShader.h" />
+    <ClInclude Include="Shader\FrameMeshShader.h" />
     <ClInclude Include="Shader\GraphicShader.h" />
+    <ClInclude Include="Shader\MaterialCBuffer.h" />
+    <ClInclude Include="Shader\SBuffer.h" />
+    <ClInclude Include="Shader\SBufferData.h" />
     <ClInclude Include="Shader\Shader.h" />
     <ClInclude Include="Shader\ShaderManager.h" />
+    <ClInclude Include="Shader\StaticMeshShader.h" />
+    <ClInclude Include="Shader\TranformCBuffer.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -184,13 +201,18 @@
     <ClCompile Include="Common\Vector3D.cpp" />
     <ClCompile Include="Common\Vector4D.cpp" />
     <ClCompile Include="Core\Asset.cpp" />
+    <ClCompile Include="Core\AssetManager.cpp" />
     <ClCompile Include="Core\Device.cpp" />
     <ClCompile Include="Core\DirectoryManager.cpp" />
     <ClCompile Include="Core\GameEngine.cpp" />
+    <ClCompile Include="Core\Material.cpp" />
+    <ClCompile Include="Core\MaterialManager.cpp" />
     <ClCompile Include="Core\Mesh.cpp" />
     <ClCompile Include="Core\MeshManager.cpp" />
     <ClCompile Include="Core\Object.cpp" />
     <ClCompile Include="Core\SubManager.cpp" />
+    <ClCompile Include="Core\Texture.cpp" />
+    <ClCompile Include="Core\TextureManager.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="pch.cpp">
@@ -199,9 +221,17 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Shader\CBuffer.cpp" />
+    <ClCompile Include="Shader\ColorCBuffer.cpp" />
+    <ClCompile Include="Shader\ColorMeshShader.cpp" />
+    <ClCompile Include="Shader\FrameMeshShader.cpp" />
     <ClCompile Include="Shader\GraphicShader.cpp" />
+    <ClCompile Include="Shader\MaterialCBuffer.cpp" />
+    <ClCompile Include="Shader\SBuffer.cpp" />
     <ClCompile Include="Shader\Shader.cpp" />
     <ClCompile Include="Shader\ShaderManager.cpp" />
+    <ClCompile Include="Shader\StaticMeshShader.cpp" />
+    <ClCompile Include="Shader\TranformCBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico" />
@@ -218,6 +248,14 @@
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">ColorMeshVS</EntryPointName>
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">ColorMeshVS</EntryPointName>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\Mesh.fx">
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MaterialMeshVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MaterialMeshVS</EntryPointName>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Effect</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="..\HLSL\Share.fx">
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>

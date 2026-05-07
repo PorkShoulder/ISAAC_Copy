@@ -1,33 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Shader">
-      <UniqueIdentifier>{d7838d78-869f-4d76-a66f-27b8c33b938a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\HLSL">
-      <UniqueIdentifier>{1f230a6e-a537-4045-9f9d-8cf74d06f7a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\ShaderClass">
-      <UniqueIdentifier>{1539414a-f540-4c19-a3c8-1693c9beaf6b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Shader\ConstantBuffer">
-      <UniqueIdentifier>{96884340-f375-417e-aef6-7f01744da3a7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Main">
-      <UniqueIdentifier>{f3b8a986-ff73-4e78-994a-5998e63fb0f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="World">
-      <UniqueIdentifier>{401b8e6c-12af-46c5-8d76-f9df26a5b258}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Input">
-      <UniqueIdentifier>{1f27d4ae-d0fe-4ee0-8fc3-b3f37cc63685}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Controller">
-      <UniqueIdentifier>{c70e632a-c345-4796-901f-cb5f69dbfc9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Collision">
-      <UniqueIdentifier>{7d397958-181a-4e14-b999-39224881acc7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="02.Common">
       <UniqueIdentifier>{bcb62b17-d8af-4fd3-9997-955e3783f370}</UniqueIdentifier>
     </Filter>
@@ -81,6 +54,39 @@
     </Filter>
     <Filter Include="04.Component\SceneComponent\Collider">
       <UniqueIdentifier>{c81f4a9d-95a3-42fb-8424-10686cc342a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="05.Collision">
+      <UniqueIdentifier>{7d397958-181a-4e14-b999-39224881acc7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="06.Controller">
+      <UniqueIdentifier>{c70e632a-c345-4796-901f-cb5f69dbfc9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="07.Input">
+      <UniqueIdentifier>{1f27d4ae-d0fe-4ee0-8fc3-b3f37cc63685}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09.Shader">
+      <UniqueIdentifier>{d7838d78-869f-4d76-a66f-27b8c33b938a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09.Shader\HLSL">
+      <UniqueIdentifier>{1f230a6e-a537-4045-9f9d-8cf74d06f7a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09.Shader\ShaderClass">
+      <UniqueIdentifier>{1539414a-f540-4c19-a3c8-1693c9beaf6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="09.Shader\ConstantBuffer">
+      <UniqueIdentifier>{96884340-f375-417e-aef6-7f01744da3a7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Main">
+      <UniqueIdentifier>{f3b8a986-ff73-4e78-994a-5998e63fb0f4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="08.World">
+      <UniqueIdentifier>{401b8e6c-12af-46c5-8d76-f9df26a5b258}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Asset\Material">
+      <UniqueIdentifier>{4111ec7e-f738-4640-b2bd-bfba5fd705fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="01.Core\Asset\Texture">
+      <UniqueIdentifier>{7173a466-90e1-4a77-8880-f46a9ed16fed}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -150,7 +156,6 @@
     <ClInclude Include="Core\Mesh.h">
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="Core\SubManager.h" />
     <ClInclude Include="Core\Device.h">
       <Filter>01.Core</Filter>
     </ClInclude>
@@ -158,10 +163,62 @@
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Shader\Shader.h">
-      <Filter>Shader\ShaderClass</Filter>
+      <Filter>09.Shader\ShaderClass</Filter>
     </ClInclude>
-    <ClInclude Include="Shader\ShaderManager.h" />
-    <ClInclude Include="Shader\GraphicShader.h" />
+    <ClInclude Include="Core\SubManager.h">
+      <Filter>01.Core\Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ShaderManager.h">
+      <Filter>09.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\GraphicShader.h">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CBuffer.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\TranformCBuffer.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\CBufferData.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Material.h">
+      <Filter>01.Core\Asset\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MaterialManager.h">
+      <Filter>01.Core\Asset\Material</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Texture.h">
+      <Filter>01.Core\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\TextureManager.h">
+      <Filter>01.Core\Asset\Texture</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\MaterialCBuffer.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\SBuffer.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\SBufferData.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ColorCBuffer.h">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ColorMeshShader.h">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\FrameMeshShader.h">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\StaticMeshShader.h">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\AssetManager.h">
+      <Filter>01.Core\Asset</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -206,7 +263,6 @@
     <ClCompile Include="Core\Mesh.cpp">
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="Core\SubManager.cpp" />
     <ClCompile Include="Core\Device.cpp">
       <Filter>01.Core</Filter>
     </ClCompile>
@@ -214,10 +270,56 @@
       <Filter>01.Core\Asset\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Shader\Shader.cpp">
-      <Filter>Shader\ShaderClass</Filter>
+      <Filter>09.Shader\ShaderClass</Filter>
     </ClCompile>
-    <ClCompile Include="Shader\ShaderManager.cpp" />
-    <ClCompile Include="Shader\GraphicShader.cpp" />
+    <ClCompile Include="Core\SubManager.cpp">
+      <Filter>01.Core\Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ShaderManager.cpp">
+      <Filter>09.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\GraphicShader.cpp">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\CBuffer.cpp">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\TranformCBuffer.cpp">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Material.cpp">
+      <Filter>01.Core\Asset\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MaterialManager.cpp">
+      <Filter>01.Core\Asset\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Texture.cpp">
+      <Filter>01.Core\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\TextureManager.cpp">
+      <Filter>01.Core\Asset\Texture</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\MaterialCBuffer.cpp">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\SBuffer.cpp">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ColorCBuffer.cpp">
+      <Filter>09.Shader\ConstantBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ColorMeshShader.cpp">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\FrameMeshShader.cpp">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\StaticMeshShader.cpp">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\AssetManager.cpp">
+      <Filter>01.Core\Asset</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">
@@ -234,10 +336,13 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="..\HLSL\Share.fx">
-      <Filter>Shader\HLSL</Filter>
+      <Filter>09.Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="..\HLSL\ColorMesh.fx">
-      <Filter>Shader\HLSL</Filter>
+      <Filter>09.Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="..\HLSL\Mesh.fx">
+      <Filter>09.Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

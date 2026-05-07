@@ -18,3 +18,7 @@ Ptr<Shader> ShaderManager::FindShader(const std::string& name)
 {
     return Ptr<Shader>();
 }
+
+void ShaderManager::SetSample(eTextureSampleType type)
+{
+}

@@ -74,3 +74,36 @@ struct FVertexColor
 
     }
 };
+
+//쉐이더 타입결정
+namespace SHADER_TYPE
+{
+    enum eType
+    {
+        VERTEX = 0x1,
+        PIXEL = 0x2,
+        GRAPHIC = VERTEX | PIXEL
+    };
+}
+
+//샘플러
+//텍스쳐 를 그릴 때 해당 텍스쳐의 픽셀을 어떻게 가져올것인지를 정하는 방법
+//UV 좌표 --> 텍스쳐의 좌표를 0과 1사이로 
+enum eTextureSampleType
+{
+    TEXTURE_SAMPLE_POINT,       //포인터 샘플러 --> UV 좌표에서 가장 가까운 픽셀 1개를 그대로 가져옴(보간 없음)
+    TEXTURE_SAMPLE_LINEAR,      //선형 샘플러   --> UV 좌표 주변 4개의 픽셀을 거리에 따라 가중 평균, 부드럽게 보간
+    TEXTURE_SAMPLE_ANISOTROPIC, //이방성 샘플러 --> 카메라가 비스듬히 볼 때, 품질 유지, 경사진 표면에서 선형샘플러보다 휠씬 선명함, 근데 무거움
+    TEXURE_SAMPLE_END
+};
+
+enum class eAssetType
+{
+    MESH,
+    TEXTURE,
+    MATERIAL,
+    ANIMATION,
+    SOUND,
+    FONT,
+    END
+};

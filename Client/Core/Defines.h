@@ -27,6 +27,18 @@ void Delete(Ptr<T>& ptr)
     ptr = nullptr;
 }
 
+template<typename Src, typename Dest>
+Ptr<Dest> Cast(Ptr<Src> src)
+{
+    return std::dynamic_pointer_cast<Dest>(src);
+}
+
+template<typename T>
+Ptr<T> Lock(Weak<T> ptr)
+{
+    return ptr.lock();
+}
+
 //
 #define SINGLETON(className) \
     friend class Singleton<className>;\

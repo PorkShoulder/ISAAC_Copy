@@ -14,6 +14,14 @@ struct FTransform
     FRotator _rotation;
 };
 
+struct FTransformMatrix
+{
+    FMatrix _scale;
+    FMatrix _rotation;
+    FMatrix _tranlate;
+    FMatrix _world;
+};
+
 // 정점(버텍스) 버퍼 구조체
 struct FVertexBuffer
 {
@@ -107,3 +115,29 @@ enum class eAssetType
     FONT,
     END
 };
+
+
+namespace AXIS_TYPE
+{
+    enum Type
+    {
+        X,
+        Y,
+        Z,
+        END
+    };
+}
+
+namespace INPUT_TYPE
+{
+    enum eType
+    {
+        DOWN,   // 키를 눌렀을때
+        HOLD,   // 키를 누르고 있을 때
+        UP,     // 키를 뗐을 때.
+        END
+
+
+    };
+
+}

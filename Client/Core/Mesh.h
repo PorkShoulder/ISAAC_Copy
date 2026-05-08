@@ -9,8 +9,7 @@ struct FMeshSlot
 {
 	// 인덱스 버퍼 + 머테리얼 조합 -> 벡터로 여러개 가능.
 	FIndexBuffer _indexBuffer;
-
-
+	Ptr<class Material> _material;
 };
 
 

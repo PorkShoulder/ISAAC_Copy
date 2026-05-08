@@ -158,6 +158,19 @@
     <ClInclude Include="Common\Vector2D.h" />
     <ClInclude Include="Common\Vector3D.h" />
     <ClInclude Include="Common\Vector4D.h" />
+    <ClInclude Include="Component\ActorComponent.h" />
+    <ClInclude Include="Component\CameraComponent.h" />
+    <ClInclude Include="Component\Component.h" />
+    <ClInclude Include="Component\InputComponent.h" />
+    <ClInclude Include="Component\MeshComponent.h" />
+    <ClInclude Include="Component\MovementComponent.h" />
+    <ClInclude Include="Component\SceneComponent.h" />
+    <ClInclude Include="Component\SoundComponent.h" />
+    <ClInclude Include="Component\SpriteComponent.h" />
+    <ClInclude Include="Component\StaticMeshComponent.h" />
+    <ClInclude Include="Component\WidgetComponent.h" />
+    <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="Controller\PlayerController.h" />
     <ClInclude Include="Core\Asset.h" />
     <ClInclude Include="Core\AssetManager.h" />
     <ClInclude Include="Core\Defines.h" />
@@ -176,7 +189,14 @@
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Input\InputAction.h" />
+    <ClInclude Include="Input\InputContext.h" />
+    <ClInclude Include="Input\InputSystem.h" />
+    <ClInclude Include="Object\Actor.h" />
+    <ClInclude Include="Object\Pawn.h" />
+    <ClInclude Include="Object\Player.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Render\RenderManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Shader\CBuffer.h" />
     <ClInclude Include="Shader\CBufferData.h" />
@@ -192,6 +212,7 @@
     <ClInclude Include="Shader\StaticMeshShader.h" />
     <ClInclude Include="Shader\TranformCBuffer.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="World\Level.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Client.cpp" />
@@ -200,6 +221,19 @@
     <ClCompile Include="Common\Vector2D.cpp" />
     <ClCompile Include="Common\Vector3D.cpp" />
     <ClCompile Include="Common\Vector4D.cpp" />
+    <ClCompile Include="Component\ActorComponent.cpp" />
+    <ClCompile Include="Component\CameraComponent.cpp" />
+    <ClCompile Include="Component\Component.cpp" />
+    <ClCompile Include="Component\InputComponent.cpp" />
+    <ClCompile Include="Component\MeshComponent.cpp" />
+    <ClCompile Include="Component\MovementComponent.cpp" />
+    <ClCompile Include="Component\SceneComponent.cpp" />
+    <ClCompile Include="Component\SoundComponent.cpp" />
+    <ClCompile Include="Component\SpriteComponent.cpp" />
+    <ClCompile Include="Component\StaticMeshComponent.cpp" />
+    <ClCompile Include="Component\WidgetComponent.cpp" />
+    <ClCompile Include="Controller\Controller.cpp" />
+    <ClCompile Include="Controller\PlayerController.cpp" />
     <ClCompile Include="Core\Asset.cpp" />
     <ClCompile Include="Core\AssetManager.cpp" />
     <ClCompile Include="Core\Device.cpp" />
@@ -215,12 +249,19 @@
     <ClCompile Include="Core\TextureManager.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
+    <ClCompile Include="Input\InputAction.cpp" />
+    <ClCompile Include="Input\InputContext.cpp" />
+    <ClCompile Include="Input\InputSystem.cpp" />
+    <ClCompile Include="Object\Actor.cpp" />
+    <ClCompile Include="Object\Pawn.cpp" />
+    <ClCompile Include="Object\Player.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Render\RenderManager.cpp" />
     <ClCompile Include="Shader\CBuffer.cpp" />
     <ClCompile Include="Shader\ColorCBuffer.cpp" />
     <ClCompile Include="Shader\ColorMeshShader.cpp" />
@@ -232,6 +273,7 @@
     <ClCompile Include="Shader\ShaderManager.cpp" />
     <ClCompile Include="Shader\StaticMeshShader.cpp" />
     <ClCompile Include="Shader\TranformCBuffer.cpp" />
+    <ClCompile Include="World\Level.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico" />

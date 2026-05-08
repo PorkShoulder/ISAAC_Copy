@@ -46,15 +46,6 @@
     <Filter Include="04.Component">
       <UniqueIdentifier>{dcb2bf47-b1dc-47c2-aa24-4bda3d6f72ae}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\ActorComponent">
-      <UniqueIdentifier>{8011055d-cb83-4742-8430-368c2f5d333c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\SceneComponent">
-      <UniqueIdentifier>{a7c90ee7-6e9a-4afe-a4db-b942f8e8487a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\SceneComponent\Collider">
-      <UniqueIdentifier>{c81f4a9d-95a3-42fb-8424-10686cc342a7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="05.Collision">
       <UniqueIdentifier>{7d397958-181a-4e14-b999-39224881acc7}</UniqueIdentifier>
     </Filter>
@@ -87,6 +78,9 @@
     </Filter>
     <Filter Include="01.Core\Asset\Texture">
       <UniqueIdentifier>{7173a466-90e1-4a77-8880-f46a9ed16fed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="10.Render">
+      <UniqueIdentifier>{df8162e8-b7e1-44ed-89bf-29dab64740ff}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -219,6 +213,61 @@
     <ClInclude Include="Core\AssetManager.h">
       <Filter>01.Core\Asset</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Actor.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Component.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\ActorComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="World\Level.h">
+      <Filter>08.World</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\SceneComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CameraComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MeshComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Render\RenderManager.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\SpriteComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\StaticMeshComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputSystem.h">
+      <Filter>07.Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputAction.h">
+      <Filter>07.Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\InputComponent.h">
+      <Filter>07.Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Input\InputContext.h">
+      <Filter>07.Input</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MovementComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\SoundComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\WidgetComponent.h">
+      <Filter>04.Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Pawn.h" />
+    <ClInclude Include="Controller\Controller.h" />
+    <ClInclude Include="Object\Player.h" />
+    <ClInclude Include="Controller\PlayerController.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -320,6 +369,61 @@
     <ClCompile Include="Core\AssetManager.cpp">
       <Filter>01.Core\Asset</Filter>
     </ClCompile>
+    <ClCompile Include="Object\Actor.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Component.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\ActorComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="World\Level.cpp">
+      <Filter>08.World</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\SceneComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CameraComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MeshComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Render\RenderManager.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\SpriteComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\StaticMeshComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputAction.cpp">
+      <Filter>07.Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\InputComponent.cpp">
+      <Filter>07.Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputContext.cpp">
+      <Filter>07.Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Input\InputSystem.cpp">
+      <Filter>07.Input</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MovementComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\SoundComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\WidgetComponent.cpp">
+      <Filter>04.Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Pawn.cpp" />
+    <ClCompile Include="Controller\Controller.cpp" />
+    <ClCompile Include="Object\Player.cpp" />
+    <ClCompile Include="Controller\PlayerController.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

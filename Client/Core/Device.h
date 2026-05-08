@@ -37,7 +37,7 @@ public:
 	ComPtr<ID3D11DepthStencilView> GetDepthStencil() const { return _depthStencil; }// 깊이 스텐실 반환 뷰
 	//
 	bool GetWindowMode() { return _windowMode; }
-	const FResolution& GetResolution() const { return _resolution; }				// 복사하지 않고 원본을 읽기 전용으로 넘기기 위함.
+	const FResolution& GetRS() const { return _resolution; }				// 복사하지 않고 원본을 읽기 전용으로 넘기기 위함.
 	//=> 다른곳에서 해상도 크기를 저장하고 그 값을 필요한곳에 써먹음 
 	FVector2D GetRSRate() const;													// 윈도우 창 크기와 해상도의 비율을 구하는 함수.
 public:

@@ -27,7 +27,7 @@ public:
 
     virtual void Destroy() override;
 
-    // virtual void DrawInspector() override; // 에디터에서 컴포넌트 속성을 ImGui로 표시하는 함수 
+    virtual void DrawInspector() override; // 에디터에서 컴포넌트 속성을 ImGui로 표시하는 함수 
 
     void SetShader(const std::string& name);
     void SetTint(const FVector4D& tint);

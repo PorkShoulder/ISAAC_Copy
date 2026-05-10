@@ -45,7 +45,7 @@ private:
 
     void mouseDown(float deltaTime);
 
-    void onDanceNotifyCallBack();
+//    void onDanceNotifyCallBack();
 
 
 private:

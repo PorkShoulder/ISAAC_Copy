@@ -26,20 +26,20 @@ private:
 
 	static bool _bIsRun;
 
+	Ptr<class World> _world;
+	Ptr<class Input> _input;
+
 public:
 	virtual void Destroy() override;					// Singleton::Destroy() 구현 — 내부 리소스 해제
-
-	// 초기화 함수
-	bool Init(HINSTANCE inst, const wchar_t* name);
-
-	// 실행 함수
-	int Run();
-
+	bool Init(HINSTANCE inst, const wchar_t* name); // 초기화 함수
+	int Run(); // 실행 함수
+	
 	// 여기서 const -> 읽기만 가능 
 	HDC GetHDC() const { return _hdc; }					// 프로그램 자체의 핸들->윈도우가 이 프로그램이 누구인지 식별하는 ID
 	HINSTANCE GetHINSTANCE() const { return _hInst; }	// 윈도우(창) 핸들 특정 창을 가리키는 ID 창크기,메세지, 다이렉트 초기화때 스왑체인에 알려주는 역할
 	HWND GetHWND() const { return _hWnd; }				// Device Context 핸들 창의 그리기 도구 Dx사용시 거의 안쓰임.
-
+	
+	Ptr<class World> GetWorld() const;
 
 
 

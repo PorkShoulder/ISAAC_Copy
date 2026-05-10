@@ -7,13 +7,6 @@
 
 // #include "Editor/EditorEngine.h"
 
-Actor::Actor()
-{
-}
-
-Actor::~Actor()
-{
-}
 
 bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
 {

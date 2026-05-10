@@ -1,11 +1,37 @@
 #include "pch.h"
 #include "GameEngine.h"
+#include "DirectoryManager.h"
+#include "TimeManager.h"
+#include "Device.h"
+#include "AssetManager.h"
+#include "Defines.h"
+
+#include "../Input/Input.h"
+#include "../Input/InputSystem.h"
+#include "../Shader/ShaderManager.h"
+#include "../Common/LogManager.h"
+#include "../World/World.h"
+//#include "../Collision/CollisionProfileManager.h"
+
+#include "../Render/RenderManager.h"
+
+
+
+
+
+
+
+
 
 
 bool GameEngine::_bIsRun = false;
 
 void GameEngine::Destroy()
 {
+    _world->Destroy();
+
+    AssetManager::Instance().Destroy();
+    ShaderManager::Instance().Destroy();
 
 }
 
@@ -48,6 +74,11 @@ int GameEngine::Run()
         }
     }
     return (int)msg.wParam;
+}
+
+Ptr<class World> GameEngine::GetWorld() const
+{
+    return _world;
 }
 
 // 레지스터에 등록한 정보를 바탕으로 실제 창을 만든다.

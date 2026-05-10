@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "SpriteComponent.h"
 
+#include "../World/Level.h"
+
 #include "../Core/Texture.h"
 #include "../Core/AssetManager.h"
 #include "../Core/Mesh.h"
@@ -10,7 +12,7 @@
 // #include "../Shader/SpriteShader.h"
 #include "../Shader/TranformCBuffer.h"
 
-#include "../World/Level.h"
+
 
 // #include "Editor/EditorEngine.h"
 
@@ -34,6 +36,7 @@ bool SpriteComponent::Init(int32 id, const std::string& name, Ptr<class Actor> o
     _mesh = MESH_MANAGER->FindMesh("TexRect");
 
     return true;
+
 }
 
 void SpriteComponent::Tick(float deltaTime)
@@ -93,7 +96,7 @@ void SpriteComponent::Destroy()
 
 void SpriteComponent::DrawInspector()
 {
-    ImGui::SeparatorText("SpriteComponent");
+    /*ImGui::SeparatorText("SpriteComponent");
 
     std::string label = std::format("World Transform##{0}", GetComponentID());
     ImGui::SeparatorText(label.c_str());
@@ -137,7 +140,7 @@ void SpriteComponent::DrawInspector()
         SetTint(_tint);
 
     if (_animation)
-        _animation->DrawInspector();
+        _animation->DrawInspector();*/
 }
 
 void SpriteComponent::SetShader(const std::string& name)

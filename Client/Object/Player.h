@@ -19,14 +19,14 @@ private:
     Ptr<class CameraComponent> _camera;         // 카메라가 플레이어를 따라다님.
     Ptr<class AABBCollisionComponent> _col;     // 충돌판정 
     Ptr<class SphereCollisionComponent> _colSphere; 
-    //Ptr<class SoundComponent> _sound;
+    Ptr<class SoundComponent> _sound;
     int32 _timerID = -1;
 
     bool reverse = false;
     float _opacity = 0.f;
 
 public:
-    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot);
+    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
     virtual void Tick(float deltaTime);
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
@@ -41,11 +41,11 @@ private:
 
     void MoveStop(float deltaTime);
 
-    void OnDance(float deltaTime);
+    /*void OnDance(float deltaTime);*/
 
     void mouseDown(float deltaTime);
 
-//    void onDanceNotifyCallBack();
+    
 
 
 private:

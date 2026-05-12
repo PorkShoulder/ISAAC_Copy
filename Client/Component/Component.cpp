@@ -36,7 +36,7 @@ bool Component::Init(int32 id, const std::string& name, Ptr<class Actor> owner)
     _name = name;
     _owner = owner;
 
-    //_level = owner->GetLevel();
+    _level = owner->GetLevel();
 
     SetEnable(true);
     SetActive(true);

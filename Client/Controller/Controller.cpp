@@ -1,9 +1,9 @@
 #include "pch.h"
 #include "Controller.h"
 
-bool Controller::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+bool Controller::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
-    Actor::Init(id, pos, scale, rot);
+    Actor::Init(id, pos, scale, rot, name);
 
     //컨트롤러는 enable false로
     SetEnable(false);

@@ -1,14 +1,21 @@
 #include "pch.h"
 #include "Actor.h"
 
-#include "../World/Level.h"
-#include "../Component/SceneComponent.h"
-#include "../Component/ActorComponent.h"
+#include "World/Level.h"
+#include "Component/SceneComponent.h"
+#include "Component/ActorComponent.h"
 
-// #include "Editor/EditorEngine.h"
+#include "Editor/EditorEngine.h"
 
+Actor::Actor()
+{
+}
 
-bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+Actor::~Actor()
+{
+}
+
+bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
     _id = id;
 
@@ -20,6 +27,8 @@ bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const F
 
     SetEnable(true);
     SetActive(true);
+
+    _name = name;
 
     return true;
 }
@@ -54,44 +63,57 @@ void Actor::Render(float deltaTime)
     //_root->Render(deltaTime);
 }
 
-//void Actor::DrawInspector()
-//{
-//    ImGui::SeparatorText("World Transform");
-//
-//    FVector3D worldPos = GetWorldPosition();
-//    if (ImGui::DragFloat3("World Position", &worldPos._x, 0.5f))
-//        SetWorldPosition(worldPos);
-//
-//    FVector3D worldRot = GetWorldRotation();
-//    if (ImGui::DragFloat3("World Rotation", &worldRot._x, 0.5f))
-//        SetWorldPosition(worldRot);
-//
-//    FVector3D worldScale = GetWorldScale();
-//    if (ImGui::DragFloat3("World Scale", &worldScale._x, 0.5f))
-//        SetWorldPosition(worldScale);
-//
-//    ImGui::SeparatorText("Relative Transform");
-//
-//    FVector3D relativePos = GetWorldPosition();
-//    if (ImGui::DragFloat3("Relative Position", &relativePos._x, 0.1f))
-//        SetWorldPosition(relativePos);
-//
-//    FVector3D relativeRot = GetWorldRotation();
-//    if (ImGui::DragFloat3("Relative Rotation", &relativeRot._x, 0.1f))
-//        SetWorldPosition(relativeRot);
-//
-//    FVector3D relativeScale = GetWorldScale();
-//    if (ImGui::DragFloat3("Relative Scale", &relativeScale._x, 0.1f))
-//        SetWorldPosition(relativeScale);
-//
-//    bool active = IsActive();
-//    if (ImGui::Checkbox("Active", &active))
-//        SetActive(active);
-//
-//    bool enable = IsEnable();
-//    if (ImGui::Checkbox("Enable", &enable))
-//        SetEnable(enable);
-//}
+void Actor::DrawInspector()
+{
+    ImGui::SeparatorText("Actor");
+    ImGui::SeparatorText("World Transform");
+
+    FVector3D worldPos = GetWorldPosition();
+    if (ImGui::DragFloat3("World Position", &worldPos._x, 0.5f))
+        SetWorldPosition(worldPos);
+
+    FVector3D worldRot = GetWorldRotation();
+    if (ImGui::DragFloat3("World Rotation", &worldRot._x, 0.5f))
+        SetWorldRotation(worldRot);
+
+    FVector3D worldScale = GetWorldScale();
+    if (ImGui::DragFloat3("World Scale", &worldScale._x, 0.5f))
+        SetWorldScale(worldScale);
+
+    ImGui::SeparatorText("Relative Transform");
+
+    FVector3D relativePos = GetWorldPosition();
+    if (ImGui::DragFloat3("Relative Position", &relativePos._x, 0.1f))
+        SetRelativePosition(relativePos);
+
+    FVector3D relativeRot = GetWorldRotation();
+    if (ImGui::DragFloat3("Relative Rotation", &relativeRot._x, 0.1f))
+        SetRelativeRotation(relativeRot);
+
+    FVector3D relativeScale = GetWorldScale();
+    if (ImGui::DragFloat3("Relative Scale", &relativeScale._x, 0.1f))
+        SetRelativeScale(relativeScale);
+
+    ImGui::BeginGroup();
+
+    bool active = IsActive();
+    if (ImGui::Checkbox("Active", &active))
+        SetActive(active);
+
+    ImGui::SameLine();
+
+    bool enable = IsEnable();
+    if (ImGui::Checkbox("Enable", &enable))
+        SetEnable(enable);
+
+    ImGui::EndGroup();
+
+    const char* buf = _name.c_str();
+    if (ImGui::InputText("ActorName", const_cast<char*>(buf), 128))
+        SetName(buf);
+
+    _root->DrawInspector();
+}
 
 Ptr<class SceneComponent> Actor::GetRoot() const
 {
@@ -180,6 +202,16 @@ void Actor::Remove()
     Ptr<Level> level = Lock<Level>(_level);
     if (level)
         level->RemoveActor(_id);
+}
+
+void Actor::SetName(const std::string& name)
+{
+    _name = name;
+}
+
+const std::string& Actor::GetName() const
+{
+    return _name;
 }
 
 bool Actor::IsTag(const std::string& tag)

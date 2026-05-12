@@ -11,9 +11,9 @@ Camera::~Camera()
 {
 }
 
-bool Camera::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+bool Camera::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
-    Actor::Init(id, pos, scale, rot);
+    Actor::Init(id, pos, scale, rot, name);
 
     _cam = CreateSceneComponent<CameraComponent>("Cam");
 

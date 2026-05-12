@@ -1,9 +1,9 @@
 #pragma once
 #include "ActorComponent.h"
 
-//#include "AIState.h"
-//#include "AITransition.h"
-//#include "MachineBase.h"
+#include "AIState.h"
+#include "AITransition.h"
+#include "MachineBase.h"
 
 #include <unordered_map>
 

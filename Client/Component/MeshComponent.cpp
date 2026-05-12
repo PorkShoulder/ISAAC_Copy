@@ -50,7 +50,7 @@ void MeshComponent::Render(float deltaTime)
     _transformCBuffer->SetWorldMatrix(_matrix._world);
     _transformCBuffer->SetProjMatrix(proj);
     _transformCBuffer->SetViewMatrix(view);
-    _transformCBuffer->Update()
+    _transformCBuffer->Update();
 
 }
 

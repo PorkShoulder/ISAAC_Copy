@@ -1,6 +1,6 @@
 #pragma once
 #include "SceneComponent.h"
-// #include "Animation2D.h"
+#include "Animation2D.h"
 
 //액터에 붙어서 애니메이션2D를 재생하고 관리할수 있게 해주는 컴포넌트
 class SpriteComponent : public SceneComponent
@@ -13,7 +13,7 @@ protected:
     Ptr<class Mesh> _mesh;              // 스프라이트를 그릴 사각형 메쉬
     Ptr<class Shader> _shader;          // 스프라이트 전용 쉐이더 -> 애니메이션 UV전환 및 좌우 반전.
     Ptr<class Texture> _texture;        // 스프라이트시트 이미지
-    // Ptr<class Animation2D> _animation;  // 애니메이션 재생 관리.
+    Ptr<class Animation2D> _animation;  // 애니메이션 재생 관리.
 
     Ptr<class SpriteCBuffer> _spriteCBuffer;
     int32 _textureIndex = 0;

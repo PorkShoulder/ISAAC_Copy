@@ -100,6 +100,21 @@
     <Filter Include="09.Shader\StructBuffer">
       <UniqueIdentifier>{86e5c176-916e-46b6-875b-2a8b2e78fc6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="01.Core\Font">
+      <UniqueIdentifier>{471072c5-5dcc-4f37-9b4c-51fbb3df6b2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{e1de5080-27ce-4ee8-a511-59f3f11b4506}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\EditorUI">
+      <UniqueIdentifier>{d3b4c2f4-3b0b-4ef4-b315-0771c5782e19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\Imgui">
+      <UniqueIdentifier>{f504b744-4749-400a-8a2b-4b1ea8467721}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Editor\Interface">
+      <UniqueIdentifier>{fbd93420-5d1e-4c65-8d8f-d3935c10cef6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Info.h">
@@ -170,9 +185,6 @@
     </ClInclude>
     <ClInclude Include="Core\Device.h">
       <Filter>01.Core</Filter>
-    </ClInclude>
-    <ClInclude Include="Core\MeshManager.h">
-      <Filter>01.Core\Asset\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Shader\Shader.h">
       <Filter>09.Shader\ShaderClass</Filter>
@@ -306,9 +318,6 @@
     <ClInclude Include="Object\Camera.h">
       <Filter>08.World</Filter>
     </ClInclude>
-    <ClInclude Include="Object\TileMap.h">
-      <Filter>03.Object</Filter>
-    </ClInclude>
     <ClInclude Include="Object\Monster.h">
       <Filter>03.Object</Filter>
     </ClInclude>
@@ -381,9 +390,6 @@
     <ClInclude Include="Component\SphereCollisionComponent.h">
       <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Tile.h">
-      <Filter>04.Component\Tile</Filter>
-    </ClInclude>
     <ClInclude Include="Component\TileComponent.h">
       <Filter>04.Component\Tile</Filter>
     </ClInclude>
@@ -414,6 +420,93 @@
     <ClInclude Include="Component\AITransition.h">
       <Filter>04.Component</Filter>
     </ClInclude>
+    <ClInclude Include="Component\MachineBase.h" />
+    <ClInclude Include="UI\Button.h" />
+    <ClInclude Include="UI\Image.h" />
+    <ClInclude Include="UI\ProgressBar.h" />
+    <ClInclude Include="UI\TextBlock.h" />
+    <ClInclude Include="UI\UIManager.h" />
+    <ClInclude Include="UI\Widget.h" />
+    <ClInclude Include="Shader\ProgressBarCBuffer.h">
+      <Filter>09.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ProgressBarShader.h">
+      <Filter>09.Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\UICBuffer.h" />
+    <ClInclude Include="Shader\UIShader.h" />
+    <ClInclude Include="Core\Sound.h">
+      <Filter>01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SoundManager.h">
+      <Filter>01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Font.h">
+      <Filter>01.Core\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FontCollection.h">
+      <Filter>01.Core\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\FontManager.h">
+      <Filter>01.Core\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorUI.h">
+      <Filter>Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imgui.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\MainMenuUI.h">
+      <Filter>Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\OutLinerUI.h">
+      <Filter>Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\InspectorUI.h">
+      <Filter>Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imconfig.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imgui_impl_dx11.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imgui_impl_win32.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imgui_internal.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imstb_rectpack.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imstb_textedit.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\imstb_truetype.h">
+      <Filter>Editor\Imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorEngine.h">
+      <Filter>Editor\Interface</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Bullet.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\RotBullet.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Tile.h" />
+    <ClInclude Include="Object\TileMap.h" />
+    <ClInclude Include="Object\TestActor.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\TestObject.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MeshManager.h">
+      <Filter>01.Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsaacAnimationLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -460,9 +553,6 @@
     </ClCompile>
     <ClCompile Include="Core\Device.cpp">
       <Filter>01.Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Core\MeshManager.cpp">
-      <Filter>01.Core\Asset\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Shader\Shader.cpp">
       <Filter>09.Shader\ShaderClass</Filter>
@@ -590,9 +680,6 @@
     <ClCompile Include="World\CameraManager.cpp">
       <Filter>08.World</Filter>
     </ClCompile>
-    <ClCompile Include="Object\TileMap.cpp">
-      <Filter>03.Object</Filter>
-    </ClCompile>
     <ClCompile Include="Object\Monster.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
@@ -665,9 +752,6 @@
     <ClCompile Include="Component\SphereCollisionComponent.cpp">
       <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Tile.cpp">
-      <Filter>04.Component\Tile</Filter>
-    </ClCompile>
     <ClCompile Include="Component\TileComponent.cpp">
       <Filter>04.Component\Tile</Filter>
     </ClCompile>
@@ -698,6 +782,90 @@
     <ClCompile Include="Component\AITransition.cpp">
       <Filter>04.Component</Filter>
     </ClCompile>
+    <ClCompile Include="Component\MachineBase.cpp" />
+    <ClCompile Include="UI\Button.cpp" />
+    <ClCompile Include="UI\Image.cpp" />
+    <ClCompile Include="UI\ProgressBar.cpp" />
+    <ClCompile Include="UI\TextBlock.cpp" />
+    <ClCompile Include="UI\UIManager.cpp" />
+    <ClCompile Include="UI\Widget.cpp" />
+    <ClCompile Include="Shader\ProgressBarCBuffer.cpp">
+      <Filter>09.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ProgressBarShader.cpp">
+      <Filter>09.Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\UICBuffer.cpp" />
+    <ClCompile Include="Shader\UIShader.cpp" />
+    <ClCompile Include="Core\Sound.cpp">
+      <Filter>01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SoundManager.cpp">
+      <Filter>01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\Font.cpp">
+      <Filter>01.Core\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FontCollection.cpp">
+      <Filter>01.Core\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\FontManager.cpp">
+      <Filter>01.Core\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorUI.cpp">
+      <Filter>Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\MainMenuUI.cpp">
+      <Filter>Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\OutLinerUI.cpp">
+      <Filter>Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\InspectorUI.cpp">
+      <Filter>Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_demo.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_draw.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_impl_dx11.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_impl_win32.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_tables.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\imgui_widgets.cpp">
+      <Filter>Editor\Imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorEngine.cpp">
+      <Filter>Editor\Interface</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Bullet.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\RotBullet.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Tile.cpp" />
+    <ClCompile Include="Object\TileMap.cpp" />
+    <ClCompile Include="Object\TestActor.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\TestObject.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MeshManager.cpp">
+      <Filter>01.Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IsaacAnimationLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

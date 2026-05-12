@@ -12,11 +12,12 @@ Pawn::~Pawn()
 {
 }
 
-bool Pawn::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
-{
-	Actor::Init(id, pos, scale, rot);
 
-	return true;
+bool Pawn::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
+{
+    Actor::Init(id, pos, scale, rot, name);
+
+    return true;
 }
 
 void Pawn::Tick(float deltaTime)
@@ -24,10 +25,12 @@ void Pawn::Tick(float deltaTime)
 	//컨트롤러가 있다면 컨트롤러의 Tick 함수를 호출해준다.
 	if (_controller)
 		_controller->Tick(deltaTime);
+   
+
 	Actor::Tick(deltaTime);
 }
 
-void Pawn::Collision(float deltaTime)
+void Pawn::Collision(float deltaTime)   
 {
     Actor::Collision(deltaTime);
 }
@@ -45,7 +48,10 @@ void Pawn::Destroy()
     if (!level)
         return;
 
-    level->RemoveActor(_controller->GetActorID());
+     if (_controller)
+        _controller->SetActive(false);
+
+    //level->RemoveActor(_controller->GetActorID());
 }
 
 void Pawn::SetController(Ptr<class Controller> ctrl)

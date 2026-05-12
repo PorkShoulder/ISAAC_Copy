@@ -11,7 +11,7 @@ private:
     Ptr<class CameraComponent> _cam;
 
 public:
-    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot);
+    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name);
     virtual void Tick(float deltaTime);
 
     virtual void Destroy() override;

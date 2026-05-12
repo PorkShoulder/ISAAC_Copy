@@ -37,9 +37,9 @@ void DirectoryManager::Init()
 		return;
 
 	// 자주 사용될 폴더 등록
-	//RegisterPath("Logs");
-	//RegisterPath("HLSL");
-	//RegisterPath("Resources");
+	RegisterPath("Logs");
+	RegisterPath("HLSL");
+	RegisterPath("Resources");
 
 
 }

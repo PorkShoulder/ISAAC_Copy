@@ -8,6 +8,7 @@ bool TextureManager::Init()
 
     //if (!LoadTexture("", TEXT(".png")))
     //  return false;
+    if (!LoadTexture("muzi", TEXT("muzi-removebg-preview.png"))) return false;
     if (!LoadTexture("apeach", TEXT("apeach.png")))
         return false;
 

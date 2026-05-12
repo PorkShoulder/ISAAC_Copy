@@ -1,20 +1,18 @@
 #include "pch.h"
 #include "SpriteComponent.h"
 
-#include "../World/Level.h"
+#include "Core/Texture.h"
+#include "Core/AssetManager.h"
+#include "Core/Mesh.h"
 
-#include "../Core/Texture.h"
-#include "../Core/AssetManager.h"
-#include "../Core/Mesh.h"
+#include "Shader/ShaderManager.h"
+#include "Shader/SpriteCBuffer.h"
+#include "Shader/SpriteShader.h"
+#include "Shader/TranformCBuffer.h"
 
-#include "../Shader/ShaderManager.h"
-// #include "../Shader/SpriteCBuffer.h"
-// #include "../Shader/SpriteShader.h"
-#include "../Shader/TranformCBuffer.h"
+#include "World/Level.h"
 
-
-
-// #include "Editor/EditorEngine.h"
+#include "Editor/EditorEngine.h"
 
 SpriteComponent::SpriteComponent()
 {
@@ -36,7 +34,6 @@ bool SpriteComponent::Init(int32 id, const std::string& name, Ptr<class Actor> o
     _mesh = MESH_MANAGER->FindMesh("TexRect");
 
     return true;
-
 }
 
 void SpriteComponent::Tick(float deltaTime)
@@ -96,51 +93,16 @@ void SpriteComponent::Destroy()
 
 void SpriteComponent::DrawInspector()
 {
-    /*ImGui::SeparatorText("SpriteComponent");
+    SceneComponent::DrawInspector();
 
-    std::string label = std::format("World Transform##{0}", GetComponentID());
-    ImGui::SeparatorText(label.c_str());
-
-    FVector3D worldPos = GetWorldPosition();
-    std::string posLabel = std::format("World Position##{0}", GetComponentID());
-    if (ImGui::DragFloat3(posLabel.c_str(), &worldPos._x, 0.5f))
-        SetWorldPosition(worldPos);
-
-    FVector3D worldRot = GetWorldRotation();
-    std::string rotLabel = std::format("World Rotation##{0}", GetComponentID());
-    if (ImGui::DragFloat3(rotLabel.c_str(), &worldRot._x, 0.5f))
-        SetWorldRotation(worldRot);
-
-    FVector3D worldScale = GetWorldScale();
-    std::string scaleLabel = std::format("World Scale##{0}", GetComponentID());
-    if (ImGui::DragFloat3(scaleLabel.c_str(), &worldScale._x, 0.5f))
-        SetWorldScale(worldScale);
-
-
-    std::string rlabel = std::format("Relative Transform##{0}", GetComponentID());
-    ImGui::SeparatorText(rlabel.c_str());
-
-    FVector3D rPos = GetRelativePosition();
-    std::string rPosLabel = std::format("Relative Position##{0}", GetComponentID());
-    if (ImGui::DragFloat3(rPosLabel.c_str(), &rPos._x, 0.5f))
-        SetRelativePosition(rPos);
-
-    FVector3D rRot = GetRelativeRotation();
-    std::string rrotLabel = std::format("Relative Rotation##{0}", GetComponentID());
-    if (ImGui::DragFloat3(rrotLabel.c_str(), &rRot._x, 0.5f))
-        SetRelativeRotation(rRot);
-
-    FVector3D rScale = GetWorldScale();
-    std::string rscaleLabel = std::format("Relative Scale##{0}", GetComponentID());
-    if (ImGui::DragFloat3(rscaleLabel.c_str(), &rScale._x, 0.5f))
-        SetRelativeScale(rScale);
+    ImGui::SeparatorText("SpriteComponent");
 
     ImGui::SeparatorText("Tint");
     if (ImGui::ColorEdit4("Tint", &_tint._x))
         SetTint(_tint);
 
     if (_animation)
-        _animation->DrawInspector();*/
+        _animation->DrawInspector();
 }
 
 void SpriteComponent::SetShader(const std::string& name)

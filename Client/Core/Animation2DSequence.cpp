@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "Animation2DSequence.h"
+#include "Editor/imgui.h"
 
 #include "GameEngine.h"
 
@@ -101,7 +102,7 @@ void Animation2DSequence::Tick(float deltaTime)
 
             ++_frame;
 
-            if (_frame == _data->GetFrameCount() - 1)
+            if (_frame >= _data->GetFrameCount())
             {
                 if (_loop)
                     _frame = 0;

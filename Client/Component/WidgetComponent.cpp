@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "WidgetComponent.h"
-// #include "../UI/Widget.h"
+#include "../UI/Widget.h"
 
 WidgetComponent::WidgetComponent()
 {

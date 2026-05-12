@@ -67,6 +67,8 @@ bool Animation2D::Init()
 
 void Animation2D::Tick(float deltaTime)
 {
+    if (!_currentSequence)
+        return;
     _currentSequence->Tick(deltaTime);
 }
 

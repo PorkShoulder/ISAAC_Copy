@@ -5,9 +5,9 @@
 #include "MeshManager.h"
 #include "TextureManager.h"
 #include "MaterialManager.h"
-//#include "AnimationManager.h"
-//#include "SoundManager.h"
-//#include "FontManager.h"
+#include "AnimationManager.h"
+#include "SoundManager.h"
+#include "FontManager.h"
 
 #include <map>
 

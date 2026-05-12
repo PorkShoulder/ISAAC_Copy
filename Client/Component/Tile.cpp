@@ -2,8 +2,7 @@
 #include "Tile.h"
 
 void Tile::Destroy()
-{
-}
+{}
 
 const eTileType Tile::GetTileType() const
 {

@@ -1,40 +1,41 @@
 #pragma once
-#include "../Core/Object.h"
+#include "Core/Object.h"
 
 #include <map>
-#include <set>
 #include <unordered_map>
+#include <set>
 
-//===========================================
-// 게임세계에 존재하는 모든 오브젝트의 부모클래스
-// _root가 위치를 갖고 있어서 모든 트랜스폼함수 위임.
-//===========================================
-
-
+//우리 프로젝트에서 게임에 등장하는 모든 캐릭터, 몬스터, NPC, 아이템 등등
+//모두 Actor로 취급할꺼에요.
+//Actor에 각종 컴포넌트를 추가하여, 여러가지 클래스를 나타낼 수 있게 할꺼에요.
 class Actor : public Object
 {
-public:
-    Actor() = default;
-    virtual ~Actor() = default;
-protected:
-    int32 _componentID = 0;             // 컴포넌트 발급용 ID
-    int32 _id = -1;                     // 액터의 ID
-    Ptr<class SceneComponent> _root;    // 루트 SceneComponent Actor의 실제 위치크기회전은 여기에 저장됨.
-    Weak<class Level> _level;           // Actor가 속한 Level Weak로 순환 참조 방지. -> 약참조로 순환 방지 
-    std::map<int, Ptr<class ActorComponent>> _actorComponents;  //액터 컴포넌트 목록
-    std::unordered_map<std::string, int> _componentFinder;      //컴포넌트를 찾기 위한 자료구조
-    std::set<std::string> _tags;        //태그(액터의 별명 같은걸 붙여주기)
+    friend class Level;
 
 public:
-    virtual bool Init(int32 id, 
-        const FVector3D& pos,
-        const FVector3D& scale, 
-        const FRotator& rot);
+    Actor();
+    virtual ~Actor();
+
+protected:
+    std::string _name;
+    int32 _componentID = 0;             //컴포넌트 발급용 ID
+    int32 _id = -1;                     //액터의 ID
+    Ptr<class SceneComponent> _root;
+    Weak<class Level> _level;
+    std::map<int, Ptr<class ActorComponent>> _actorComponents; //액터 컴포넌트 목록
+    std::unordered_map<std::string, int> _componentFinder;      //컴포넌트를 찾기 위한 자료구조
+    std::set<std::string> _tags;    //태그(액터의 별명 같은걸 붙여주기)
+    //ex) 몬스터, 고블린, 엘리트 등급
+    //몬스터라는 애들을 전부 찾아올수 있게
+    //혹은 해당 액터가 몬스터인지? 고블린인지?
+
+public:
+    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name);
     virtual void Tick(float deltaTime);
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
 
-    // virtual void DrawInspector() override;
+    virtual void DrawInspector() override;
 
     virtual void Destroy() override;
 
@@ -50,6 +51,9 @@ public:
     void SetLevel(Ptr<class Level> level);
 
     void Remove();
+
+    void SetName(const std::string& name);
+    const std::string& GetName() const;
 
 public:
     const int32 GetActorID() const { return _id; }

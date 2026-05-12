@@ -38,7 +38,7 @@ public:
 	//메쉬 그리기
 	void Render();
 	//같은 메쉬 여러 개 한 번에 그리기
-	void RenderInstacing(int32 count);
+	void RenderInstancing(int32 count);
 	size_t GetSlotCount() { return _meshSlots.size(); }
 	const FMeshSlot* GetSlot(int idx)
 	{

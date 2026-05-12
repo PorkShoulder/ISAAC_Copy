@@ -2,9 +2,9 @@
 #include "AIController.h"
 #include "Component/AIComponent.h"
 
-bool AIController::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+bool AIController::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
-    Controller::Init(id, pos, scale, rot);
+    Controller::Init(id, pos, scale, rot, name);
 
     _aiComponent = CreateActorComponent<AIComponent>("AI");
     _aiComponent->SetController(This<AIController>());

@@ -1,7 +1,7 @@
 #pragma once
 #include "Core/Object.h"
 #include "Object/Actor.h"
-//#include "UI/UIManager.h"
+#include "UI/UIManager.h"
 
 #include <map>
 #include <vector>
@@ -75,7 +75,7 @@ public:
     }
 
     template<typename T>
-    Ptr<T> SpawnActor(const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+    Ptr<T> SpawnActor(const std::string& name, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
     {
         Ptr<T> actor = New<T>();
 
@@ -83,7 +83,7 @@ public:
 
         int32 actorID = _actorID++;
 
-        if (!actor->Init(actorID, pos, scale, rot))
+        if (!actor->Init(actorID, pos, scale, rot, name))
         {
             DESTROY(actor)
                 return nullptr;

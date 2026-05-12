@@ -11,9 +11,10 @@
 #include "../Shader/ShaderManager.h"
 #include "../Common/LogManager.h"
 #include "../World/World.h"
-//#include "../Collision/CollisionProfileManager.h"
+#include "../Collision/CollisionProfileManager.h"
 
 #include "../Render/RenderManager.h"
+#include "Editor/imgui_impl_win32.h"
 
 
 
@@ -24,7 +25,7 @@
 
 
 
-bool GameEngine::_bIsRun = false;
+
 
 void GameEngine::Destroy()
 {
@@ -32,6 +33,19 @@ void GameEngine::Destroy()
 
     AssetManager::Instance().Destroy();
     ShaderManager::Instance().Destroy();
+
+#ifdef _USE_MEMORY_POOL
+    MemoryPool::Instance().Destroy();
+#elif defined(_USE_OBJECT_POOL)
+    ObjectPool::Instance().Destroy();
+#endif
+
+    _input->Destroy();
+    InputSystem::Instance().Destroy();
+
+
+    LogManager::Instance().Destroy();
+    DirectoryManager::Instance().Destroy();
 
 }
 
@@ -49,19 +63,20 @@ bool GameEngine::Init(HINSTANCE inst, const wchar_t* name)
         return false;
         
     _hdc    = GetDC(_hWnd);                     // Dx에서 그릴때 필요할 수도 있으니까 가져옴
-    _bIsRun = InitManager();                    // 
-    //_world = New<world>();
-    //_world->Init("")
+    g_isRun = InitManager();
+
+    _world = New<World>();
+    _world->Init("");
 
 
-    return Run();
+    return true;
 }
 
 int GameEngine::Run()
 {
     MSG msg = {};
     
-    while (_bIsRun)
+    while (g_isRun)
     {
         if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
         {
@@ -140,43 +155,111 @@ void GameEngine::RegisterWindowClass()
     RegisterClassExW(&wcex);
 
 }
-
 void GameEngine::Logic()
 {
+    //logic
+    //time
+    //dir
+    //input
+    //log
+    float deltaTime = TimeManager::Instance().Tick();
+    Tick(deltaTime);
+    Collision(deltaTime);
+    Render(deltaTime);
+
+    /* float fps = TimeManager::Instance().GetFPS();
+     LogManager::Instance().Debug("FPS : ", fps);*/
 }
 
-void GameEngine::Tick()
+void GameEngine::Tick(float deltaTime)
 {
+    _input->Tick(deltaTime); //실제 물리적인 키가 어떤 상태인지 갱신
+
+    InputSystem::Instance().Tick(deltaTime); //활성화된 입력컨텍스트의 키 상태를 갱신(down? hold? up?)
+
+    SOUND_MANAGER->Tick();
+
+    _world->Tick(deltaTime);
+    RenderManager::Instance().Tick(deltaTime);
 }
 
-void GameEngine::Collision()
+void GameEngine::Collision(float deltaTime)
 {
+    _world->Collision(deltaTime);
 }
 
-void GameEngine::Render()
+void GameEngine::Render(float deltaTime)
 {
+    Device::Instance().ClearBackBuffer(_clearColor);
+    Device::Instance().ClearDepthStencil(1.f, 0);
+    Device::Instance().SetTarget();
+
+    //Device::Instance().GetTarget2D()->BeginDraw();
+
+    _world->Render(deltaTime);
+    RenderManager::Instance().Render(deltaTime);
+    _world->RenderUI(deltaTime);
+
+    //Device::Instance().GetTarget2D()->EndDraw();
+
+    Device::Instance().Render();
 }
 
 bool GameEngine::InitManager()
 {
+    DirectoryManager::Instance().Init();
+    LogManager::Instance().Init();
+    if (false == TimeManager::Instance().Init())
+    {
+        LogManager::Instance().Fatal("TimeManager Init Error!");
+        return false;
+    }
+
+    if (false == Device::Instance().Init(_hWnd, 1280, 720, true))
+    {
+        LogManager::Instance().Fatal("Device Init Error!");
+        return false;
+    }
+
+    if (false == ShaderManager::Instance().Init())
+        return false;
+
+    if (false == AssetManager::Instance().Init())
+        return false;
+
+    _input = New<Input>();
+    _input->Init();
+
+    if (false == InputSystem::Instance().Init(_input))
+        return false;
+
+    if (false == CollisionProfileManager::Instance().Init())
+        return false;
+
+    if (false == RenderManager::Instance().Init())
+        return false;
+
     return true;
 }
 
 LRESULT GameEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    if (ImGui_ImplWin32_WndProcHandler(hWnd, message, wParam, lParam))
+        return true;
+
     switch (message)
     {
-    case WM_PAINT:                          // 창을 다시 그리는 메시지창.  
+    case WM_PAINT:
     {
         PAINTSTRUCT ps;
-        HDC hdc = BeginPaint(hWnd, &ps);    // 창을 그리기 시작.
-        EndPaint(hWnd, &ps);                // 창을 그리기 끝.
+        HDC hdc = BeginPaint(hWnd, &ps);
+        EndPaint(hWnd, &ps);
     }
     break;
-    case WM_DESTROY:                        // 창이 닫혔다 라는 메시지 X버튼을 누리면 false로 게임루프를 멈춤.
+    case WM_DESTROY:
     {
-        _bIsRun = false;                    // 게임루프 종료
-        PostQuitMessage(0);                 // OS한테 프로그램 종료한다 고 알려줌.
+        g_isRun = false;
+        PostQuitMessage(0);
     }
     break;
     default:
@@ -184,4 +267,3 @@ LRESULT GameEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     }
     return 0;
 }
-

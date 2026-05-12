@@ -1,12 +1,13 @@
 #include "pch.h"
 #include "SceneComponent.h"
-#include "../Object/Actor.h"
+#include "Object/Actor.h"
 
-#include "../Shader/ShaderManager.h"
-#include "../Shader/TranformCBuffer.h"
+#include "Shader/ShaderManager.h"
+#include "Shader/TranformCBuffer.h"
 
-#include "../Render/RenderManager.h"
+#include "Render/RenderManager.h"
 
+#include "Editor/EditorEngine.h"
 
 SceneComponent::SceneComponent() : _renderLayerName("Default"), _isRender(false)
 {
@@ -23,8 +24,8 @@ bool SceneComponent::Init(int32 id, const std::string& name, Ptr<class Actor> ow
     _transformCBuffer = FIND_CBUFFER("Transform", TranformCBuffer);
 
     //그려야 할 얘들만 랜더매니저에 넣을꺼에요.
-  /*  if (_isRender)
-        RenderManager::Instance().AddRenderComponent(owner->GetActorID(), This<SceneComponent>());*/
+    if (_isRender)
+        RenderManager::Instance().AddRenderComponent(owner->GetActorID(), This<SceneComponent>());
 
     return true;
 }
@@ -48,13 +49,68 @@ void SceneComponent::Tick(float deltaTime)
 
 void SceneComponent::Collision(float deltaTime)
 {
-    
     Component::Collision(deltaTime);
 }
 
 void SceneComponent::Render(float deltaTime)
 {
     Component::Render(deltaTime);
+
+    /*for (auto& it : _childs)
+    {
+        Ptr<SceneComponent> child = it.second;
+        if (nullptr == child)
+            continue;
+
+        if (!child->IsActive() || !child->IsEnable())
+            continue;
+
+        child->Render(deltaTime);
+    }*/
+}
+
+void SceneComponent::DrawInspector()
+{
+    Component::DrawInspector();
+
+    ImGui::SeparatorText("SceneComponent");
+
+    std::string label = std::format("World Transform##{0}", GetComponentID());
+    ImGui::SeparatorText(label.c_str());
+
+    FVector3D worldPos = GetWorldPosition();
+    std::string posLabel = std::format("World Position##{0}", GetComponentID());
+    if (ImGui::DragFloat3(posLabel.c_str(), &worldPos._x, 0.5f))
+        SetWorldPosition(worldPos);
+
+    FVector3D worldRot = GetWorldRotation();
+    std::string rotLabel = std::format("World Rotation##{0}", GetComponentID());
+    if (ImGui::DragFloat3(rotLabel.c_str(), &worldRot._x, 0.5f))
+        SetWorldRotation(worldRot);
+
+    FVector3D worldScale = GetWorldScale();
+    std::string scaleLabel = std::format("World Scale##{0}", GetComponentID());
+    if (ImGui::DragFloat3(scaleLabel.c_str(), &worldScale._x, 0.5f))
+        SetWorldScale(worldScale);
+
+
+    std::string rlabel = std::format("Relative Transform##{0}", GetComponentID());
+    ImGui::SeparatorText(rlabel.c_str());
+
+    FVector3D rPos = GetRelativePosition();
+    std::string rPosLabel = std::format("Relative Position##{0}", GetComponentID());
+    if (ImGui::DragFloat3(rPosLabel.c_str(), &rPos._x, 0.5f))
+        SetRelativePosition(rPos);
+
+    FVector3D rRot = GetRelativeRotation();
+    std::string rrotLabel = std::format("Relative Rotation##{0}", GetComponentID());
+    if (ImGui::DragFloat3(rrotLabel.c_str(), &rRot._x, 0.5f))
+        SetRelativeRotation(rRot);
+
+    FVector3D rScale = GetWorldScale();
+    std::string rscaleLabel = std::format("Relative Scale##{0}", GetComponentID());
+    if (ImGui::DragFloat3(rscaleLabel.c_str(), &rScale._x, 0.5f))
+        SetRelativeScale(rScale);
 }
 
 void SceneComponent::Destroy()
@@ -76,11 +132,11 @@ void SceneComponent::Destroy()
 
         RenderManager::Instance().RemoveRenderComponent(_renderLayerName, owner->GetActorID(), GetComponentID());
     }
+
 }
 
 void SceneComponent::SetRenderLayer(const std::string& name)
 {
-    // 그리는 순서 정하기.
     _renderLayerName = name;
 
     RenderManager::Instance().RefreshLayer();
@@ -88,7 +144,6 @@ void SceneComponent::SetRenderLayer(const std::string& name)
 
 const std::string& SceneComponent::GetRenderLayerName() const
 {
-    // 현재 설정된 레이어 이름 반환.
     return _renderLayerName;
 }
 
@@ -96,10 +151,9 @@ const std::map<int32, Ptr<SceneComponent>>& SceneComponent::GetChilds() const
 {
     return _childs;
 }
+
 const Ptr<SceneComponent> SceneComponent::GetParent() const
 {
-    //_parent를 Lock으로 변환해서 변환.
-
     return Lock<SceneComponent>(_parent);
 }
 
@@ -735,3 +789,5 @@ void SceneComponent::SetWorldRotation(float x, float y, float z)
 
     UpdateTransform();
 }
+
+//

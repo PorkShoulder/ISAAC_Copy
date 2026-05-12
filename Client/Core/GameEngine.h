@@ -3,6 +3,7 @@
 #include "framework.h"
 #include "../Common/Singleton.h"
 
+#include "Editor/EditorEngine.h"
 
 
 
@@ -14,6 +15,8 @@
 
 class GameEngine : public Singleton<GameEngine>
 {
+	friend class EditorEngine;
+
 	SINGLETON(GameEngine)
 
 private:
@@ -24,7 +27,7 @@ private:
 	TCHAR		_titleName[256] = {};				// 윈도우 창 타이틀 이름
 	float		_clearColor[4] = { 1,1,1,1 };		// 바탕을 초기화 할 색상
 
-	static bool _bIsRun;
+	
 
 	Ptr<class World> _world;
 	Ptr<class Input> _input;
@@ -47,9 +50,9 @@ private:
 	bool Create();									// 윈도우 창 생성
 	void RegisterWindowClass();						// 윈도우 클래스 생성 함수
 	void Logic();									// 로직 실행 함수
-	void Tick();									// 매 프레임 들어오는 함수
-	void Collision();								// 오브젝트 간 충돌 검사 및 처리
-	void Render();									// 화면에 오브젝트 그리기 (DirectX Draw 호출)
+	void Tick(float deltaTime);						// 매 프레임 들어오는 함수
+	void Collision(float deltaTime);				// 오브젝트 간 충돌 검사 및 처리
+	void Render(float deltaTime);					// 화면에 오브젝트 그리기 (DirectX Draw 호출)
 
 	bool InitManager();								// 각종 매니저 초기화
 

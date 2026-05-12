@@ -12,6 +12,18 @@
     <ContentFile>
       <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Mesh.cso</FullPath>
     </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Sprite.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\TileInstance.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\TileMap.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\UI.cso</FullPath>
+    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

@@ -21,7 +21,7 @@ bool CBuffer::Create(int size, int regi, int type)
     D3D11_BUFFER_DESC desc = {};
     desc.Usage = D3D11_USAGE_DYNAMIC;           // 매 프레임 데이터가 바뀔수 있으니 동적 버퍼로 만든다.
     desc.ByteWidth = _size;                     // 버퍼 크기
-    desc.ByteWidth = D3D11_CPU_ACCESS_WRITE;    // 버퍼 용도
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;    // 버퍼 용도
     desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER; // 버퍼에 CPU가 무슨일을 할 수 있는지
    
     if (FAILED(Device::Instance().GetDevice()->CreateBuffer(&desc, nullptr, _buffer.GetAddressOf())))

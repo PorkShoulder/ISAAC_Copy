@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "AnimationManager.h"
 #include "Animation2DData.h"
+#include "../Core/IsaacAnimationLoader.h"
 
 AnimationManager::AnimationManager()
 {}
@@ -10,20 +11,17 @@ AnimationManager::~AnimationManager()
 
 bool AnimationManager::Init()
 {
-    CreateAnimation("LION_IDLE", eAnimTextureType::SPRITE);
-    SetTexture("LION_IDLE", "LION_IDLE", TEXT("FrameAnim\\lion_atlas.png"));
+    IsaacAnimationLoader::Register(this);   // 이미지 로딩 
+    
 
-    for (int32 i = 0; i < 12; ++i)
-        AddFrame("LION_IDLE", i * 420.f, 0, 420.f, 420.f);
-
-    CreateAnimation("LION_DANCE", eAnimTextureType::FRAME);
+    /*CreateAnimation("LION_DANCE", eAnimTextureType::FRAME);
     SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_000.png"));
     SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_001.png"));
     SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_002.png"));
     SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_003.png"));
     SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_004.png"));
     for (int32 i = 0; i < 5; ++i)
-        AddFrame("LION_DANCE", 0.f, 0.f, 1.f, 1.f);
+        AddFrame("LION_DANCE", 0.f, 0.f, 1.f, 1.f);*/
 
     CreateAnimation("APEACH_IDLE", eAnimTextureType::SPRITE);
     SetTexture("APEACH_IDLE", "APEACH_IDLE", TEXT("FrameAnim\\apeach_atlas.png"));

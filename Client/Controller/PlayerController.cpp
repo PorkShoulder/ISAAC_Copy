@@ -1,11 +1,11 @@
 #include "pch.h"
 #include "PlayerController.h"
-#include "../Object/Player.h"
-#include "../Input/InputSystem.h"
+#include "Object/Player.h"
+#include "Input/InputSystem.h"
 
-bool PlayerController::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot)
+bool PlayerController::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
-    Controller::Init(id, pos, scale, rot);
+    Controller::Init(id, pos, scale, rot, name);
 
     //디폴트로 InputComponent를 생성하고 가지고 있는다.
     _input = CreateActorComponent<InputComponent>("Input");

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "AIComponent.h"
-//#include "MachineBase.h"
+#include "MachineBase.h"
 #include "Controller/AIController.h"
 
 

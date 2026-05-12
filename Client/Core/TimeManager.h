@@ -26,7 +26,27 @@ public:
 	void RemoveTimer(int32 id);
 	virtual void Destroy() override;
 
+    template<typename T>
+    int32 SetTimer(float expireTime, bool repeat, T&& func)
+    {
+        int32 id = _timerID++;
+        Ptr<Timer> timer = New<Timer>();
+        timer->SetTimer(expireTime, repeat, std::forward<T>(func));
+        _timers[id] = timer;
 
+        return id;
+    }
+
+    template<typename T>
+    int32 SetTimer(float expireTime, bool repeat, T* obj, void(T::* func)())
+    {
+        int32 id = _timerID++;
+        Ptr<Timer> timer = New<Timer>();
+        timer->SetTimer(expireTime, repeat, obj, func);
+        _timers[id] = timer;
+
+        return id;
+    }
 
 };
 

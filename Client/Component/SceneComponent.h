@@ -41,7 +41,7 @@ public:
 	virtual void Tick(float deltaTime) override;
 	virtual void Collision(float deltaTime) override;
 	virtual void Render(float deltaTime) override;
-
+    virtual void DrawInspector() override;
 	virtual void Destroy() override;
 
 	void SetRenderLayer(const std::string& name);

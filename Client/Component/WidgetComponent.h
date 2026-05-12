@@ -1,9 +1,9 @@
 #pragma once
 #include "SceneComponent.h"
-//#include "UI/TextBlock.h"
-//#include "UI/Button.h"
-//#include "UI/ProgressBar.h"
-//#include "UI/Image.h"
+#include "../UI/TextBlock.h"
+#include "../UI/Button.h"
+#include "../UI/ProgressBar.h"
+#include "../UI/Image.h"
 
 //======================================
 // UI 위젯을 오브젝트에 붙이는 컴포넌트.

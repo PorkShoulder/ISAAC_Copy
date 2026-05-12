@@ -65,22 +65,41 @@ StructuredBuffer<FTileInstanceData> gTileInstance : register(t1);
 
 StructuredBuffer<FTileLineInstanceData> gTileLineInstance : register(t2);
 
+//float2 UpdateAnimation2D(float2 UV)
+//{
+//    float2 result = (float2) 0.f;
+    
+//    if (UV.x == 0.f)
+//        result.x = gAnim2DLTUV.x;
+//    else
+//        result.x = gAnim2DRBUV.x;
+    
+//    if (UV.y == 0.f)
+//        result.y = gAnim2DLTUV.y;
+//    else
+//        result.y = gAnim2DRBUV.y;
+    
+//    if (gAnimFilp == 1)
+//        result.x = gAnim2DLTUV.x + gAnim2DRBUV.x - result.x;
+//        //result.x = 1 - result.x;
+    
+//    return result;
+//}
+
 float2 UpdateAnimation2D(float2 UV)
 {
-    float2 result = (float2) 0.f;
-    
-    if (UV.x == 0.f)
-        result.x = gAnim2DLTUV.x;
-    else
-        result.x = gAnim2DRBUV.x;
-    
-    if (UV.y == 0.f)
-        result.y = gAnim2DLTUV.y;
-    else
-        result.y = gAnim2DRBUV.y;
-    
+    float2 result;
+
     if (gAnimFilp == 1)
-        result.x = 1 - result.x;
-    
+    {
+        result.x = lerp(gAnim2DRBUV.x, gAnim2DLTUV.x, UV.x);
+    }
+    else
+    {
+        result.x = lerp(gAnim2DLTUV.x, gAnim2DRBUV.x, UV.x);
+    }
+
+    result.y = lerp(gAnim2DLTUV.y, gAnim2DRBUV.y, UV.y);
+
     return result;
 }

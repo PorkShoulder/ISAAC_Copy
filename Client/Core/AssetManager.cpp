@@ -15,13 +15,13 @@ bool AssetManager::Init()
     if (!RegisterManager<MeshManager>(eAssetType::MESH))
         return false;
 
-  /*  if (!RegisterManager<AnimationManager>(eAssetType::ANIMATION))
+    if (!RegisterManager<AnimationManager>(eAssetType::ANIMATION))
         return false;
 
     if (!RegisterManager<SoundManager>(eAssetType::SOUND))
         return false;
 
-    if (!RegisterManager<FontManager>(eAssetType::FONT))*/
+    if (!RegisterManager<FontManager>(eAssetType::FONT))
         return false;
 
     return true;

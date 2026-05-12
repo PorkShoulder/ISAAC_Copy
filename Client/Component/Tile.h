@@ -1,9 +1,7 @@
 #pragma once
-#include "../Core/Object.h"
+#include "Core/Object.h"
 
 //타일 하나를 표현하는 클래스
-
-
 class Tile : public Object
 {
     friend class TileComponent;

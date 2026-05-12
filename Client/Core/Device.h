@@ -21,15 +21,15 @@ private:
 	ComPtr<ID3D11RenderTargetView> _targetView = nullptr;	 // 특정 리소스를 랜더링의 목적지로 정하는 인터페이스
 	ComPtr<ID3D11DepthStencilView> _depthStencil = nullptr; // 앞뒤 순서와 특수 마스크 처리를 위한 버퍼
 
-	HWND _hwnd = nullptr;									 // 이 디바이스가 출력할 대상 창.
+	HWND _hWnd = nullptr;									 // 이 디바이스가 출력할 대상 창.
 	FResolution _resolution = {};							 // 윈도우 해상도를 기억하는 용도.
 	bool _windowMode = false;								 // 전체화면, 창모드인지를 저장하는 플래그 
-	//ComPtr<ID2D1RenderTarget>	m_target2D;					 // 
-	//ComPtr<ID2D1Factory>		m_factory2D;				 //
+	ComPtr<ID2D1RenderTarget>	_target2D;					 // 
+	ComPtr<ID2D1Factory>		_factory2D;				 //
 
 public:
 	// const가 뒤에 붙는 함수는 이 객체를 안 바꾼다 라는  뜻임.
-	// ComPtr<ID2D1RenderTarget> GetTarget2D() { return m_target2D; }
+	ComPtr<ID2D1RenderTarget> GetTarget2D() { return _target2D; }
 	ComPtr<ID3D11Device> GetDevice() const { return _device; }						 // 다른 클래스가 버퍼/텍스처/뷰를 만들때 필요함.
 	ComPtr<ID3D11DeviceContext> GetContext() const { return _context; }			 // 다른 클래스가 바인딩/드로우/업데이트 할 때 필요하다.
 	ComPtr<IDXGISwapChain> GetSwapchain() const { return _swapChain; }				 // 다른 클래스가 백버퍼얻기/화면 모드 변경처리/Present호출 할 때 필요하다.

@@ -1,8 +1,9 @@
 #include "pch.h"
 #include "Mesh.h"
 #include "Device.h"
+#include "Material.h"
+#include "AssetManager.h"
 
-//#include "Asset"
 
 
 
@@ -29,6 +30,7 @@ bool Mesh::CreateMesh(void* vertexData, int32 size, int32 count, D3D11_USAGE ver
 	if (indexData)
 	{
 		FMeshSlot slot;
+
 		slot._indexBuffer._size = indexSize;
 		slot._indexBuffer._count = indexCount;
 		slot._indexBuffer._data.resize(indexSize * indexCount);
@@ -37,7 +39,11 @@ bool Mesh::CreateMesh(void* vertexData, int32 size, int32 count, D3D11_USAGE ver
 
 		if (!CreateBuffer(slot._indexBuffer._buffer, D3D11_BIND_INDEX_BUFFER, indexData, indexSize, indexCount, indexUsage))
 			return false;
+
+		slot._material = MATERIAL_MANAGER->CreateMaterialInstance("DefaultMaterial");
+
 		_meshSlots.push_back(slot);
+
 	}
 
 	return true;
@@ -66,7 +72,7 @@ bool Mesh::CreateBuffer(ComPtr<ID3D11Buffer>& buffer, D3D11_BIND_FLAG flag, void
 	if(FAILED(Device::Instance().GetDevice()->CreateBuffer(&bufferDesc, &bufferData, buffer.GetAddressOf())))
 		return false;
 
-	return false;
+	return true;
 }
 
 void Mesh::Render()
@@ -99,7 +105,7 @@ void Mesh::Render()
 
 }
 
-void Mesh::RenderInstacing(int32 count) // _meshSlots[0]._indexBuffer._count 개의 인덱스를 사용하는 메쉬 1개를 count개 만큼 반복해서 그려라.
+void Mesh::RenderInstancing(int32 count) // _meshSlots[0]._indexBuffer._count 개의 인덱스를 사용하는 메쉬 1개를 count개 만큼 반복해서 그려라.
 {
 	uint32 stride = _vertexBuffer._size;	// 정점 하나의 크기
 	uint32 offset = 0;						// 시작 오프셋 설정.

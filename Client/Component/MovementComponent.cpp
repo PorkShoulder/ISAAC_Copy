@@ -2,8 +2,8 @@
 #include "MovementComponent.h"
 #include "SceneComponent.h"
 
-//#include "../Controller/PlayerController.h"
-//#include "../Object/Pawn.h"
+#include "../Controller/PlayerController.h"
+#include "../Object/Pawn.h"
 #include "../Common/LogManager.h"
 
 

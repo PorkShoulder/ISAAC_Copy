@@ -23,7 +23,14 @@ private:
     int32 _timerID = -1;
 
     bool reverse = false;
+    bool _headKeyActive = false;
     float _opacity = 0.f;
+
+    //이동조작 플래그
+    bool _moveRight = false;
+    bool _moveLeft = false;
+    bool _moveUp = false;
+    bool _moveDown = false;
 
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
@@ -34,12 +41,25 @@ public:
     virtual void Destroy() override;
 
 private:
+    void SetHeadDirection(const std::string& anim, bool flip);
+    void UpdateMovement();
     void MoveRight(float deltaTime);
     void MoveLeft(float deltaTime);
     void MoveUp(float deltaTime);
     void MoveDown(float deltaTime);
+    void MoveRightStop(float deltaTime);
+    void MoveLeftStop(float deltaTime);
+    void MoveUpStop(float deltaTime);
+    void MoveDownStop(float deltaTime);
 
     void MoveStop(float deltaTime);
+
+    //아이작 머리 조작
+    void HeadRight(float deltaTime);
+    void HeadLeft(float deltaTime);
+    void HeadUp(float deltaTime);
+    void HeadDown(float deltaTime);
+    void HeadRelease(float deltaTime);
 
     /*void OnDance(float deltaTime);*/
 

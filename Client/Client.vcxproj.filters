@@ -507,6 +507,7 @@
       <Filter>01.Core</Filter>
     </ClInclude>
     <ClInclude Include="Core\IsaacAnimationLoader.h" />
+    <ClInclude Include="Object\IsaacPlayer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -866,6 +867,7 @@
       <Filter>01.Core</Filter>
     </ClCompile>
     <ClCompile Include="Core\IsaacAnimationLoader.cpp" />
+    <ClCompile Include="Object\IsaacPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

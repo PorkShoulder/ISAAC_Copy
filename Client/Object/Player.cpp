@@ -33,78 +33,88 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 
     //컨트롤러가 조종하는 대상을 지정
     _controller->SetPawn(This<Player>());
-
+ 
     // 아이작 몸 바디 
     // 아이작 몸통
     Ptr<SpriteComponent> body = CreateSceneComponent<SpriteComponent>("Body");
     body->AddAnimSequence("IASSC_BODY_FRONT", true);
-    body->AddAnimSequence("IASSC_BODY_BACK", true);
     body->AddAnimSequence("IASSC_BODY_SIDE", true);
-
     body->ChangeAnimation("IASSC_BODY_FRONT");
     body->SetPlay("IASSC_BODY_FRONT", false);
 
-    SetRootComponent(body);
-    body->SetRelativeScale(64.f, 64.f, 64.f);
-
     // 아이작 머리
     Ptr<SpriteComponent> head = CreateSceneComponent<SpriteComponent>("Head");
-    head->AddAnimSequence("IASSC_HEAD", false);
-    head->SetPlay("IASSC_HEAD", false);
+    head->AddAnimSequence("IASSC_HEAD_FRONT", true);
+    head->AddAnimSequence("IASSC_HEAD_SIDE", true);
+    head->AddAnimSequence("IASSC_HEAD_BACK", true);
+    head->ChangeAnimation("IASSC_HEAD_FRONT");
+    head->SetPlay("IASSC_HEAD_FRONT", false);
 
     head->AttachToComponent(body);
     head->SetRelativeScale(1.f, 1.f, 1.f);
     head->SetRelativePosition(0.f, 0.32f, 0.f); // 머리니까 몸통 크기만큼 +
-  
+
+    SetRootComponent(body);
+    body->SetRelativeScale(64.f, 64.f, 64.f);
     //InputComponent를 가져온다.
     Ptr<InputComponent> inputComp = GetController<PlayerController>()->GetInputComponent();
 
     //MoveContext를 있으면 가져오고 없으면 만들어서 가져온다.
     auto moveContext = InputSystem::Instance().FindOrAddInputContext("DEFAULT_CONTEXT");
 
-    //MoveRight 액션을 있으면 가져오고 없으면 만들어서 가져온다.
-    auto moveRight = InputSystem::Instance().FindOrAddInputAction("MOVE_RIGHT");
-    auto moveleft = InputSystem::Instance().FindOrAddInputAction("MOVE_LEFT");
-    auto moveUp = InputSystem::Instance().FindOrAddInputAction("MOVE_UP");
-    auto moveDown = InputSystem::Instance().FindOrAddInputAction("MOVE_DOWN");
-    auto change = InputSystem::Instance().FindOrAddInputAction("change");
-    //auto dance = InputSystem::Instance().FindOrAddInputAction("Dance"); // To do 미사일로 나중에 바꿀것
-    auto mouseL = InputSystem::Instance().FindOrAddInputAction("MouseL");
+  
+    //몽통 액션을 있으면 가져오고 없으면 만들어서 가져온다.
+    auto moveRight  = InputSystem::Instance().FindOrAddInputAction("MOVE_RIGHT");
+    auto moveleft   = InputSystem::Instance().FindOrAddInputAction("MOVE_LEFT");
+    auto moveUp     = InputSystem::Instance().FindOrAddInputAction("MOVE_UP");
+    auto moveDown   = InputSystem::Instance().FindOrAddInputAction("MOVE_DOWN");
+    auto change     = InputSystem::Instance().FindOrAddInputAction("change");
+    auto mouseL     = InputSystem::Instance().FindOrAddInputAction("MouseL");
 
-    //MoveContext 에 MoveRight 액션을 키보드 D키와 함께 바인딩한다.
+    //MoveContext 에 MoveRight 액션을 화살표와 함께 바인딩한다.
     moveContext->BindInputAction(moveRight, 'D');
-    moveContext->BindInputAction(moveleft, 'A');
-    moveContext->BindInputAction(moveUp, 'W');
-    moveContext->BindInputAction(moveDown, 'S');
-    moveContext->BindInputAction(change, '1');
-    //moveContext->BindInputAction(dance, VK_SPACE); // To do 미사일로 나중에 바꿀것
+    moveContext->BindInputAction(moveleft,  'A');
+    moveContext->BindInputAction(moveUp,    'W');
+    moveContext->BindInputAction(moveDown,  'S');
     moveContext->BindInputAction(mouseL, VK_LBUTTON);
+
+    //머리 액션을 있으면 가져오고 없으면 만들어서 가져온다.
+    auto headRight = InputSystem::Instance().FindOrAddInputAction("HEAD_RIGHT");
+    auto headLeft = InputSystem::Instance().FindOrAddInputAction("HEAD_LEFT");
+    auto headUp = InputSystem::Instance().FindOrAddInputAction("HEAD_UP");
+    auto headDown = InputSystem::Instance().FindOrAddInputAction("HEAD_DOWN");
+
+    //moveContext에 headRight 액션을 화살표와 함께 바인딩한다.
+    moveContext->BindInputAction(headRight, VK_RIGHT);
+    moveContext->BindInputAction(headLeft, VK_LEFT);
+    moveContext->BindInputAction(headUp, VK_UP);
+    moveContext->BindInputAction(headDown, VK_DOWN);
 
     //InputComponent에 MoveContext를 등록한다.
     inputComp->AddInputContext("DEFAULT_CONTEXT");
 
     //InputComponent에 등록된 컨텍스트와 그 안에 액션에 따른 함수를 등록해준다.
-    //누르고 있을때, Player 클래스의 MoveRight 함수를 호출해준다.
+   //누르고 있을때, Player 클래스의 MoveRight 함수를 호출해준다.
     inputComp->BindAction(moveContext->GetName(), moveRight->GetName(), INPUT_TYPE::DOWN, this, &Player::MoveRight);
-    inputComp->BindAction(moveContext->GetName(), moveRight->GetName(), INPUT_TYPE::UP, this, &Player::MoveStop);
-
+    inputComp->BindAction(moveContext->GetName(), moveRight->GetName(), INPUT_TYPE::UP, this, &Player::MoveRightStop);
     inputComp->BindAction(moveContext->GetName(), moveUp->GetName(), INPUT_TYPE::DOWN, this, &Player::MoveUp);
-    inputComp->BindAction(moveContext->GetName(), moveUp->GetName(), INPUT_TYPE::UP, this, &Player::MoveStop);
-    
+    inputComp->BindAction(moveContext->GetName(), moveUp->GetName(), INPUT_TYPE::UP, this, &Player::MoveUpStop);
     inputComp->BindAction(moveContext->GetName(), moveDown->GetName(), INPUT_TYPE::DOWN, this, &Player::MoveDown);
-    inputComp->BindAction(moveContext->GetName(), moveDown->GetName(), INPUT_TYPE::UP, this, &Player::MoveStop);
-
+    inputComp->BindAction(moveContext->GetName(), moveDown->GetName(), INPUT_TYPE::UP, this, &Player::MoveDownStop);
     inputComp->BindAction(moveContext->GetName(), moveleft->GetName(), INPUT_TYPE::DOWN, this, &Player::MoveLeft);
-    inputComp->BindAction(moveContext->GetName(), moveleft->GetName(), INPUT_TYPE::UP, this, &Player::MoveStop);
+    inputComp->BindAction(moveContext->GetName(), moveleft->GetName(), INPUT_TYPE::UP, this, &Player::MoveLeftStop);
 
-    inputComp->BindAction(moveContext->GetName(), change->GetName(), INPUT_TYPE::DOWN, [&](float time)
-        {
-            auto Context = InputSystem::Instance().FindOrAddInputContext("DEFAULT_CONTEXT");
-            Context->ChangeInputActionKey("MOVE_RIGHT", VK_RIGHT);
-            Context->ChangeInputActionKey("MOVE_LEFT", VK_LEFT);
-        });
+    //누르고 있을때, Player 클래스의 MoveRight 함수를 호출해준다.
+    inputComp->BindAction(moveContext->GetName(), headRight->GetName(), INPUT_TYPE::DOWN, this, &Player::HeadRight);
+    inputComp->BindAction(moveContext->GetName(), headLeft->GetName(), INPUT_TYPE::DOWN, this, &Player::HeadLeft);
+    inputComp->BindAction(moveContext->GetName(), headUp->GetName(), INPUT_TYPE::DOWN, this, &Player::HeadUp);
+    inputComp->BindAction(moveContext->GetName(), headDown->GetName(), INPUT_TYPE::DOWN, this, &Player::HeadDown);
 
-    /*inputComp->BindAction(moveContext->GetName(), dance->GetName(), INPUT_TYPE::DOWN, this, &Player::OnDance);*/
+    inputComp->BindAction(moveContext->GetName(), headRight->GetName(), INPUT_TYPE::UP, this, &Player::HeadRelease);
+    inputComp->BindAction(moveContext->GetName(), headLeft->GetName(), INPUT_TYPE::UP, this, &Player::HeadRelease);
+    inputComp->BindAction(moveContext->GetName(), headUp->GetName(), INPUT_TYPE::UP, this, &Player::HeadRelease);
+    inputComp->BindAction(moveContext->GetName(), headDown->GetName(), INPUT_TYPE::UP, this, &Player::HeadRelease);
+
 
     inputComp->BindAction(moveContext->GetName(), mouseL->GetName(), INPUT_TYPE::DOWN, this, &Player::mouseDown);
 
@@ -123,16 +133,6 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     _col->SetBoxSize(300.f, 300.f);
     _col->AttachToComponent(_root);
     _col->SetCollisionProfile("Player");
-
-  
-
-    /*auto name_ui = CreateSceneComponent<WidgetComponent>("nameUI");
-    auto nameWidget = GetLevel()->CreateWidget<TextBlock>("name");
-    nameWidget->SetPos(FVector2D(-50.f, 25.f));
-    nameWidget->SetSize(FVector2D(100.f, 100.f));
-    nameWidget->SetText(TEXT("라이언"));
-    name_ui->SetWidget(nameWidget);
-    name_ui->AttachToComponent(_root);*/
 
     GameEngine::Instance().GetWorld()->SetMainPlayer(This<Player>());
 
@@ -161,61 +161,186 @@ void Player::Destroy()
     TimeManager::Instance().RemoveTimer(_timerID);
 }
 
-void Player::MoveRight(float deltaTime)
+void Player::SetHeadDirection(const std::string& anim, bool flip)
 {
-    _movement->SetMoveAxis(FVector3D::Axis_X);
-
-    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
-    //if (nullptr == body)
-    if (!body)
-        return;
-
-    body->ChangeAnimation("IASSC_BODY_SIDE");
-    body->SetAnimFilp(false);
-    body->SetPlay("IASSC_BODY_SIDE", true);
+    if (_headKeyActive) return;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (!head) return;
+    head->ChangeAnimation(anim);
+    head->SetAnimFilp(flip);
 }
 
-void Player::MoveLeft(float deltaTime)
+void Player::UpdateMovement()
 {
-    _movement->SetMoveAxis(-FVector3D::Axis_X);
+    FVector3D axis(0.f, 0.f, 0.f);
+
+    if (_moveRight) axis._x += 1.f;
+    if (_moveLeft)  axis._x -= 1.f;
+    if (_moveUp)    axis._y += 1.f;
+    if (_moveDown)  axis._y -= 1.f;
 
     Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
-    //if (nullptr == body)
-    if (!body)
-        return;
+    if (!body) return;
 
-    body->ChangeAnimation("IASSC_BODY_SIDE");
-    body->SetAnimFilp(true);
-    body->SetPlay("IASSC_BODY_SIDE", true);
+    // 아무 키도 안 눌림 → 정지
+    if (axis._x == 0.f && axis._y == 0.f)
+    {
+        _movement->Stop();
+        body->ChangeAnimation("IASSC_BODY_FRONT");
+        body->SetAnimFilp(false);
+        body->SetPlay("IASSC_BODY_FRONT", false);
+        SetHeadDirection("IASSC_HEAD_FRONT", false);
+        return;
+    }
+
+    _movement->SetMoveAxis(axis);
+
+    // 애니메이션은 X축 우선
+    if (axis._x > 0.f)
+    {
+        body->ChangeAnimation("IASSC_BODY_SIDE");
+        body->SetAnimFilp(false);
+        body->SetPlay("IASSC_BODY_SIDE", true);
+        SetHeadDirection("IASSC_HEAD_SIDE", false);
+    }
+    else if (axis._x < 0.f)
+    {
+        body->ChangeAnimation("IASSC_BODY_SIDE");
+        body->SetAnimFilp(true);
+        body->SetPlay("IASSC_BODY_SIDE", true);
+        SetHeadDirection("IASSC_HEAD_SIDE", true);
+    }
+    else if (axis._y > 0.f)
+    {
+        body->ChangeAnimation("IASSC_BODY_FRONT");
+        body->SetAnimFilp(true);
+        body->SetPlay("IASSC_BODY_FRONT", true);
+        SetHeadDirection("IASSC_HEAD_BACK", false);
+    }
+    else if (axis._y < 0.f)
+    {
+        body->ChangeAnimation("IASSC_BODY_FRONT");
+        body->SetAnimFilp(false);
+        body->SetPlay("IASSC_BODY_FRONT", true);
+        SetHeadDirection("IASSC_HEAD_FRONT", false);
+    }
 }
 
-void Player::MoveUp(float deltaTime)
-{
-    _movement->SetMoveAxis(FVector3D::Axis_Y);
+void Player::MoveRight(float deltaTime) { _moveRight = true;  UpdateMovement(); }
+void Player::MoveLeft(float deltaTime) { _moveLeft = true;  UpdateMovement(); }
+void Player::MoveUp(float deltaTime) { _moveUp = true;  UpdateMovement(); }
+void Player::MoveDown(float deltaTime) { _moveDown = true;  UpdateMovement(); }
+void Player::MoveRightStop(float deltaTime) { _moveRight = false; UpdateMovement(); }
+void Player::MoveLeftStop(float deltaTime) { _moveLeft = false; UpdateMovement(); }
+void Player::MoveUpStop(float deltaTime) { _moveUp = false; UpdateMovement(); }
+void Player::MoveDownStop(float deltaTime) { _moveDown = false; UpdateMovement(); }
 
-    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
-    //if (nullptr == body)
-    if (!body)
-        return;
 
-    body->ChangeAnimation("IASSC_BODY_BACK");
-    body->SetPlay("IASSC_BODY_BACK", true);
-    body->SetAnimFilp(false);
-}
 
-void Player::MoveDown(float deltaTime)
-{
-    _movement->SetMoveAxis(-FVector3D::Axis_Y);
 
-    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
-    //if (nullptr == body)
-    if (!body)
-        return;
 
-    body->ChangeAnimation("IASSC_BODY_FRONT");
-    body->SetAnimFilp(false);
-    body->SetPlay("IASSC_BODY_FRONT", true);
-}
+
+
+//이동 조작 
+//
+//void Player::MoveRight(float deltaTime)
+//{
+//    _movement->SetMoveAxis(FVector3D::Axis_X);
+//    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+//    if (nullptr == body)
+//        return;
+//
+//    body->ChangeAnimation("IASSC_BODY_SIDE");
+//    body->SetAnimFilp(false);
+//    body->SetPlay("IASSC_BODY_SIDE", true);
+//
+//    if (!_headKeyActive)
+//    {
+//        Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+//        if (head)
+//        {
+//            head->ChangeAnimation("IASSC_HEAD_SIDE");
+//            head->SetAnimFilp(false);
+//        }
+//    }
+//}
+//
+//void Player::MoveLeft(float deltaTime)
+//{
+//    _movement->SetMoveAxis(-FVector3D::Axis_X);
+//
+//    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+//    //if (nullptr == body)
+//    if (!body)
+//        return;
+//
+//    body->ChangeAnimation("IASSC_BODY_SIDE");
+//    body->SetAnimFilp(true);
+//    body->SetPlay("IASSC_BODY_SIDE", true);
+//
+//    if (!_headKeyActive)
+//    {
+//        Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+//        if (head)
+//        {
+//            head->ChangeAnimation("IASSC_HEAD_SIDE");
+//            head->SetAnimFilp(true);
+//        }
+//    }
+//}
+//
+//void Player::MoveUp(float deltaTime)
+//{
+//     
+//    _movement->SetMoveAxis(FVector3D::Axis_Y);
+//
+//    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+//    //if (nullptr == body)
+//    if (!body)
+//        return;
+//
+//    body->ChangeAnimation("IASSC_BODY_FRONT");
+//    body->SetAnimFilp(true);
+//    body->SetPlay("IASSC_BODY_FRONT", true);
+//
+//    if (!_headKeyActive)
+//    {
+//        Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+//        if (head)
+//        {
+//            head->ChangeAnimation("IASSC_HEAD_BACK");
+//            head->SetAnimFilp(false);
+//        }
+//    }
+//}
+//
+//void Player::MoveDown(float deltaTime)
+//{
+//    _movement->SetMoveAxis(-FVector3D::Axis_Y);
+//
+//    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+//    //if (nullptr == body)
+//    if (!body)
+//        return;
+//
+//    body->ChangeAnimation("IASSC_BODY_FRONT");
+//    body->SetAnimFilp(false);
+//    body->SetPlay("IASSC_BODY_FRONT", true);
+//
+//    if (!_headKeyActive)
+//    {
+//        Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+//        if (head)
+//        {
+//            head->ChangeAnimation("IASSC_HEAD_FRONT");
+//            head->SetAnimFilp(true);
+//        }
+//    }
+//}
+
+
+
+
 
 void Player::MoveStop(float deltaTime)
 {
@@ -229,6 +354,47 @@ void Player::MoveStop(float deltaTime)
     body->ChangeAnimation("IASSC_BODY_FRONT");
     body->SetAnimFilp(false);
     body->SetPlay("IASSC_BODY_FRONT", false);
+}
+
+void Player::HeadRight(float deltaTime)
+{
+    _headKeyActive = true;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (!head) return;
+    head->ChangeAnimation("IASSC_HEAD_SIDE");
+    head->SetAnimFilp(false);
+}
+
+void Player::HeadLeft(float deltaTime)
+{
+    _headKeyActive = true;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (!head) return;
+    head->ChangeAnimation("IASSC_HEAD_SIDE");
+    head->SetAnimFilp(true);
+}
+
+void Player::HeadUp(float deltaTime)
+{
+    _headKeyActive = true;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (!head) return;
+    head->ChangeAnimation("IASSC_HEAD_BACK");
+    head->SetAnimFilp(false);
+}
+
+void Player::HeadDown(float deltaTime)
+{
+    _headKeyActive = true;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (!head) return;
+    head->ChangeAnimation("IASSC_HEAD_FRONT");
+    head->SetAnimFilp(false);
+}
+
+void Player::HeadRelease(float deltaTime)
+{
+    _headKeyActive = false;
 }
 
 

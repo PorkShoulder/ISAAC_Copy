@@ -14,22 +14,6 @@ bool AnimationManager::Init()
     IsaacAnimationLoader::Register(this);   // 이미지 로딩 
     
 
-    /*CreateAnimation("LION_DANCE", eAnimTextureType::FRAME);
-    SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_000.png"));
-    SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_001.png"));
-    SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_002.png"));
-    SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_003.png"));
-    SetTexture("LION_DANCE", "LION_DANCE", TEXT("FrameAnim\\frame_004.png"));
-    for (int32 i = 0; i < 5; ++i)
-        AddFrame("LION_DANCE", 0.f, 0.f, 1.f, 1.f);*/
-
-    CreateAnimation("APEACH_IDLE", eAnimTextureType::SPRITE);
-    SetTexture("APEACH_IDLE", "APEACH_IDLE", TEXT("FrameAnim\\apeach_atlas.png"));
-
-    for (int32 i = 0; i < 18; ++i)
-        AddFrame("APEACH_IDLE", i * 480.f, 0, 480.f, 480.f);
-
-
 
     return true;
 }

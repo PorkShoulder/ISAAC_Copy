@@ -23,7 +23,7 @@ void MainMenuUI::Render(float deltaTime)
     if (ImGui::BeginMainMenuBar())
     {
         File();
-        View();
+        Editor();
 
         ImGui::EndMainMenuBar();
     }
@@ -56,7 +56,7 @@ void MainMenuUI::File()
     }
 }
 
-void MainMenuUI::View()
+void MainMenuUI::Editor()   // To do 타일맵 구현하기.
 {
     if (ImGui::BeginMenu("View"))
     {

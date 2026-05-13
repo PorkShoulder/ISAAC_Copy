@@ -21,8 +21,8 @@ OutLinerUI::~OutLinerUI()
 
 bool OutLinerUI::Init(const std::string & name)
 {
-    EditorUI::Init(name);
-    SetEnable(false);
+    EditorUI::Init(name);   // 부모 Init 호출 -> _name 설정, Active/Enable = true;
+    SetEnable(false);       // 바로 꺼둠 -> MainMenuUI에서 켜줘야 보임.
 
     return true;
 }
@@ -31,11 +31,11 @@ void OutLinerUI::Render(float deltaTime)
 {
     EditorUI::Render(deltaTime);
 
-    Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+    Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();    // GameEngine -> world -> CurLevel에서 현재 레벨을 가져온다.
     if (nullptr == level)
         return;
 
-    ImGui::Begin(_name.c_str());
+    ImGui::Begin(_name.c_str());    //OutLiner 이름의 ImGui 윈도우를 연다.
 
     auto& actors = level->GetActors();
     for (auto& actor : actors)

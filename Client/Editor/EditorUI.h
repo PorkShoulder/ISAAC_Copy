@@ -1,6 +1,10 @@
 #pragma once
 #include "Core/Object.h"
 
+//=================================
+// 모든 에디터 UI의 부모 클래스입니다.
+//=================================
+
 class EditorUI : public Object
 {
 public:

@@ -14,6 +14,6 @@ public:
 
 private:
     void File();
-    void View();
+    void Editor();
 };
 

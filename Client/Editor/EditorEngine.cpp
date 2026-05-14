@@ -12,6 +12,9 @@
 #include "MainMenuUI.h"
 #include "OutLinerUI.h"
 #include "InspectorUI.h"
+#include "PopUpUI.h"
+#include "SaveUI.h"
+#include "LoadUI.h"
 
 #include "Client.h"
 
@@ -128,4 +131,31 @@ bool EditorEngine::Run()
 
 
     return (int)msg.wParam;
+}
+
+void EditorEngine::Show(ePopUpType type, const std::string& msg)
+{
+    _popUp->Show(type, msg);
+}
+
+void EditorEngine::ShowError(const std::string& msg)
+{
+    _popUp->ShowError(msg);
+}
+
+void EditorEngine::ShowWarning(const std::string& msg)
+{
+    _popUp->ShowWarning(msg);
+
+}
+
+void EditorEngine::ShowInfo(const std::string& msg)
+{
+    _popUp->ShowInfo(msg);
+
+}
+
+void EditorEngine::ShowConfirm(const std::string& msg)
+{
+    _popUp->ShowConfirm(msg);
 }

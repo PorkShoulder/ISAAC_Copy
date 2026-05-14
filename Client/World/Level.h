@@ -35,6 +35,9 @@ public:
 
     virtual void Destroy() override;
 
+    virtual void Save(std::ofstream& file);
+    virtual void Load(std::ifstream& file);
+
     void AddTag(const std::string& tag, int32 id);
     void DeleteTag(Ptr<class Actor> actor);
 

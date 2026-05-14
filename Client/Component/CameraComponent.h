@@ -59,5 +59,7 @@ public:
     virtual void Render(float deltaTime) override;
 
     virtual void Destroy() override;
+
+    void OnWindowSizeChanged(int, int);
 };
 

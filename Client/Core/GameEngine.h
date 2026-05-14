@@ -27,7 +27,7 @@ private:
 	TCHAR		_titleName[256] = {};				// 윈도우 창 타이틀 이름
 	float		_clearColor[4] = { 1,1,1,1 };		// 바탕을 초기화 할 색상
 
-	
+	inline static std::function<void(int, int)> _onWindowSizeChanged;
 
 	Ptr<class World> _world;
 	Ptr<class Input> _input;
@@ -63,8 +63,13 @@ private:
 									WPARAM wParam,	// 메시지 부가 정보 1 (눌린 키 값)
 									LPARAM lParam);	// 메시지 부가 정보 2 (마우스 좌표)
 
-
-
+public:
+	template<typename T>
+	static void RegisterOnWindowSizeChangedCallback(T&& func)
+	{
+		_onWindowSizeChanged = std::forward<T>(func);
+	}
 
 };
 
+#define GET_WORLD GameEngine::Instance().GetWorld()

@@ -58,7 +58,7 @@ void MainMenuUI::File()
 
 void MainMenuUI::Editor()   // To do 타일맵 구현하기.
 {
-    if (ImGui::BeginMenu("View"))
+    if (ImGui::BeginMenu("Editor"))
     {
         if (ImGui::MenuItem("OutLiner"))
         {

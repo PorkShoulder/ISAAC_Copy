@@ -247,6 +247,30 @@ void Level::Destroy()
     DESTROY(_uiManager);
 }
 
+void Level::Save(std::ofstream& file)
+{
+    //todo : level save
+    for (auto& it : _actors)
+    {
+        if (!it.second->IsActive())
+            continue;
+
+        //it.second->Save(file);
+    }
+}
+
+void Level::Load(std::ifstream& file)
+{
+    //todo : level load
+    for (auto& it : _actors)
+    {
+        if (!it.second->IsActive())
+            continue;
+
+        //it.second->Load(file);
+    }
+}
+
 void Level::AddTag(const std::string& tag, int32 id)
 {
     _tagManager->Add(tag, id);

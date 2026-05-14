@@ -508,6 +508,15 @@
     </ClInclude>
     <ClInclude Include="Core\IsaacAnimationLoader.h" />
     <ClInclude Include="Object\IsaacPlayer.h" />
+    <ClInclude Include="Editor\LoadUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\PopUpUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\SaveUI.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -868,6 +877,15 @@
     </ClCompile>
     <ClCompile Include="Core\IsaacAnimationLoader.cpp" />
     <ClCompile Include="Object\IsaacPlayer.cpp" />
+    <ClCompile Include="Editor\LoadUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\PopUpUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\SaveUI.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

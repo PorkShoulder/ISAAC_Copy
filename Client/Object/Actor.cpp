@@ -65,7 +65,10 @@ void Actor::Render(float deltaTime)
 
 void Actor::DrawInspector()
 {
+    // SeparatorText 구분선 + 제목
     ImGui::SeparatorText("Actor");
+
+    //=======================================================
     ImGui::SeparatorText("World Transform");
 
     FVector3D worldPos = GetWorldPosition();
@@ -79,7 +82,7 @@ void Actor::DrawInspector()
     FVector3D worldScale = GetWorldScale();
     if (ImGui::DragFloat3("World Scale", &worldScale._x, 0.5f))
         SetWorldScale(worldScale);
-
+    //=======================================================
     ImGui::SeparatorText("Relative Transform");
 
     FVector3D relativePos = GetWorldPosition();
@@ -93,21 +96,26 @@ void Actor::DrawInspector()
     FVector3D relativeScale = GetWorldScale();
     if (ImGui::DragFloat3("Relative Scale", &relativeScale._x, 0.1f))
         SetRelativeScale(relativeScale);
-
+    //=======================================================
+    
+    // 그룹 묶기 Begin->End
+    //=======================================================
     ImGui::BeginGroup();
 
     bool active = IsActive();
     if (ImGui::Checkbox("Active", &active))
         SetActive(active);
 
-    ImGui::SameLine();
+    ImGui::SameLine(); // 같은 줄에 배치 
 
     bool enable = IsEnable();
     if (ImGui::Checkbox("Enable", &enable))
         SetEnable(enable);
 
     ImGui::EndGroup();
+    //=======================================================
 
+    // 액터 이름 변경.
     const char* buf = _name.c_str();
     if (ImGui::InputText("ActorName", const_cast<char*>(buf), 128))
         SetName(buf);
@@ -611,4 +619,4 @@ void Actor::Destroy()
             _actorComponents.clear();
     _componentFinder.clear();
 }
-
+//----------------------------------------------------------------------------

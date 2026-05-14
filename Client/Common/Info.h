@@ -130,6 +130,15 @@ enum class eObjectType
     END
 };
 
+enum class eActorType
+{
+    Actor,
+    Pawn,
+    Player,
+    Monster,
+    End
+};
+
 enum class eAssetType
 {
     MESH,

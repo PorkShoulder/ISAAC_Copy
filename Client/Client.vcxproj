@@ -260,8 +260,11 @@
     <ClInclude Include="Editor\imstb_textedit.h" />
     <ClInclude Include="Editor\imstb_truetype.h" />
     <ClInclude Include="Editor\InspectorUI.h" />
+    <ClInclude Include="Editor\LoadUI.h" />
     <ClInclude Include="Editor\MainMenuUI.h" />
     <ClInclude Include="Editor\OutLinerUI.h" />
+    <ClInclude Include="Editor\PopUpUI.h" />
+    <ClInclude Include="Editor\SaveUI.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputAction.h" />
@@ -425,8 +428,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Editor\InspectorUI.cpp" />
+    <ClCompile Include="Editor\LoadUI.cpp" />
     <ClCompile Include="Editor\MainMenuUI.cpp" />
     <ClCompile Include="Editor\OutLinerUI.cpp" />
+    <ClCompile Include="Editor\PopUpUI.cpp" />
+    <ClCompile Include="Editor\SaveUI.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\InputAction.cpp" />
     <ClCompile Include="Input\InputContext.cpp" />

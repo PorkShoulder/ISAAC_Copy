@@ -48,11 +48,12 @@ void OutLinerUI::Render(float deltaTime)
 void OutLinerUI::Destroy()
 {}
 
-void OutLinerUI::DrawActor(Ptr<class Actor> actor)
+void OutLinerUI::DrawActor(Ptr<class Actor> actor) // 
 {
     ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 
-    std::string label = std::to_string(actor->GetActorID()) ;
+    std::string label = std::format("{} | {}", actor->GetActorID(), actor->GetName());
+    //std::format("형식 문자열", 값1, 값2.....)
 
     Ptr<InspectorUI> inspector = EditorEngine::Instance().FindEditorUI<InspectorUI>("Inspector");
     if (!inspector) 

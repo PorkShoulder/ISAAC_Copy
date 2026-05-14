@@ -20,11 +20,14 @@ protected:
     std::string _name;
     int32 _componentID = 0;             //컴포넌트 발급용 ID
     int32 _id = -1;                     //액터의 ID
+    std::set<std::string> _tags;        //태그(액터의 별명 같은걸 붙여주기)
+    eActorType _type = eActorType::Actor;
+
     Ptr<class SceneComponent> _root;
     Weak<class Level> _level;
     std::map<int, Ptr<class ActorComponent>> _actorComponents; //액터 컴포넌트 목록
     std::unordered_map<std::string, int> _componentFinder;      //컴포넌트를 찾기 위한 자료구조
-    std::set<std::string> _tags;    //태그(액터의 별명 같은걸 붙여주기)
+    
     //ex) 몬스터, 고블린, 엘리트 등급
     //몬스터라는 애들을 전부 찾아올수 있게
     //혹은 해당 액터가 몬스터인지? 고블린인지?

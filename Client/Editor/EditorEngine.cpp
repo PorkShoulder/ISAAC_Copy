@@ -15,6 +15,7 @@
 #include "PopUpUI.h"
 #include "SaveUI.h"
 #include "LoadUI.h"
+#include "TileMapUI.h"
 
 #include "Client.h"
 
@@ -37,6 +38,7 @@ bool EditorEngine::Init()
     CreateEditorUI<MainMenuUI>("MainMenu");
     CreateEditorUI<OutLinerUI>("OutLiner");
     CreateEditorUI<InspectorUI>("Inspector");
+    CreateEditorUI<TileMapUI>("TileMap");
 
     
     return true;

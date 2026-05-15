@@ -82,20 +82,8 @@
     <Filter Include="10.Render">
       <UniqueIdentifier>{df8162e8-b7e1-44ed-89bf-29dab64740ff}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\Animation">
-      <UniqueIdentifier>{e18a8393-ac33-4626-bc64-979121d6f997}</UniqueIdentifier>
-    </Filter>
     <Filter Include="01.Core\Asset\Animation">
       <UniqueIdentifier>{4f91b197-b782-4e7f-98d5-204831e02ec5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\SceneComponent">
-      <UniqueIdentifier>{fe0929e7-f1d2-4098-8779-0ca644c6ba54}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\SceneComponent\Collider">
-      <UniqueIdentifier>{9ffe7761-8e19-4baa-9955-8c4caf6f6468}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\Tile">
-      <UniqueIdentifier>{ea4a2647-990e-45f4-ba40-538ffb5fc18b}</UniqueIdentifier>
     </Filter>
     <Filter Include="09.Shader\StructBuffer">
       <UniqueIdentifier>{86e5c176-916e-46b6-875b-2a8b2e78fc6a}</UniqueIdentifier>
@@ -103,17 +91,44 @@
     <Filter Include="01.Core\Font">
       <UniqueIdentifier>{471072c5-5dcc-4f37-9b4c-51fbb3df6b2e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor">
+    <Filter Include="11.Editor">
       <UniqueIdentifier>{e1de5080-27ce-4ee8-a511-59f3f11b4506}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\EditorUI">
+    <Filter Include="11.Editor\EditorUI">
       <UniqueIdentifier>{d3b4c2f4-3b0b-4ef4-b315-0771c5782e19}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Imgui">
+    <Filter Include="11.Editor\Imgui">
       <UniqueIdentifier>{f504b744-4749-400a-8a2b-4b1ea8467721}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Editor\Interface">
+    <Filter Include="11.Editor\Interface">
       <UniqueIdentifier>{fbd93420-5d1e-4c65-8d8f-d3935c10cef6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="12.UI">
+      <UniqueIdentifier>{69b50d97-771a-493e-9cb5-6990489bad0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\05.Tile">
+      <UniqueIdentifier>{ea4a2647-990e-45f4-ba40-538ffb5fc18b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-01..Animation">
+      <UniqueIdentifier>{e18a8393-ac33-4626-bc64-979121d6f997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-02.">
+      <UniqueIdentifier>{4541e56a-5043-4f73-a09d-742dd1244169}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-04.SceneComponent">
+      <UniqueIdentifier>{fe0929e7-f1d2-4098-8779-0ca644c6ba54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-04.SceneComponent\Collider">
+      <UniqueIdentifier>{9ffe7761-8e19-4baa-9955-8c4caf6f6468}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-04.SceneComponent\Mesh">
+      <UniqueIdentifier>{dd2a37a8-db11-4afe-8d25-0fdf0e630e28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-04.SceneComponent\Camera">
+      <UniqueIdentifier>{7bd708d0-5f4a-4ba1-8ee5-2b1b19a9ed99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\04-03.Actor">
+      <UniqueIdentifier>{7ad3c180-8368-42b0-a0ea-28037aa68f26}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -249,19 +264,10 @@
     <ClInclude Include="Component\Component.h">
       <Filter>04.Component</Filter>
     </ClInclude>
-    <ClInclude Include="Component\ActorComponent.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
     <ClInclude Include="World\Level.h">
       <Filter>08.World</Filter>
     </ClInclude>
     <ClInclude Include="Component\SceneComponent.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\CameraComponent.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\MeshComponent.h">
       <Filter>04.Component</Filter>
     </ClInclude>
     <ClInclude Include="Component\SpriteComponent.h">
@@ -302,9 +308,6 @@
     </ClInclude>
     <ClInclude Include="Controller\PlayerController.h">
       <Filter>06.Controller</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\AIComponent.h">
-      <Filter>04.Component</Filter>
     </ClInclude>
     <ClInclude Include="Controller\AIController.h">
       <Filter>06.Controller</Filter>
@@ -352,7 +355,7 @@
       <Filter>01.Core\Asset\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Component\Animation2D.h">
-      <Filter>04.Component\Animation</Filter>
+      <Filter>04.Component\04-01..Animation</Filter>
     </ClInclude>
     <ClInclude Include="Shader\AnimCBuffer.h">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -379,19 +382,19 @@
       <Filter>05.Collision</Filter>
     </ClInclude>
     <ClInclude Include="Component\AABBCollisionComponent.h">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\CollisionComponent.h">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\OBBCollisionComponent.h">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\SphereCollisionComponent.h">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\TileComponent.h">
-      <Filter>04.Component\Tile</Filter>
+      <Filter>04.Component\05.Tile</Filter>
     </ClInclude>
     <ClInclude Include="Shader\TileMapCBuffer.h">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -411,18 +414,7 @@
     <ClInclude Include="Shader\TileSBuffer.h">
       <Filter>09.Shader\StructBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Component\AIBoard.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\AIState.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Component\AITransition.h">
-      <Filter>04.Component</Filter>
-    </ClInclude>
     <ClInclude Include="Component\MachineBase.h" />
-    <ClInclude Include="UI\Button.h" />
-    <ClInclude Include="UI\Image.h" />
     <ClInclude Include="UI\ProgressBar.h" />
     <ClInclude Include="UI\TextBlock.h" />
     <ClInclude Include="UI\UIManager.h" />
@@ -451,43 +443,43 @@
       <Filter>01.Core\Font</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorUI.h">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imgui.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\MainMenuUI.h">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\OutLinerUI.h">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\InspectorUI.h">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imconfig.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imgui_impl_dx11.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imgui_impl_win32.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imgui_internal.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imstb_rectpack.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imstb_textedit.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\imstb_truetype.h">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorEngine.h">
-      <Filter>Editor\Interface</Filter>
+      <Filter>11.Editor\Interface</Filter>
     </ClInclude>
     <ClInclude Include="Object\Bullet.h">
       <Filter>03.Object</Filter>
@@ -495,7 +487,6 @@
     <ClInclude Include="Object\RotBullet.h">
       <Filter>03.Object</Filter>
     </ClInclude>
-    <ClInclude Include="Component\Tile.h" />
     <ClInclude Include="Object\TileMap.h" />
     <ClInclude Include="Object\TestActor.h">
       <Filter>03.Object</Filter>
@@ -509,13 +500,46 @@
     <ClInclude Include="Core\IsaacAnimationLoader.h" />
     <ClInclude Include="Object\IsaacPlayer.h" />
     <ClInclude Include="Editor\LoadUI.h">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\PopUpUI.h">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\SaveUI.h">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\TileMapUI.h">
+      <Filter>11.Editor\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Button.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Image.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\Tile.h">
+      <Filter>04.Component\05.Tile</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\AIBoard.h">
+      <Filter>04.Component\04-02.</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\AIComponent.h">
+      <Filter>04.Component\04-02.</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\AIState.h">
+      <Filter>04.Component\04-02.</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\AITransition.h">
+      <Filter>04.Component\04-02.</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\ActorComponent.h">
+      <Filter>04.Component\04-03.Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MeshComponent.h">
+      <Filter>04.Component\04-04.SceneComponent\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\CameraComponent.h">
+      <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -621,19 +645,10 @@
     <ClCompile Include="Component\Component.cpp">
       <Filter>04.Component</Filter>
     </ClCompile>
-    <ClCompile Include="Component\ActorComponent.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
     <ClCompile Include="World\Level.cpp">
       <Filter>08.World</Filter>
     </ClCompile>
     <ClCompile Include="Component\SceneComponent.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\CameraComponent.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\MeshComponent.cpp">
       <Filter>04.Component</Filter>
     </ClCompile>
     <ClCompile Include="Component\SpriteComponent.cpp">
@@ -674,9 +689,6 @@
     </ClCompile>
     <ClCompile Include="Controller\PlayerController.cpp">
       <Filter>06.Controller</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\AIComponent.cpp">
-      <Filter>04.Component</Filter>
     </ClCompile>
     <ClCompile Include="Controller\AIController.cpp">
       <Filter>06.Controller</Filter>
@@ -724,7 +736,7 @@
       <Filter>01.Core\Asset\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Component\Animation2D.cpp">
-      <Filter>04.Component\Animation</Filter>
+      <Filter>04.Component\04-01..Animation</Filter>
     </ClCompile>
     <ClCompile Include="Shader\AnimCBuffer.cpp">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -751,19 +763,19 @@
       <Filter>05.Collision</Filter>
     </ClCompile>
     <ClCompile Include="Component\AABBCollisionComponent.cpp">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\CollisionComponent.cpp">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\OBBCollisionComponent.cpp">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\SphereCollisionComponent.cpp">
-      <Filter>04.Component\SceneComponent\Collider</Filter>
+      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\TileComponent.cpp">
-      <Filter>04.Component\Tile</Filter>
+      <Filter>04.Component\05.Tile</Filter>
     </ClCompile>
     <ClCompile Include="Shader\TileMapCBuffer.cpp">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -783,18 +795,7 @@
     <ClCompile Include="Shader\TileSBuffer.cpp">
       <Filter>09.Shader\StructBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Component\AIBoard.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\AIState.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Component\AITransition.cpp">
-      <Filter>04.Component</Filter>
-    </ClCompile>
     <ClCompile Include="Component\MachineBase.cpp" />
-    <ClCompile Include="UI\Button.cpp" />
-    <ClCompile Include="UI\Image.cpp" />
     <ClCompile Include="UI\ProgressBar.cpp" />
     <ClCompile Include="UI\TextBlock.cpp" />
     <ClCompile Include="UI\UIManager.cpp" />
@@ -823,40 +824,40 @@
       <Filter>01.Core\Font</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorUI.cpp">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\MainMenuUI.cpp">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\OutLinerUI.cpp">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\InspectorUI.cpp">
-      <Filter>Editor\EditorUI</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_demo.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_draw.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_impl_dx11.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_impl_win32.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_tables.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\imgui_widgets.cpp">
-      <Filter>Editor\Imgui</Filter>
+      <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorEngine.cpp">
-      <Filter>Editor\Interface</Filter>
+      <Filter>11.Editor\Interface</Filter>
     </ClCompile>
     <ClCompile Include="Object\Bullet.cpp">
       <Filter>03.Object</Filter>
@@ -864,7 +865,6 @@
     <ClCompile Include="Object\RotBullet.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
-    <ClCompile Include="Component\Tile.cpp" />
     <ClCompile Include="Object\TileMap.cpp" />
     <ClCompile Include="Object\TestActor.cpp">
       <Filter>03.Object</Filter>
@@ -878,13 +878,46 @@
     <ClCompile Include="Core\IsaacAnimationLoader.cpp" />
     <ClCompile Include="Object\IsaacPlayer.cpp" />
     <ClCompile Include="Editor\LoadUI.cpp">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\PopUpUI.cpp">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\SaveUI.cpp">
-      <Filter>Editor</Filter>
+      <Filter>11.Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\TileMapUI.cpp">
+      <Filter>11.Editor\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Button.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Image.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\Tile.cpp">
+      <Filter>04.Component\05.Tile</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\AIBoard.cpp">
+      <Filter>04.Component\04-02.</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\AIComponent.cpp">
+      <Filter>04.Component\04-02.</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\AIState.cpp">
+      <Filter>04.Component\04-02.</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\AITransition.cpp">
+      <Filter>04.Component\04-02.</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\ActorComponent.cpp">
+      <Filter>04.Component\04-03.Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MeshComponent.cpp">
+      <Filter>04.Component\04-04.SceneComponent\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\CameraComponent.cpp">
+      <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

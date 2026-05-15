@@ -48,6 +48,7 @@ void SaveUI::Destroy()
 
 void SaveUI::Save(const std::string& fileName)
 {
+    // 경로 확인 + 파일 이름 검증
     auto cachePath = DirectoryManager::Instance().GetCachePath("Resources\\Level");
     if (!cachePath.has_value() || fileName.empty())
     {
@@ -55,6 +56,7 @@ void SaveUI::Save(const std::string& fileName)
         return;
     }
 
+    // 중복 파일 확인.
     std::filesystem::path fullPath;
     if (DirectoryManager::Instance().GetFile(cachePath.value(), fileName, OUT fullPath))
     {
@@ -62,14 +64,14 @@ void SaveUI::Save(const std::string& fileName)
         EditorEngine::Instance().ShowError("Duplicate FileName");
         return;
     }
-
+    // 파일 열기
     std::ofstream saveFile(fullPath, std::ios::binary);
     if (saveFile.fail())
     {
         EditorEngine::Instance().ShowError("File Open Error");
         return;
     }
-
+    // Level 확인 + 저장
     Ptr<Level> level = GET_WORLD->GetCurLevel();
     if (!level)
     {

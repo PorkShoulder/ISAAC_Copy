@@ -265,6 +265,7 @@
     <ClInclude Include="Editor\OutLinerUI.h" />
     <ClInclude Include="Editor\PopUpUI.h" />
     <ClInclude Include="Editor\SaveUI.h" />
+    <ClInclude Include="Editor\TileMapUI.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Input\Input.h" />
     <ClInclude Include="Input\InputAction.h" />
@@ -433,6 +434,7 @@
     <ClCompile Include="Editor\OutLinerUI.cpp" />
     <ClCompile Include="Editor\PopUpUI.cpp" />
     <ClCompile Include="Editor\SaveUI.cpp" />
+    <ClCompile Include="Editor\TileMapUI.cpp" />
     <ClCompile Include="Input\Input.cpp" />
     <ClCompile Include="Input\InputAction.cpp" />
     <ClCompile Include="Input\InputContext.cpp" />

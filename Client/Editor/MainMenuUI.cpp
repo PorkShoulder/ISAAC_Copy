@@ -4,6 +4,7 @@
 #include "EditorEngine.h"
 #include "OutLinerUI.h"
 #include "InspectorUI.h"
+#include "TileMapUI.h"
 
 MainMenuUI::MainMenuUI()
 {}
@@ -73,6 +74,15 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
             if (inspector)
                 inspector->SetEnable(true);
         }
+
+        if (ImGui::MenuItem("TileMap_Editor"))
+        {
+            Ptr<TileMapUI> tilemap = EditorEngine::Instance().FindEditorUI<TileMapUI>("TileMap_Editor");
+            if (tilemap)
+                tilemap->SetEnable(true);
+
+        }
+
 
         ImGui::EndMenu();
     }

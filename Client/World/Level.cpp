@@ -23,21 +23,6 @@
 #include "UI/ProgressBar.h"
 #include "UI/TextBlock.h"
 
-/*
-*
-여기서 갤러그 만들기
-1. 적비행기 처음에 5기 나옴
-2. 없어지면 다시 5기
-3. 보스는 유도미사일 발사(5초 후에 터짐)
-
-플레이어 쏜 총알 반경(거리) 1 안에 적이 있으면
-적은 없어짐
-
-적이 쏜 총알 반경(거리) 1안에 있으면 플레이어 피 -1
-
-모든 오브젝트의 z 포지션은 10
-
-*/
 
 Level::Level()
 {
@@ -65,9 +50,10 @@ bool Level::Init(const std::string& path)
     
     // 초기값 설정
     FVector3D scale = FVector3D(1.f, 1.f, 1.f);
-    FVector3D pos = FVector3D(10.f, 0.f, 1.f);
+    FVector3D pos = FVector3D(0.f, 0.f, 1.f);
     FRotator rot = FRotator(0.f, 0.f, 0.f);
-    Ptr<Player> t1 = SpawnActor<Player>("Body", pos, scale, rot);
+
+    Ptr<Player> t1 = SpawnActor<Player>("ISAAC", pos, scale, rot); // 플레이어의 이름 설정
     if (t1) 
     {
         t1->AddTags("Player", "Human"); 
@@ -84,7 +70,7 @@ bool Level::Init(const std::string& path)
 
     FVector3D pos2(0, 0, 1);
     FVector3D scale2 = FVector3D(30.f, 30.f, 30.f);
-    SpawnActor<TileMap>("TileMap", pos2, scale1, rot1);
+    SpawnActor<TileMap>("TileMap", pos2, scale2, rot1);
 
 
     auto ui_img = _uiManager->CreateWidget<Image>("ui_Image");
@@ -125,24 +111,6 @@ bool Level::Init(const std::string& path)
     ui_bar->SetPercent(0.2f);
 
     _uiManager->AddToViewport(ui_bar);
-
-
-    /*auto ui_text = _uiManager->CreateWidget<TextBlock>("ui_text");
-    ui_text->SetPos(FVector2D(450.f, 50.f));
-    ui_text->SetSize(FVector2D(300.f, 100.f));
-    ui_text->SetFont("GraceSerif1");
-    ui_text->SetText(L"우아한세리프!");
-
-    _uiManager->AddToViewport(ui_text);
-
-    auto ui_text2 = _uiManager->CreateWidget<TextBlock>("ui_text2");
-    ui_text2->SetPos(FVector2D(800.f, 50.f));
-    ui_text2->SetSize(FVector2D(300.f, 100.f));
-    ui_text2->SetFont("Maplestory OTF Light");
-    ui_text2->SetText(L"메이플스토리!");
-
-    _uiManager->AddToViewport(ui_text2);*/
-
 
     return true;
 }

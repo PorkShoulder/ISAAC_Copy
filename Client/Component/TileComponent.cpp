@@ -144,6 +144,7 @@ void TileComponent::RenderOutLine()
     {
         if (_bTileLineInstRefresh)
         {
+            _tileLineSBuffer->Clear();
             for (int32 i = 0; i < _countY; ++i)
             {
                 for (int32 j = 0; j < _countX; ++j)
@@ -267,6 +268,28 @@ bool TileComponent::Init(int32 id, const std::string& name, Ptr<class Actor> own
 void TileComponent::Tick(float deltaTime)
 {
     SceneComponent::Tick(deltaTime);
+
+    Ptr<Actor> owner = GetOwner();
+    if (!owner)
+        return;
+    FVector3D curOwnerPos = owner->GetWorldPosition();
+
+    if (!_ownerPosInit)
+    {
+        _prevOwnerPos = curOwnerPos;
+        _ownerPosInit = true;
+        return;
+    }
+
+    if (_prevOwnerPos._x != curOwnerPos._x ||
+        _prevOwnerPos._y != curOwnerPos._y ||
+        _prevOwnerPos._z != curOwnerPos._z)
+    {
+        SetTileInstRefresh(true);
+        SetTileLineInstRefresh(true);
+
+        _prevOwnerPos = curOwnerPos;
+    }
 }
 
 void TileComponent::Collision(float deltaTiem)

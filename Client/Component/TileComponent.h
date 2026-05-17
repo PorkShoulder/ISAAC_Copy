@@ -20,9 +20,9 @@ protected:
     std::vector<Ptr<Tile>> _tiles;
 
     //타일 하나의 크기
-    FVector2D _tileSize;
+    FVector2D _tileSize = FVector2D(1.f, 1.f);
 
-    //전체 크기
+    //전체 크기 `
     FVector2D _mapSize;
 
     //타일의 총 X축 개수
@@ -72,6 +72,10 @@ protected:
 
     //외곽선 인스턴싱용 쉐이더
     Ptr<class Shader> _tileLineInstanceShader;
+
+    //이전 타일 위치 
+    FVector3D _prevOwnerPos = FVector3D(0.f, 0.f, 0.f);
+    bool _ownerPosInit = false;
 
     bool _useInstancing = true;
     bool _bTileInstRefresh = false;

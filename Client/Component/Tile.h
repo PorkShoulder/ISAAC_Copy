@@ -42,6 +42,7 @@ public:
     const int32 GetTextureFrame() const;
     void SetTextureFrame(int32 frame);
 
+    
 
     virtual void Destroy() override;
 };

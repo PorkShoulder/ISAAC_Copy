@@ -742,6 +742,7 @@ void SceneComponent::UpdateTransform()
 
     _matrix._world.ExtractPosition(_world._position);
     _matrix._world.ExtractEuler(_world._rotation);
+    //_world._rotation = _relative._rotation;
     _matrix._world.ExtractScale(_world._scale);
 
     for (auto& it : _childs)

@@ -75,9 +75,9 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
                 inspector->SetEnable(true);
         }
 
-        if (ImGui::MenuItem("TileMap_Editor"))
+        if (ImGui::MenuItem("Room_Editor"))
         {
-            Ptr<TileMapUI> tilemap = EditorEngine::Instance().FindEditorUI<TileMapUI>("TileMap_Editor");
+            Ptr<TileMapUI> tilemap = EditorEngine::Instance().FindEditorUI<TileMapUI>("Room_Editor");
             if (tilemap)
                 tilemap->SetEnable(true);
 

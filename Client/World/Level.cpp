@@ -68,9 +68,10 @@ bool Level::Init(const std::string& path)
     m1->AddTags("Monster", "Human");
     m1->SetTarget(t1);
 
-    FVector3D pos2(0, 0, 1);
-    FVector3D scale2 = FVector3D(30.f, 30.f, 30.f);
-    SpawnActor<TileMap>("TileMap", pos2, scale2, rot1);
+    //// 에디터쪽으로 이동 예정.
+    //FVector3D pos2(0, 0, 1);
+    //FVector3D scale2 = FVector3D(30.f, 30.f, 30.f);
+    //SpawnActor<TileMap>("TileMap", pos2, scale2, rot1);
 
 
     auto ui_img = _uiManager->CreateWidget<Image>("ui_Image");

@@ -16,16 +16,9 @@ bool TileMap::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     Actor::Init(id, pos, scale, rot, name);
 
     _tileComponent = CreateSceneComponent<TileComponent>("Tile");
+    SetRootComponent(_tileComponent);
     _tileComponent->SetTexture("TileSet", TEXT("ISAAC_Map\\room\\0_library.png"));
 
-    SetRootComponent(_tileComponent);
-
-    _tileComponent->CreateTile(18, 12, FVector2D(52.f, 52.f), 0);
-    _tileComponent->AddTileFrame(0.f, 0.f, 52.f, 52.f);
-    _tileComponent->AddTileFrame(52.f, 0.f, 52.f, 52.f);
-    _tileComponent->AddTileFrame(104.f, 0.f, 52.f, 52.f);
-    _tileComponent->AddTileFrame(156.f, 0.f, 52.f, 52.f);
-    _tileComponent->AddTileFrame(208.f, 0.f, 52.f, 52.f);
 
     return true;
 }
@@ -92,5 +85,5 @@ void TileMap::ChangeTileType(const FVector2D& pos)
         tile->SetTileType(eTileType::NORMAL);
 
     _tileComponent->SetTileLineInstRefresh(true);
-    //_tileComponent->SetIn
+  
 }

@@ -20,5 +20,8 @@ public:
 
     void ChangeTileTexture(const FVector2D& pos);
     void ChangeTileType(const FVector2D& pos);
+
+    Ptr<TileComponent> GetTileComponent() const { return _tileComponent; }
+
 };
 

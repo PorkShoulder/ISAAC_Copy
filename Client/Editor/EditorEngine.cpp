@@ -38,7 +38,7 @@ bool EditorEngine::Init()
     CreateEditorUI<MainMenuUI>("MainMenu");
     CreateEditorUI<OutLinerUI>("OutLiner");
     CreateEditorUI<InspectorUI>("Inspector");
-    CreateEditorUI<TileMapUI>("TileMap");
+    CreateEditorUI<TileMapUI>("Room_Editor");
 
     
     return true;

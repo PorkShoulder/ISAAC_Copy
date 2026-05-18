@@ -89,13 +89,7 @@ void EditorEngine::Render(float deltaTime)
     RenderManager::Instance().Render(deltaTime);
     GameEngine::Instance().GetWorld()->RenderUI(deltaTime);
 
-    //todo : editorUI begin Render
-
-    ImGui::Begin("Test");
-
-    ImGui::Text("TEST ..! ");
-
-    ImGui::End();
+   
 
     for (auto& it : _edits)
     {

@@ -3,19 +3,33 @@
 
 class TileMapUI : public EditorUI
 {
+	//class TileMap;
+
 public:
 	TileMapUI();
 	virtual ~TileMapUI();
 protected:
-	
+	// 만들 타일맵 크기/ 선택된 타일맵
 	int _countX = 1;
 	int _countY = 1;
-	float _tileSize[2] = { 52.f, 52.f };
+	float _tileSize[2] = { 52.f, 52.f }; // 타일 크기 정수로 바꿔야하나? 
+	//std::vector<Ptr<class TileMap>> _targetTileMap;
 	Ptr<class TileMap> _targetTileMap;
 
-public:
-	
+	// 선택한 텍스처 및 프레임
+	std::string _selectedTextureName;
+	// 선택한 텍스처 객체
+	Ptr<class Texture> _selectedTexture;
+	//텍스처 아틀라스에서 선택한 프레임의 시작 좌표
+	int _selectedFrameX = -1;
+	int _selectedFrameY = -1;
+	//한 프레임의 크기
+	int _frameWidth = 52;
+	int _frameHeight = 52;
+	// 현재 선택된 프레임 번호
+	int _selectedFrameIndex = 0;
 
+public:
 	virtual bool Init(const std::string& name) override; 
 	virtual void Render(float deltaTime)override;
 	virtual void Destroy() override;

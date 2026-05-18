@@ -65,22 +65,37 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
         {
             Ptr<OutLinerUI> outliner = EditorEngine::Instance().FindEditorUI<OutLinerUI>("OutLiner");
             if (outliner)
+            {
                 outliner->SetEnable(true);
+                outliner->SetOpen(true);
+            }
+             
+
         }
 
         if (ImGui::MenuItem("Inspector"))
         {
             Ptr<InspectorUI> inspector = EditorEngine::Instance().FindEditorUI<InspectorUI>("Inspector");
             if (inspector)
+            {
                 inspector->SetEnable(true);
+                inspector->SetOpen(true);
+            
+            }    
+
+            
         }
 
         if (ImGui::MenuItem("Room_Editor"))
         {
             Ptr<TileMapUI> tilemap = EditorEngine::Instance().FindEditorUI<TileMapUI>("Room_Editor");
             if (tilemap)
+            {
                 tilemap->SetEnable(true);
-
+                tilemap->SetOpen(true);
+            }
+             
+            
         }
 
 

@@ -35,7 +35,10 @@ void OutLinerUI::Render(float deltaTime)
     if (nullptr == level)
         return;
 
-    ImGui::Begin(_name.c_str());    //OutLiner 이름의 ImGui 윈도우를 연다.
+    if (!IsOpen())
+        return;
+    bool EditorOnOff = BeginWindow(); 
+    //ImGui::Begin(_name.c_str());    //OutLiner 이름의 ImGui 윈도우를 연다.
 
     auto& actors = level->GetActors();
     for (auto& actor : actors)

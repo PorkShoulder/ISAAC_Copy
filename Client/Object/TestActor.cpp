@@ -18,62 +18,12 @@ bool TestActor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, con
     meshComp->SetMesh("TexRect");
     meshComp->AddTexture(0, "apeach", 0);
 
-    /*meshComp->SetMesh("Triangle");
-    meshComp->SetShader("ColorMeshShader");*/
+    meshComp->SetMesh("Triangle");
+    meshComp->SetShader("ColorMeshShader");
 
     SetRootComponent(meshComp);
 
-    //Ptr<InputComponent> inputComp = CreateActorComponent<InputComponent>("Input");
-
-    ////switch 
-    //auto switchAction = InputSystem::Instance().FindOrAddInputAction("switch");
-
-    ////이런거 사용하는거는
-    ////예를 들어 공격상태일때는 F키가 공격인데
-    ////NPC랑 붙어있을때는 F키가 상호작용키
-
-
-    ////게임
-    ////서있을때, 말 탔을때
-
-
-    ////moveContext
-    //auto moveContext = InputSystem::Instance().FindOrAddInputContext("MOVE_CONTEXT");
-    //auto moveRight = InputSystem::Instance().FindOrAddInputAction("MOVE_RIGHT");
-    //auto moveLeft = InputSystem::Instance().FindOrAddInputAction("MOVE_Left");
-    //moveContext->BindInputAction(moveRight, 'D');
-    //moveContext->BindInputAction(moveLeft, 'A');
-    //moveContext->BindInputAction(switchAction, VK_TAB);
-
-    ////scaleContext
-    //auto scaleContext = InputSystem::Instance().FindOrAddInputContext("SCALE_CONTEXT");
-    //auto scaleRight = InputSystem::Instance().FindOrAddInputAction("SCALE_RIGHT");
-    //auto scaleLeft = InputSystem::Instance().FindOrAddInputAction("SCALE_Left");
-    //scaleContext->BindInputAction(scaleRight, 'D');
-    //scaleContext->BindInputAction(scaleLeft, 'A');
-    //scaleContext->BindInputAction(switchAction, VK_TAB);
-
-    //inputComp->AddInputContext(moveContext->GetName());
-    //inputComp->AddInputContext(scaleContext->GetName());
-
-    //inputComp->BindAction(moveContext->GetName(), moveRight->GetName(), INPUT_TYPE::HOLD, this, &TestActor::MoveRight);
-    //inputComp->BindAction(moveContext->GetName(), moveLeft->GetName(), INPUT_TYPE::HOLD, this, &TestActor::MoveLeft);
-
-    //inputComp->BindAction(scaleContext->GetName(), scaleRight->GetName(), INPUT_TYPE::HOLD, this, &TestActor::ScaleRight);
-    //inputComp->BindAction(scaleContext->GetName(), scaleLeft->GetName(), INPUT_TYPE::HOLD, this, &TestActor::ScaleLeft);
-
-    //Ptr<TestActor> mine = This<TestActor>();
-    //inputComp->BindAction(moveContext->GetName(), switchAction->GetName(), INPUT_TYPE::DOWN, [mine](float deltaTime) 
-    //    {
-    //        Ptr<InputComponent> inputComp = mine->FindComponent<InputComponent>("Input");
-    //        inputComp->SetActiveContext("SCALE_CONTEXT");
-    //    });
-
-    //inputComp->BindAction(scaleContext->GetName(), switchAction->GetName(), INPUT_TYPE::DOWN, [mine](float deltaTime)
-    //    {
-    //        Ptr<InputComponent> inputComp = mine->FindComponent<InputComponent>("Input");
-    //        inputComp->SetActiveContext("MOVE_CONTEXT");
-    //    });
+   
 
 
 

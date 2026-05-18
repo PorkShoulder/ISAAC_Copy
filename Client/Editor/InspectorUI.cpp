@@ -23,8 +23,12 @@ bool InspectorUI::Init(const std::string& name)
 void InspectorUI::Render(float deltaTime)
 {
     EditorUI::Render(deltaTime);
+    if (!IsOpen())
+        return;
+    bool EditorOnOff = BeginWindow();
 
-    ImGui::Begin(_name.c_str());
+
+    //ImGui::Begin(_name.c_str());
 
     if (!_target)
     {

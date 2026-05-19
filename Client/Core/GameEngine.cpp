@@ -264,10 +264,14 @@ LRESULT GameEngine::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 	break;
 	case WM_SIZE:
 	{
-		int width = LOWORD(lParam);
-		int height = HIWORD(lParam);
-		if (_onWindowSizeChanged)
-			_onWindowSizeChanged(width, height);
+		if (wParam != SIZE_MINIMIZED)
+		{
+			UINT width = LOWORD(lParam);
+			UINT height = HIWORD(lParam);
+			Device::Instance().OnResize(width, height);
+		}
+		return 0;
+		
 	}
 	break;
 	default:

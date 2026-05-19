@@ -34,8 +34,6 @@ void TileMapUI::Render(float deltaTime)
 {
 	EditorUI::Render(deltaTime);
     
-    /*if (!IsOpen())
-        return;*/
     bool EditorOnOff = BeginWindow(); //"Room_Editor"
 
     if (EditorOnOff)
@@ -136,44 +134,99 @@ void TileMapUI::Render(float deltaTime)
 
         // 4. 프레임 조절.
         ImGui::SeparatorText("Tile Frame");
+        // 프레임 하나의 크기 조절
         ImGui::DragInt("Frame Width", & _frameWidth, 1.f, 1, 512);
         ImGui::DragInt("Frame Height", & _frameHeight, 1.f, 1, 512);
+
+        // 선택된 타일맵이 있을때만 미리보기 표시 -> To do텍스처 선택으로 변경예정
         if (_targetTileMap)
-        {
+        {   // 타일맵에서 TileComponent를 가져온다
             Ptr<TileComponent> tileComp = _targetTileMap->GetTileComponent();
             if (tileComp)
-            {
+            {   // TileComponent가 사용하는 텍스처를 가져온다.
                 Ptr<Texture> tex = tileComp->GetTexture();
                 if (tex)
-                {
+                {   // 텍스처의 첫번째 이미지 정보 (SRV, 크기 등)
                     const FTextureInfo* texInfo = tex->GetTexture(0);
                     if (texInfo && texInfo->_srv)
-                    {
+                    {   // DX11dml SRV포인터를 ImGui가 쓸 수 있는 ImTexture로 캐스팅
                         ImTextureID texID = (ImTextureID)texInfo->_srv.Get();
-                        
+                        // 원본 텍스처의 실제 픽셀 크기
                         float texW = (float)texInfo->_width;
                         float texH = (float)texInfo->_height;
-
-                        float previewW = 300.f;
+                        // 미리보기 이미지 크기
+                        float previewW = ImGui::GetContentRegionAvail().x;
                         float previewH = previewW * (texH / texW);
-                        
+                        // ImGui 윈도우 내에서 이미지가 그려질 좌측 상단 좌표
                         ImVec2 imagePos = ImGui::GetCursorScreenPos();
-                        
+                        // 텍스처 미리보기 크기로 축소해서 표기
                         ImGui::Image(texID, ImVec2(previewW, previewH));
-                        
-                        if (ImGui::IsItemClicked())
-                        {
-                            ImVec2 mousePos = ImGui::GetMousePos();
+                       
+                        // 이미지 위에 그리드 그리기
+                        ImDrawList* drawList = ImGui::GetWindowDrawList();
+                        float scaleX = previewW / texW;
+                        float scaleY = previewH / texH;
 
+                        // 그리드 색상
+                        ImU32 gridColor = IM_COL32(0, 255, 0, 180);
+                        //세로선
+                        for (float x = 0.f; x <= texW; x += _frameWidth)
+                        {
+                            float screenX = imagePos.x + x * scaleX;
+                            drawList->AddLine(
+                                ImVec2(screenX, imagePos.y),
+                                ImVec2(screenX, imagePos.y + previewH),
+                                gridColor, 
+                                1.f
+                            );
+                        }
+                        // 가로선
+                        for (float y = 0.f; y <= texH; y += _frameHeight)
+                        {
+                            float screenY = imagePos.y + y * scaleY;
+
+                            drawList->AddLine(
+                                ImVec2(imagePos.x, screenY),
+                                ImVec2(imagePos.x + previewW, screenY),
+                                gridColor,
+                                1.f
+                            );
+                        }
+                        //프레임 강조
+                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        {
+                            ImVec2 rectMin(
+                                imagePos.x + _selectedFrameX * scaleX,
+                                imagePos.y + _selectedFrameY * scaleY
+                            );
+
+                            ImVec2 rectMax(
+                                imagePos.x + (_selectedFrameX + _frameWidth) * scaleX,
+                                imagePos.y + (_selectedFrameY + _frameHeight) * scaleY
+                            );
+
+                            drawList->AddRect(rectMin, rectMax, IM_COL32(255, 0, 0, 255), 0.f, 0, 2.f);
+                        }
+
+
+
+                        //미리보기 이미지를 클릭했는지 확인
+                        if (ImGui::IsItemClicked())
+                        {   // 마우스의 스크린 좌표
+                            ImVec2 mousePos = ImGui::GetMousePos();
+                            // 이미지 좌측 상단 기준 상대 좌표 (미리보기 크기 기준)
                             float relX = mousePos.x - imagePos.x;
                             float relY = mousePos.y - imagePos.y;
-
+                            
+                            // 미리보기 좌표 -> 원본 텍스처 좌표로 반환
+                            // 미리보기가 축소되어 있으니 비율을 곱해서 실제 픽셀 위치를 구함.
                             float actualX = relX * (texW / previewW);
                             float actualY = relY * (texH / previewH);
 
                             _selectedFrameX = ((int)actualX / _frameWidth) * _frameWidth;
                             _selectedFrameY = ((int)actualY / _frameHeight) * _frameHeight;
                         }
+
                         if(_selectedFrameX >= 0 && _selectedFrameY >= 0)
                         {
                             ImVec2 uv0(

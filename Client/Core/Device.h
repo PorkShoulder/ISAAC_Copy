@@ -21,11 +21,13 @@ private:
 	ComPtr<ID3D11RenderTargetView> _targetView = nullptr;	 // 특정 리소스를 랜더링의 목적지로 정하는 인터페이스
 	ComPtr<ID3D11DepthStencilView> _depthStencil = nullptr; // 앞뒤 순서와 특수 마스크 처리를 위한 버퍼
 
+
 	HWND _hWnd = nullptr;									 // 이 디바이스가 출력할 대상 창.
 	FResolution _resolution = {};							 // 윈도우 해상도를 기억하는 용도.
 	bool _windowMode = false;								 // 전체화면, 창모드인지를 저장하는 플래그 
 	ComPtr<ID2D1RenderTarget>	_target2D;					 // 
-	ComPtr<ID2D1Factory>		_factory2D;				 //
+	ComPtr<ID2D1Factory>		_factory2D;				 
+
 
 public:
 	// const가 뒤에 붙는 함수는 이 객체를 안 바꾼다 라는  뜻임.
@@ -36,6 +38,7 @@ public:
 	ComPtr<ID3D11RenderTargetView> GetTargetView() const { return _targetView; }	 // 렌더 타겟을 설정하거나 확인할 떄 사용가능.
 	ComPtr<ID3D11DepthStencilView> GetDepthStencil() const { return _depthStencil; }// 깊이 스텐실 반환 뷰
 	//
+	void OnResize(UINT width, UINT height);
 	bool GetWindowMode() { return _windowMode; }
 	const FResolution& GetRS() const { return _resolution; }				// 복사하지 않고 원본을 읽기 전용으로 넘기기 위함.
 	//=> 다른곳에서 해상도 크기를 저장하고 그 값을 필요한곳에 써먹음 

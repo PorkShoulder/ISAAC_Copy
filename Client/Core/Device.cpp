@@ -2,6 +2,61 @@
 #include "Device.h"
 #include "Common/LogManager.h"
 
+void Device::OnResize(UINT width, UINT height)
+{
+    if (!_swapChain || width == 0 || height == 0)
+        return;
+
+    // 1. 기존 리소스 해제 (순서 중요 — 참조 끊어야 리사이즈 가능)
+    _target2D.Reset();
+    _context->OMSetRenderTargets(0, nullptr, nullptr);
+    _targetView.Reset();
+    _depthStencil.Reset();
+
+    // 2. 스왑체인 버퍼 리사이즈
+    _swapChain->ResizeBuffers(0, width, height, DXGI_FORMAT_UNKNOWN, 0);
+
+    // 3. 렌더타겟 재생성 (Init과 동일)
+    ComPtr<ID3D11Texture2D> backBuffer = nullptr;
+    _swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (void**)backBuffer.GetAddressOf());
+    _device->CreateRenderTargetView(backBuffer.Get(), nullptr, _targetView.GetAddressOf());
+
+    // 4. 뎁스스텐실 재생성 (Init과 동일)
+    D3D11_TEXTURE2D_DESC depthDesc = {};
+    depthDesc.Width = width;
+    depthDesc.Height = height;
+    depthDesc.ArraySize = 1;
+    depthDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+    depthDesc.Usage = D3D11_USAGE_DEFAULT;
+    depthDesc.SampleDesc.Count = 4;
+    depthDesc.SampleDesc.Quality = 0;
+    depthDesc.MipLevels = 1;
+
+    ComPtr<ID3D11Texture2D> depthBuffer = nullptr;
+    _device->CreateTexture2D(&depthDesc, nullptr, depthBuffer.GetAddressOf());
+    _device->CreateDepthStencilView(depthBuffer.Get(), nullptr, _depthStencil.GetAddressOf());
+
+    // 5. 뷰포트 업데이트
+    D3D11_VIEWPORT vp = {};
+    vp.Width = (float)width;
+    vp.Height = (float)height;
+    vp.MaxDepth = 1.f;
+    _context->RSSetViewports(1, &vp);
+
+    // 6. 2D 렌더타겟 재생성 (Init과 동일)
+    ComPtr<IDXGISurface> backSurface = nullptr;
+    _swapChain->GetBuffer(0, IID_PPV_ARGS(backSurface.GetAddressOf()));
+    D2D1_RENDER_TARGET_PROPERTIES prob = D2D1::RenderTargetProperties(
+        D2D1_RENDER_TARGET_TYPE_HARDWARE,
+        D2D1::PixelFormat(DXGI_FORMAT_UNKNOWN, D2D1_ALPHA_MODE_PREMULTIPLIED));
+    _factory2D->CreateDxgiSurfaceRenderTarget(backSurface.Get(), prob, _target2D.GetAddressOf());
+
+    // 7. 해상도 갱신
+    _resolution._width = width;
+    _resolution._height = height;
+}
+
 FVector2D Device::GetRSRate() const
 {
     RECT windowRC;

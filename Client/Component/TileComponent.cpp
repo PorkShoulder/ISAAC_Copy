@@ -253,11 +253,14 @@ bool TileComponent::Init(int32 id, const std::string& name, Ptr<class Actor> own
 #ifdef _DEBUG
     _outLineRender = true;
 #endif // _DEBUG
-
-    _tileSBuffer = FIND_SBUFFER("TileInstance", TileSBuffer);
+    _tileSBuffer = New<TileSBuffer>();
+    _tileSBuffer->Create(sizeof(FTileInstanceData), 100, 1, SHADER_TYPE::VERTEX);
+    //_tileSBuffer = FIND_SBUFFER("TileInstance", TileSBuffer);
     _tileInstanceShader = FIND_SHADER("TileInstanceShader");
 
-    _tileLineSBuffer = FIND_SBUFFER("TileLineInstance", TileLineSBuffer);
+    _tileLineSBuffer = New<TileLineSBuffer>();
+    _tileLineSBuffer->Create(sizeof(FTileLineInstanceData), 100, 2, SHADER_TYPE::VERTEX);
+    //_tileLineSBuffer = FIND_SBUFFER("TileLineInstance", TileLineSBuffer);
     _tileLineInstanceShader = FIND_SHADER("TileLineInstanceShader");
 
     SetRenderLayer("BackGround");
@@ -311,8 +314,98 @@ void TileComponent::Destroy()
 
     for (auto& it : _tiles)
         DESTROY(it);
-
     _tiles.clear();
+
+    DESTROY(_tileSBuffer);
+    DESTROY(_tileLineSBuffer);
+}
+
+void TileComponent::Save(std::ofstream& file)
+{
+    // 타일 기본 정보
+    file.write((char*)&_countX, sizeof(int32));
+    file.write((char*)&_countY, sizeof(int32));
+    file.write((char*)&_tileSize, sizeof(FVector2D));
+
+    // 텍스처 경로
+    int32 pathLen = (int32)_texturePath.size();
+    file.write((char*)&pathLen, sizeof(int32));
+    file.write((char*)_texturePath.c_str(), pathLen * sizeof(wchar_t));
+
+    int32 nameLen = (int32)_textureName.size();
+    file.write((char*)&nameLen, sizeof(int32));
+    file.write(_textureName.c_str(), nameLen);
+
+    // 프레임 정보
+    int32 frameCount = (int32)_tileFrames.size();
+    file.write((char*)&frameCount, sizeof(int32));
+    for (auto& frame : _tileFrames)
+    {
+        file.write((char*)&frame._start, sizeof(FVector2D));
+        file.write((char*)&frame._size, sizeof(FVector2D));
+    }
+
+    // 각 타일 상태
+    int32 tileCount = (int32)_tiles.size();
+    file.write((char*)&tileCount, sizeof(int32));
+    for (auto& tile : _tiles)
+    {
+        eTileType type = tile->GetTileType();
+        int32 texFrame = tile->GetTextureFrame();
+        file.write((char*)&type, sizeof(eTileType));
+        file.write((char*)&texFrame, sizeof(int32));
+    }
+}
+
+void TileComponent::Load(std::ifstream& file)
+{
+    // 타일 기본 정보
+    file.read((char*)&_countX, sizeof(int32));
+    file.read((char*)&_countY, sizeof(int32));
+    file.read((char*)&_tileSize, sizeof(FVector2D));
+
+    // 텍스처 경로
+    int32 pathLen = 0;
+    file.read((char*)&pathLen, sizeof(int32));
+    _texturePath.resize(pathLen);
+    file.read(reinterpret_cast<char*>(_texturePath.data()), pathLen * sizeof(wchar_t));
+
+    int32 nameLen = 0;
+    file.read((char*)&nameLen, sizeof(int32));
+    _textureName.resize(nameLen);
+    file.read(_textureName.data(), nameLen);
+
+    // 텍스처 로드
+    SetTexture(_textureName, _texturePath);
+
+    // 프레임 정보
+    int32 frameCount = 0;
+    file.read((char*)&frameCount, sizeof(int32));
+    _tileFrames.clear();
+    for (int32 i = 0; i < frameCount; ++i)
+    {
+        FAnimationFrame frame;
+        file.read((char*)&frame._start, sizeof(FVector2D));
+        file.read((char*)&frame._size, sizeof(FVector2D));
+        _tileFrames.push_back(frame);
+    }
+
+    // 타일 생성 후 상태 복원
+    CreateTile(_countX, _countY, _tileSize, 0);
+    int32 tileCount = 0;
+    file.read((char*)&tileCount, sizeof(int32));
+    for (int32 i = 0; i < tileCount && i < (int32)_tiles.size(); ++i)
+    {
+        eTileType type;
+        int32 texFrame;
+        file.read((char*)&type, sizeof(eTileType));
+        file.read((char*)&texFrame, sizeof(int32));
+        _tiles[i]->SetTileType(type);
+        _tiles[i]->SetTextureFrame(texFrame);
+    }
+
+    SetTileInstRefresh(true);
+    SetTileLineInstRefresh(true);
 }
 
 void TileComponent::SetTexture(const std::string& name)
@@ -338,6 +431,9 @@ void TileComponent::SetTexture(const std::string& name, const std::wstring& file
 {
     if (!TEXTURE_MANAGER->LoadTexture(name, fileName))
         return;
+    
+    _textureName = name;
+    _texturePath = fileName;
 
     Ptr<Texture> texture = TEXTURE_MANAGER->Findtexture(name);
     if (texture)

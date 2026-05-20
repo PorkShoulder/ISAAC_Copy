@@ -20,6 +20,8 @@ public:
     bool LoadTexture(const std::string& name, const std::wstring& fileName);
     Ptr<class Texture> Findtexture(const std::string& name);
     
+    const std::unordered_map<std::string, Ptr<class Texture>>& GetTextures() const { return _textures; }
+
     virtual void Destroy() override;
 
 };

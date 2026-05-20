@@ -2,6 +2,7 @@
 #include "SceneComponent.h"
 #include "Tile.h"
 
+
 #include <vector>
 
 //다른 액터들끼리-->인스턴싱 하고 싶다?
@@ -73,7 +74,9 @@ protected:
     //외곽선 인스턴싱용 쉐이더
     Ptr<class Shader> _tileLineInstanceShader;
     
-    //
+    //저장 불러오기 기능
+    std::wstring _texturePath; // 텍스처 파일 상대 경로
+    std::string _textureName; // 텍스처 파일 이름(키)
     
 
     //이전 타일 위치 
@@ -88,13 +91,19 @@ private:
     void RenderTile();
     void RenderOutLine();
 
+
 public:
     virtual bool Init(int32 id, const std::string& name, Ptr<class Actor> owner) override;
     virtual void Tick(float deltaTime) override;
     virtual void Collision(float deltaTiem) override;
     virtual void Render(float deltaTime) override;
     
+    
+    
     virtual void Destroy() override;
+
+    void Save(std::ofstream& file);
+    void Load(std::ifstream& file);
 
 public:
     void UseInstance() { _useInstancing = true; }

@@ -18,6 +18,8 @@ protected:
 
 	// 선택한 텍스처 및 프레임
 	std::string _selectedTextureName;
+	std::wstring _selectedTexturePath;
+
 	// 선택한 텍스처 객체
 	Ptr<class Texture> _selectedTexture;
 	//텍스처 아틀라스에서 선택한 프레임의 시작 좌표
@@ -28,6 +30,11 @@ protected:
 	int _frameHeight = 52;
 	// 현재 선택된 프레임 번호
 	int _selectedFrameIndex = 0;
+
+	//드래그 기능 추가
+	bool _isDragging = false;
+	FVector2D _dragStartTex; // 텍스처 좌표 기준 시작점.
+	FVector2D _dragEndTex; // 텍스처 좌표 기준 끝점.
 
 public:
 	virtual bool Init(const std::string& name) override; 

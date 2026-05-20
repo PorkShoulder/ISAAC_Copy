@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "Device.h"
+#include "GameEngine.h"
 #include "Common/LogManager.h"
+
+#include "../Component/CameraComponent.h"
+
+#include "../World/World.h"
+#include "../World/Level.h"
 
 void Device::OnResize(UINT width, UINT height)
 {
@@ -55,6 +61,21 @@ void Device::OnResize(UINT width, UINT height)
     // 7. 해상도 갱신
     _resolution._width = width;
     _resolution._height = height;
+
+    // 8. 카메라 프로젝션 갱신
+    Ptr<World> world = GameEngine::Instance().GetWorld();
+    if (world)
+    {
+        Ptr<Level> level = world->GetCurLevel();
+        if (level)
+        {
+            Ptr<CameraComponent> cam = level->GetMainCamera();
+            if (cam)
+                cam->OnWindowSizeChanged(width, height);
+        }
+
+
+    }
 }
 
 FVector2D Device::GetRSRate() const

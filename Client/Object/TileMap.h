@@ -20,6 +20,8 @@ public:
 
     void ChangeTileTexture(const FVector2D& pos);
     void ChangeTileType(const FVector2D& pos);
+    void Save(std::ofstream& file);
+    void Load(std::ifstream& file);
 
     Ptr<TileComponent> GetTileComponent() const { return _tileComponent; }
 

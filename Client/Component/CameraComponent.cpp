@@ -86,5 +86,7 @@ void CameraComponent::Destroy()
 
 void CameraComponent::OnWindowSizeChanged(int width, int height)
 {
-	// 
+	_width = static_cast<float>(width);
+	_height = static_cast<float>(height);
+	SetProjectionType(_type);
 }

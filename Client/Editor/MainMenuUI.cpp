@@ -97,6 +97,12 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
              
             
         }
+       /* if (ImGui::MenuItem("Save/Load"))
+        {
+
+        }
+*/
+
 
 
         ImGui::EndMenu();

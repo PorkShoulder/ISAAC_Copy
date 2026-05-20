@@ -17,9 +17,7 @@ bool TileMap::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
 
     _tileComponent = CreateSceneComponent<TileComponent>("Tile");
     SetRootComponent(_tileComponent);
-    _tileComponent->SetTexture("TileSet", TEXT("ISAAC_Map\\room\\0_library.png"));
-
-
+    
     return true;
 }
 
@@ -86,4 +84,25 @@ void TileMap::ChangeTileType(const FVector2D& pos)
 
     _tileComponent->SetTileLineInstRefresh(true);
   
+}
+
+void TileMap::Save(std::ofstream& file)
+{
+    // Actor 위치
+    FVector3D pos = GetWorldPosition();
+    file.write((char*)&pos, sizeof(FVector3D));
+
+    // TileComponent 저장
+    _tileComponent->Save(file);
+}
+
+void TileMap::Load(std::ifstream& file)
+{
+    // Actor 위치
+    FVector3D pos;
+    file.read((char*)&pos, sizeof(FVector3D));
+    SetWorldPosition(pos);
+
+    // TileComponent 불러오기
+    _tileComponent->Load(file);
 }

@@ -8,11 +8,15 @@
 
 #include "../Core/GameEngine.h"
 #include "../Core/Texture.h"
+#include "../Core/AssetManager.h"
 
 #include "../Component/TileComponent.h"
+#include "../Component/CameraComponent.h"
 
 #include "../World/Level.h"
 #include "../World/World.h"
+
+
 
 TileMapUI::TileMapUI()
 {
@@ -32,12 +36,57 @@ bool TileMapUI::Init(const std::string& name)
 
 void TileMapUI::Render(float deltaTime)
 {
-	EditorUI::Render(deltaTime);
-    
+    EditorUI::Render(deltaTime);
+
     bool EditorOnOff = BeginWindow(); //"Room_Editor"
 
     if (EditorOnOff)
     {
+        ImGui::SeparatorText("Texture Select");
+
+        // 현재 선택된 텍스처 이름 표시
+        ImGui::Text("Selected: %s", _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str());
+        ImGui::SameLine();
+        // ...Browse->찾아보기 버튼.
+        if (ImGui::Button("Browse..."))
+        {
+            OPENFILENAME ofn = {};
+            wchar_t filePath[MAX_PATH] = {};
+
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner = GameEngine::Instance().GetHWND();
+            ofn.lpstrFilter = L"PNG Files\0*.png\0All Files\0*.*\0";
+            ofn.lpstrFile = filePath;
+            ofn.nMaxFile = MAX_PATH;
+            ofn.lpstrInitialDir = L"ISAAC_Map\\room";
+            ofn.Flags = OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+            if (GetOpenFileName(&ofn))
+            {
+                // 전체 경로에서 텍스처 상대 경로 추출
+                std::wstring fullPath = filePath;
+
+                // 텍스처 이름 = 파일명만
+                std::wstring wFileName = fullPath.substr(fullPath.find_last_of(L"\\") + 1);
+                std::string fileName(wFileName.begin(), wFileName.end());
+
+                // 상대 경로 추출 (ISAAC_Map 이후 부분)
+                std::wstring relativePath;
+                size_t pos = fullPath.find(L"ISAAC_Map");
+                if (pos != std::wstring::npos)
+                    relativePath = fullPath.substr(pos);
+                else
+                    relativePath = fullPath;
+
+                _selectedTextureName = fileName;
+                _selectedTexturePath = relativePath;
+
+                TEXTURE_MANAGER->LoadTexture(fileName, relativePath);
+                _selectedTexture = TEXTURE_MANAGER->Findtexture(fileName);
+            }
+
+        }
+
         // 여기에 위젯 추가
         ImGui::SeparatorText("Create Room");
         ImGui::DragInt("CountX", &_countX, 1.f, 1, 100);
@@ -46,7 +95,7 @@ void TileMapUI::Render(float deltaTime)
         // UI 버튼 사이즈 조절.
         ImVec2 buttonSize(120.f, 28.f);
 
-        // UI키
+
         // 1. 방 만들기 
         if (ImGui::Button("New Room", buttonSize))
         {
@@ -71,19 +120,30 @@ void TileMapUI::Render(float deltaTime)
                 if (tilemap)
                 {
                     _targetTileMap = tilemap;
+
                     // 생성된 TileMap에서 TileComponent를 가져온다
                     Ptr<TileComponent> tileComp = tilemap->GetTileComponent();
 
                     // UI에서 설정한 값(_countX, _countY, _tileSize)으로 타일을 생성한다
                     tileComp->CreateTile(_countX, _countY, FVector2D(_tileSize[0], _tileSize[1]), 0);
+                    // 이 부분이 빠져있음
+                    if (!_selectedTextureName.empty())
+                        tileComp->SetTexture(_selectedTextureName, _selectedTexturePath);
 
+                    if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                    {
+                        tileComp->AddTileFrame(
+                            (float)_selectedFrameX,
+                            (float)_selectedFrameY,
+                            (float)_frameWidth,
+                            (float)_frameHeight);
+                    }
                 }
             }
         }
-        
+
         // 가로로 나란히
         ImGui::SameLine();
-        
         // 2.방 선택하기
         if (ImGui::Button("Apply Selected", buttonSize))
         {
@@ -93,15 +153,45 @@ void TileMapUI::Render(float deltaTime)
                 Ptr<TileMap> selectedTileMap = Cast<Object, TileMap>(inspector->GetTarget());
                 if (selectedTileMap)
                 {
+                    _targetTileMap = selectedTileMap; 
+                    
+                    // 선택한 방의 상태를 UI로 불러오기
                     Ptr<TileComponent> tileComp = selectedTileMap->GetTileComponent();
                     if (tileComp)
                     {
-                        tileComp->CreateTile(_countX, _countY, FVector2D(_tileSize[0], _tileSize[1]), 0);
-                        _targetTileMap = selectedTileMap;
+                        // 방의 기존 상태를 불러오기
+                        _countX = tileComp->GetTileCountX();
+                        _countY = tileComp->GetTileCountY();
+                        _tileSize[0] = tileComp->GetTileSize()._x;
+                        _tileSize[1] = tileComp->GetTileSize()._y;
+
+                        // 렌더 갱신 
+                        tileComp->SetTileInstRefresh(true);
+                        tileComp->SetTileLineInstRefresh(true);
+                        
+                        // 선택한 텍스처가 있으면 적용
+                        if (_selectedTexture)
+                            tileComp->SetTexture(_selectedTexture);
+
+                        // 선택한 프레임이 있으면 최소 1개 등록
+                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        {
+                            tileComp->AddTileFrame(
+                                (float)_selectedFrameX,
+                                (float)_selectedFrameY,
+                                (float)_frameWidth,
+                                (float)_frameHeight
+                                );
+                        }
+                        // 숨김 상태였다면 다시 보이게
+                        selectedTileMap->SetEnable(true);
+                        selectedTileMap->SetActive(true);
+                     
                     }
+
                 }
             }
-         
+
         }
 
         // 가로로 나란히
@@ -131,12 +221,95 @@ void TileMapUI::Render(float deltaTime)
             }
 
         }
+        // 4. Save
+        if (ImGui::Button("Save", buttonSize))
+        {
+            OPENFILENAME ofn = {};
+            wchar_t filePath[MAX_PATH] = {};
 
-        // 4. 프레임 조절.
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner = GameEngine::Instance().GetHWND();
+            ofn.lpstrFilter = L"Room Files\0*.room\0";
+            ofn.lpstrFile = filePath;
+            ofn.nMaxFile = MAX_PATH;
+            ofn.lpstrDefExt = L"room";
+            ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+
+            if (GetSaveFileName(&ofn))
+            {
+                std::ofstream file(filePath, std::ios::binary);
+                if (file.is_open())
+                {
+                    Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+                    const auto& actors = level->GetActors();
+
+                    // TileMap 개수 세기
+                    int32 roomCount = 0;
+                    for (auto& [id, actor] : actors)
+                    {
+                        if (Cast<Actor, TileMap>(actor))
+                            roomCount++;
+                    }
+                    file.write((char*)&roomCount, sizeof(int32));
+
+                    // 각 방 저장
+                    for (auto& [id, actor] : actors)
+                    {
+                        Ptr<TileMap> room = Cast<Actor, TileMap>(actor);
+                        if (room)
+                            room->Save(file);
+                    }
+                    file.close();
+                }
+            }
+        }
+
+        ImGui::SameLine();
+
+        // 5. Load
+        if (ImGui::Button("Load", buttonSize))
+        {
+            OPENFILENAME ofn = {};
+            wchar_t filePath[MAX_PATH] = {};
+
+            ofn.lStructSize = sizeof(ofn);
+            ofn.hwndOwner = GameEngine::Instance().GetHWND();
+            ofn.lpstrFilter = L"Room Files\0*.room\0";
+            ofn.lpstrFile = filePath;
+            ofn.nMaxFile = MAX_PATH;
+            ofn.Flags = OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
+
+            if (GetOpenFileName(&ofn))
+            {
+                std::ifstream file(filePath, std::ios::binary);
+                if (file.is_open())
+                {
+                    Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+
+                    int32 roomCount = 0;
+                    file.read((char*)&roomCount, sizeof(int32));
+
+                    for (int32 i = 0; i < roomCount; ++i)
+                    {
+                        FVector3D pos(0, 0, 1);
+                        FVector3D scale(1, 1, 1);
+                        FRotator rot(0, 0, 0);
+
+                        Ptr<TileMap> room = level->SpawnActor<TileMap>("Room_Editor", pos, scale, rot);
+                        if (room)
+                            room->Load(file);
+                    }
+                    file.close();
+                }
+            }
+        }
+
+        ////////////////////////////
+        // 6. 프레임 조절.
         ImGui::SeparatorText("Tile Frame");
         // 프레임 하나의 크기 조절
-        ImGui::DragInt("Frame Width", & _frameWidth, 1.f, 1, 512);
-        ImGui::DragInt("Frame Height", & _frameHeight, 1.f, 1, 512);
+        ImGui::DragInt("Frame Width", &_frameWidth, 1.f, 1, 512);
+        ImGui::DragInt("Frame Height", &_frameHeight, 1.f, 1, 512);
 
         // 선택된 타일맵이 있을때만 미리보기 표시 -> To do텍스처 선택으로 변경예정
         if (_targetTileMap)
@@ -161,7 +334,7 @@ void TileMapUI::Render(float deltaTime)
                         ImVec2 imagePos = ImGui::GetCursorScreenPos();
                         // 텍스처 미리보기 크기로 축소해서 표기
                         ImGui::Image(texID, ImVec2(previewW, previewH));
-                       
+
                         // 이미지 위에 그리드 그리기
                         ImDrawList* drawList = ImGui::GetWindowDrawList();
                         float scaleX = previewW / texW;
@@ -176,7 +349,7 @@ void TileMapUI::Render(float deltaTime)
                             drawList->AddLine(
                                 ImVec2(screenX, imagePos.y),
                                 ImVec2(screenX, imagePos.y + previewH),
-                                gridColor, 
+                                gridColor,
                                 1.f
                             );
                         }
@@ -208,8 +381,6 @@ void TileMapUI::Render(float deltaTime)
                             drawList->AddRect(rectMin, rectMax, IM_COL32(255, 0, 0, 255), 0.f, 0, 2.f);
                         }
 
-
-
                         //미리보기 이미지를 클릭했는지 확인
                         if (ImGui::IsItemClicked())
                         {   // 마우스의 스크린 좌표
@@ -217,7 +388,7 @@ void TileMapUI::Render(float deltaTime)
                             // 이미지 좌측 상단 기준 상대 좌표 (미리보기 크기 기준)
                             float relX = mousePos.x - imagePos.x;
                             float relY = mousePos.y - imagePos.y;
-                            
+
                             // 미리보기 좌표 -> 원본 텍스처 좌표로 반환
                             // 미리보기가 축소되어 있으니 비율을 곱해서 실제 픽셀 위치를 구함.
                             float actualX = relX * (texW / previewW);
@@ -227,10 +398,10 @@ void TileMapUI::Render(float deltaTime)
                             _selectedFrameY = ((int)actualY / _frameHeight) * _frameHeight;
                         }
 
-                        if(_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
                         {
                             ImVec2 uv0(
-                                (float)_selectedFrameX / texW, 
+                                (float)_selectedFrameX / texW,
                                 (float)_selectedFrameY / texH);
 
                             ImVec2 uv1(
@@ -246,18 +417,45 @@ void TileMapUI::Render(float deltaTime)
                                     (float)_selectedFrameX,
                                     (float)_selectedFrameY,
                                     (float)_frameWidth,
-                                    (float)_frameHeight
-                                );
+                                    (float)_frameHeight);
                             }
 
                         }
 
                     }
-                    
+
                 }
 
             }
         }
+
+
+
+        //// 5. 방 숨김 체크박스
+        //ImGui::SeparatorText("Room List");
+        //Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+        //if (level)
+        //{
+        //    const auto& actors = level->GetActors();
+        //    for (auto& [id, actor] : actors)
+        //    {
+        //        Ptr<TileMap> room = Cast<Actor, TileMap>(actor);
+        //        if (!room)
+        //            continue;
+
+        //        bool visible = room->IsEnable();
+        //        // 체크박스 이름 중복 방지용 ##id
+        //        std::string label = room->GetName() + "##" + std::to_string(id);
+        //        if (ImGui::Checkbox(label.c_str(), &visible))
+        //        {
+        //            room->SetEnable(visible);
+        //        }
+        //    }
+        //}
+
+
+
+
 
     }
 	EndWindow();
@@ -265,4 +463,6 @@ void TileMapUI::Render(float deltaTime)
 
 void TileMapUI::Destroy()
 {
+
 }
+

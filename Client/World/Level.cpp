@@ -60,58 +60,11 @@ bool Level::Init(const std::string& path)
     }
     
 
-    FVector3D scale1 = FVector3D(100.f, 100.f, 100.f);
-    FVector3D pos1 = FVector3D(-500.f, 5.f, 1.f);
-    FRotator rot1 = FRotator(0.f, 0.f, 0.f);
-
-    Ptr<Monster> m1 = SpawnActor<Monster>("Apeach", pos1, scale1, rot1);
-    m1->AddTags("Monster", "Human");
-    m1->SetTarget(t1);
-
-    //// 에디터쪽으로 이동 예정.
-    //FVector3D pos2(0, 0, 1);
-    //FVector3D scale2 = FVector3D(30.f, 30.f, 30.f);
-    //SpawnActor<TileMap>("TileMap", pos2, scale2, rot1);
 
 
-    auto ui_img = _uiManager->CreateWidget<Image>("ui_Image");
-    ui_img->SetTexture("apeach");
-    ui_img->SetPos(FVector2D(100.f, 50.f));
-    ui_img->SetSize(FVector2D(50.f, 50.f));
+   
 
-    _uiManager->AddToViewport(ui_img);
-
-    auto ui_img2 = _uiManager->CreateWidget<Image>("ui_Image");
-    ui_img2->SetTexture("muzi");
-    ui_img2->SetPos(FVector2D(50.f, 50.f));
-    ui_img2->SetSize(FVector2D(50.f, 50.f));
-
-    _uiManager->AddToViewport(ui_img2);
-
-    auto ui_button = _uiManager->CreateWidget<Button>("ui_button");
-    ui_button->SetTexture(UI_BUTTON_STATE::ENABLE, "red_texture", TEXT("red_texture.png"));
-    ui_button->SetTexture(UI_BUTTON_STATE::HOVERED, "red_texture", TEXT("red_texture.png"));
-    //ui_button->SetTexture(UI_BUTTON_STATE::DISABLE, "red_texture", TEXT("red_texture.png"));
-    ui_button->SetTexture(UI_BUTTON_STATE::PRESSED, "red_texture", TEXT("red_texture.png"));
-
-    ui_button->SetOpacity(UI_BUTTON_STATE::HOVERED, 0.5f);
-    ui_button->SetOpacity(UI_BUTTON_STATE::ENABLE, 0.7f);
-    ui_button->SetOpacity(UI_BUTTON_STATE::PRESSED, 1.F);
-    ui_button->SetOpacity(UI_BUTTON_STATE::CLICK, 0.1f);
-
-    ui_button->SetPos(FVector2D(150.f, 50.f));
-    ui_button->SetSize(FVector2D(50.f, 50.f));
-
-    _uiManager->AddToViewport(ui_button);
-
-    auto ui_bar = _uiManager->CreateWidget<ProgressBar>("ui_bar");
-    ui_bar->SetTexture(PROGRESS_BAR_IMAGE::FILL, "black", TEXT("black.bmp"));
-    ui_bar->SetPos(FVector2D(400.f, 50.f));
-    ui_bar->SetSize(FVector2D(300.f, 10.f));
-
-    ui_bar->SetPercent(0.2f);
-
-    _uiManager->AddToViewport(ui_bar);
+   
 
     return true;
 }

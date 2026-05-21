@@ -36,6 +36,11 @@ protected:
 	FVector2D _dragStartTex; // 텍스처 좌표 기준 시작점.
 	FVector2D _dragEndTex; // 텍스처 좌표 기준 끝점.
 
+	//드래그 선택 범위
+	bool _hasDragSelection = false;
+
+
+
 public:
 	virtual bool Init(const std::string& name) override; 
 	virtual void Render(float deltaTime)override;

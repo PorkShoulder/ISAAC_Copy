@@ -185,6 +185,7 @@ namespace MOUSE_BUTTON_TYPE
         LButton,
         RButton,
         Wheel,
+        Press,
         End
     };
 }

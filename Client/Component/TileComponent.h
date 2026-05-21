@@ -104,6 +104,8 @@ public:
 
     void Save(std::ofstream& file);
     void Load(std::ifstream& file);
+    void RemoveTileFrame(int32 idx);
+    const FAnimationFrame& GetTileFrame(int32 idx) const { return _tileFrames[idx]; }
 
 public:
     void UseInstance() { _useInstancing = true; }

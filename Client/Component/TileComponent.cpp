@@ -408,6 +408,23 @@ void TileComponent::Load(std::ifstream& file)
     SetTileLineInstRefresh(true);
 }
 
+void TileComponent::RemoveTileFrame(int32 idx)
+{
+    if (idx < 0 || idx >= (int32)_tileFrames.size())
+        return;
+    _tileFrames.erase(_tileFrames.begin() + idx);
+    // 삭제된 프레임 이후 인덱스를 참조하던 타일들 보정.
+    for (auto& tile : _tiles)
+    {
+        int32 frame = tile->GetTextureFrame();
+        if (frame == idx)
+            tile->SetTextureFrame(0);
+        else if (frame > idx)
+            tile->SetTextureFrame(frame - 1);
+    }
+    SetTileInstRefresh(true);
+}
+
 void TileComponent::SetTexture(const std::string& name)
 {
     Ptr<Texture> foundTexture = TEXTURE_MANAGER->Findtexture(name);

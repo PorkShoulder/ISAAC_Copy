@@ -48,6 +48,7 @@ public:
     bool GetMouseDown(MOUSE_BUTTON_TYPE::Type type);
     bool GetMouseHold(MOUSE_BUTTON_TYPE::Type type);
     bool GetMouseUp(MOUSE_BUTTON_TYPE::Type type);
+    
 
     virtual void Destroy() override;
 };

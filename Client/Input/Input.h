@@ -82,6 +82,8 @@ public:
         return _mouseUp[type];
     }
 
+   
+
     const FVector2D& GetMouseWorldPos() const
     {
         return _mouseWorldPos;

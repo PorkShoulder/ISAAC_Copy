@@ -93,50 +93,47 @@ void TileMapUI::Render(float deltaTime)
         ImGui::DragInt("CountY", &_countY, 1.f, 1, 100);
         ImGui::DragFloat2("TileSize", _tileSize, 1.f, 1.f, 512.f);
         // UI 버튼 사이즈 조절.
-        ImVec2 buttonSize(120.f, 28.f);
+        ImVec2 buttonSize(100.f, 20.f);
 
 
         // 1. 방 만들기 
-        if (ImGui::Button("New Room", buttonSize))
+        if (ImGui::Button("New", buttonSize))
         {
             // 현재 Level을 가져온다
             Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
             if (level)
             {
-                if (_countX <= 0 || _countY <= 0)
-                    return;
-
-                if (_tileSize[0] <= 0.f || _tileSize[1] <= 0.f)
-                    return;
-
-                // TileMap Actor의 생성 위치, 크기, 회전 설정
-                FVector3D pos(0, 0, 1);
-                FVector3D scale(1, 1, 1);
-                FRotator rot(0, 0, 1);
-
-
-                // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
-                Ptr<TileMap> tilemap = level->SpawnActor<TileMap>("Room_Editor", pos, scale, rot);
-                if (tilemap)
+                if (_countX > 0 && _countY > 0 && _tileSize[0] > 0.f && _tileSize[1] > 0.f)
                 {
-                    _targetTileMap = tilemap;
+                    // TileMap Actor의 생성 위치, 크기, 회전 설정
+                    FVector3D pos(0, 0, 1);
+                    FVector3D scale(1, 1, 1);
+                    FRotator rot(0, 0, 1);
 
-                    // 생성된 TileMap에서 TileComponent를 가져온다
-                    Ptr<TileComponent> tileComp = tilemap->GetTileComponent();
 
-                    // UI에서 설정한 값(_countX, _countY, _tileSize)으로 타일을 생성한다
-                    tileComp->CreateTile(_countX, _countY, FVector2D(_tileSize[0], _tileSize[1]), 0);
-                    // 이 부분이 빠져있음
-                    if (!_selectedTextureName.empty())
-                        tileComp->SetTexture(_selectedTextureName, _selectedTexturePath);
-
-                    if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                    // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
+                    Ptr<TileMap> tilemap = level->SpawnActor<TileMap>("Room_Editor", pos, scale, rot);
+                    if (tilemap)
                     {
-                        tileComp->AddTileFrame(
-                            (float)_selectedFrameX,
-                            (float)_selectedFrameY,
-                            (float)_frameWidth,
-                            (float)_frameHeight);
+                        _targetTileMap = tilemap;
+
+                        // 생성된 TileMap에서 TileComponent를 가져온다
+                        Ptr<TileComponent> tileComp = tilemap->GetTileComponent();
+
+                        // UI에서 설정한 값(_countX, _countY, _tileSize)으로 타일을 생성한다
+                        tileComp->CreateTile(_countX, _countY, FVector2D(_tileSize[0], _tileSize[1]), 0);
+                        // 이 부분이 빠져있음
+                        if (!_selectedTextureName.empty())
+                            tileComp->SetTexture(_selectedTextureName, _selectedTexturePath);
+
+                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        {
+                            tileComp->AddTileFrame(
+                                (float)_selectedFrameX,
+                                (float)_selectedFrameY,
+                                (float)_frameWidth,
+                                (float)_frameHeight);
+                        }
                     }
                 }
             }
@@ -145,7 +142,7 @@ void TileMapUI::Render(float deltaTime)
         // 가로로 나란히
         ImGui::SameLine();
         // 2.방 선택하기
-        if (ImGui::Button("Apply Selected", buttonSize))
+        if (ImGui::Button("Apply", buttonSize))
         {
             Ptr<InspectorUI> inspector = EditorEngine::Instance().FindEditorUI<InspectorUI>("Inspector");
             if (inspector)
@@ -198,7 +195,7 @@ void TileMapUI::Render(float deltaTime)
         ImGui::SameLine();
 
         // 3. 방 삭제하기
-        if (ImGui::Button("Delete Selected", buttonSize))
+        if (ImGui::Button("Delete", buttonSize))
         {
             Ptr<InspectorUI> inspector = EditorEngine::Instance().FindEditorUI<InspectorUI>("Inspector");
             if (inspector)
@@ -305,7 +302,7 @@ void TileMapUI::Render(float deltaTime)
         }
 
         ////////////////////////////
-        // 6. 프레임 조절.
+        // 6. 프레임 추가.
         ImGui::SeparatorText("Tile Frame");
         // 프레임 하나의 크기 조절
         ImGui::DragInt("Frame Width", &_frameWidth, 1.f, 1, 512);
@@ -332,8 +329,11 @@ void TileMapUI::Render(float deltaTime)
                         float previewH = previewW * (texH / texW);
                         // ImGui 윈도우 내에서 이미지가 그려질 좌측 상단 좌표
                         ImVec2 imagePos = ImGui::GetCursorScreenPos();
+                        
                         // 텍스처 미리보기 크기로 축소해서 표기
                         ImGui::Image(texID, ImVec2(previewW, previewH));
+                        ImGui::SetCursorScreenPos(imagePos);
+                        ImGui::InvisibleButton("##texPreviewDrag", ImVec2(previewW, previewH));
 
                         // 이미지 위에 그리드 그리기
                         ImDrawList* drawList = ImGui::GetWindowDrawList();
@@ -381,24 +381,89 @@ void TileMapUI::Render(float deltaTime)
                             drawList->AddRect(rectMin, rectMax, IM_COL32(255, 0, 0, 255), 0.f, 0, 2.f);
                         }
 
-                        //미리보기 이미지를 클릭했는지 확인
-                        if (ImGui::IsItemClicked())
-                        {   // 마우스의 스크린 좌표
+                        // 이미지 위에서 마우스 입력 처리 (클릭 / 드래그)
+                        if (ImGui::IsItemHovered())
+                        {
                             ImVec2 mousePos = ImGui::GetMousePos();
-                            // 이미지 좌측 상단 기준 상대 좌표 (미리보기 크기 기준)
                             float relX = mousePos.x - imagePos.x;
                             float relY = mousePos.y - imagePos.y;
 
-                            // 미리보기 좌표 -> 원본 텍스처 좌표로 반환
-                            // 미리보기가 축소되어 있으니 비율을 곱해서 실제 픽셀 위치를 구함.
-                            float actualX = relX * (texW / previewW);
-                            float actualY = relY * (texH / previewH);
+                            float texX = relX * (texW / previewW);
+                            float texY = relY * (texH / previewH);
+                            // 미리보기 좌표 → 원본 텍스처 좌표 변환
+                            //float texMouseX = (mousePos.x - imagePos.x) * (texW / previewW);
+                            //float texMouseY = (mousePos.y - imagePos.y) * (texH / previewH);
 
-                            _selectedFrameX = ((int)actualX / _frameWidth) * _frameWidth;
-                            _selectedFrameY = ((int)actualY / _frameHeight) * _frameHeight;
+                            // 드래그 시작
+                            if (ImGui::IsMouseClicked(0))
+                            {
+                                _isDragging = true;
+                                _dragStartTex = FVector2D(texX, texY);
+                                _dragEndTex = _dragStartTex;
+                            }
+
+                            // 드래그 중 - 끝점 갱신
+                            if (_isDragging && ImGui::IsMouseDown(0))
+                            {
+                                _dragEndTex = FVector2D(texX, texY);
+                            }
                         }
 
-                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        // 마우스 릴리즈 (Hovered 밖에서도 감지)
+                        if (_isDragging && ImGui::IsMouseReleased(0))
+                        {
+                            _isDragging = false;
+
+                            // 드래그 영역 계산 (min/max 정리)
+                            float minX = min(_dragStartTex._x, _dragEndTex._x);
+                            float minY = min(_dragStartTex._y, _dragEndTex._y);
+                            float maxX = max(_dragStartTex._x, _dragEndTex._x);
+                            float maxY = max(_dragStartTex._y, _dragEndTex._y);
+
+                            float dragW = maxX - minX;
+                            float dragH = maxY - minY;
+
+                            // 3픽셀 이하면 클릭으로 판정 → 기존 그리드 스냅
+                            if (dragW < 3.f && dragH < 3.f)
+                            {
+                                _selectedFrameX = ((int)_dragStartTex._x / _frameWidth) * _frameWidth;
+                                _selectedFrameY = ((int)_dragStartTex._y / _frameHeight) * _frameHeight;
+                            }
+                            else
+                            {
+                                // 드래그 → 드래그 범위 내에서 그리드 선택
+                                _selectedFrameX = ((int)minX / _frameWidth) * _frameWidth;
+                                _selectedFrameY = ((int)minY / _frameHeight) * _frameHeight;
+                                _dragEndTex._x = (float)(((int)maxX / _frameWidth+1) * _frameWidth);
+                                _dragEndTex._y = (float)(((int)maxY / _frameHeight+1) * _frameHeight);
+                                _dragStartTex._x = (float)_selectedFrameX;
+                                _dragStartTex._y = (float)_selectedFrameY;
+                                _hasDragSelection = true; // 드래그 상태 
+                            }
+                        }
+                        float snapMinX, snapMinY, snapMaxX, snapMaxY;
+                        // 드래그 중이면 드래그 영역 표시 (파란 사각형)
+                        if (_isDragging || _hasDragSelection)
+                        {
+                            // 드래그 중: 마우스 위치 그대로 표시 (스냅 없음)
+                            snapMinX = min(_dragStartTex._x, _dragEndTex._x);
+                            snapMinY = min(_dragStartTex._y, _dragEndTex._y);
+                            snapMaxX = max(_dragStartTex._x, _dragEndTex._x);
+                            snapMaxY = max(_dragStartTex._y, _dragEndTex._y);
+                        }
+                        else 
+                        {
+                            // 드래그 완료 후 유지: 이미 스냅된 값 사용
+                            snapMinX = _dragStartTex._x;
+                            snapMinY = _dragStartTex._y;
+                            snapMaxX = _dragEndTex._x;
+                            snapMaxY = _dragEndTex._y;
+                        }
+                        ImVec2 dragRectMin(imagePos.x + snapMinX * scaleX, imagePos.y + snapMinY * scaleY);
+                        ImVec2 dragRectMax(imagePos.x + snapMaxX * scaleX, imagePos.y + snapMaxY * scaleY);
+                        drawList->AddRect(dragRectMin, dragRectMax, IM_COL32(0, 120, 255, 255), 0.f, 0, 2.f);
+                        drawList->AddRectFilled(dragRectMin, dragRectMax, IM_COL32(0, 120, 255, 40));
+                        if(_selectedFrameX >= 0 && _selectedFrameY >= 0)
                         {
                             ImVec2 uv0(
                                 (float)_selectedFrameX / texW,
@@ -411,13 +476,31 @@ void TileMapUI::Render(float deltaTime)
                             ImGui::Text("Selected: %d, %d", _selectedFrameX, _selectedFrameY);
                             ImGui::Image(texID, ImVec2(64.f, 64.f), uv0, uv1);
 
+                            // 프레임 추가 하기
                             if (ImGui::Button("Add Frame"))
                             {
-                                tileComp->AddTileFrame(
-                                    (float)_selectedFrameX,
-                                    (float)_selectedFrameY,
-                                    (float)_frameWidth,
-                                    (float)_frameHeight);
+                                // 드래그 범위 내의 그리드 셀을 각각 개별 프레임으로 등록
+                                int startGX = _selectedFrameX;
+                                int startGY = _selectedFrameY;
+                                int endGX = (int)_dragEndTex._x;
+                                int endGY = (int)_dragEndTex._y;
+                                
+                                // 드래그 범위가 없으면 (클릭 선택) 현재 셀 1개만
+                                if (endGX <= startGX) endGX = startGX + _frameWidth;
+                                if (endGY <= startGY) endGY = startGY + _frameHeight;
+
+                                for (int gy = startGY; gy < endGY; gy += _frameHeight)
+                                {
+                                    for (int gx = startGX; gx < endGX; gx += _frameWidth)
+                                    {
+                                        tileComp->AddTileFrame(
+                                            (float)gx,
+                                            (float)gy,
+                                            (float)_frameWidth,
+                                            (float)_frameHeight);
+                                    }
+                                }
+                                _hasDragSelection = false; // 등록후 드래그 범위 제거
                             }
 
                         }
@@ -429,31 +512,57 @@ void TileMapUI::Render(float deltaTime)
             }
         }
 
+        ImGui::SeparatorText("Registered Frames");
+        if (_targetTileMap)
+        {
+            Ptr<TileComponent> tileComp = _targetTileMap->GetTileComponent();
+            Ptr<Texture> tex = tileComp->GetTexture();
+            if(tileComp && tex)
+            {
+                const FTextureInfo* texInfo = tex->GetTexture(0);
+                if (texInfo && texInfo->_srv)
+                {
+                    ImTextureID texID = (ImTextureID)texInfo->_srv.Get();
+                    float texW = (float)texInfo->_width;
+                    float texH = (float)texInfo->_height;
+                    int32 frameCount = tileComp->GetTileFrameCount();
 
+                    for (int32 i = 0; i < frameCount; ++i)
+                    {
+                        const FAnimationFrame& frame = tileComp->GetTileFrame(i);
+                        ImVec2 uv0(frame._start._x / texW, frame._start._y / texH);
+                        ImVec2 uv1((frame._start._x + frame._size._x) / texW,
+                                   (frame._start._y + frame._size._y) / texH);
 
-        //// 5. 방 숨김 체크박스
-        //ImGui::SeparatorText("Room List");
-        //Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
-        //if (level)
-        //{
-        //    const auto& actors = level->GetActors();
-        //    for (auto& [id, actor] : actors)
-        //    {
-        //        Ptr<TileMap> room = Cast<Actor, TileMap>(actor);
-        //        if (!room)
-        //            continue;
+                        ImGui::PushID(i);
+                        ImGui::BeginGroup();
+                        if (i == _selectedFrameIndex)
+                            ImGui::Text("[%d]", i);
+                        else
+                            ImGui::Text("[%d", i);
+                        ImGui::SameLine();
+                        ImGui::Image(texID, ImVec2(48.f, 48.f), uv0, uv1); // 프레임 미리보기 사이즈 ->To do 값대로변경 
+                        if (ImGui::IsItemClicked())
+                        {
+                            _selectedFrameIndex = i;
+                            if (_targetTileMap)
+                                _targetTileMap->SetPaintFrameIndex(i);
+                        }
 
-        //        bool visible = room->IsEnable();
-        //        // 체크박스 이름 중복 방지용 ##id
-        //        std::string label = room->GetName() + "##" + std::to_string(id);
-        //        if (ImGui::Checkbox(label.c_str(), &visible))
-        //        {
-        //            room->SetEnable(visible);
-        //        }
-        //    }
-        //}
-
-
+                        if (ImGui::SmallButton("X"))
+                        {
+                            tileComp->RemoveTileFrame(i);
+                            ImGui::EndGroup();
+                            ImGui::PopID();
+                            break;
+                        }
+                        ImGui::EndGroup();
+                        ImGui::PopID();
+                        ImGui::SameLine();
+                    }
+                }
+            }
+        }
 
 
 

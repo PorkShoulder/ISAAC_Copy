@@ -59,11 +59,26 @@ void TileComponent::RenderTile()
                         continue;
 
                     std::optional<FVector2D> worldPos = GetTileWorldPos(index);
+                    // UV 계산
 
                     FVector2D LTUV, RBUV;
                     LTUV = _tileFrames[frameIndex]._start / _tileTextureSize;
                     RBUV = LTUV + _tileFrames[frameIndex]._size / _tileTextureSize;
-
+                    // 반전 처리
+                    if (tile->GetFlipX())
+                    {
+                        float tmpX = LTUV._x;
+                        LTUV._x = RBUV._x;
+                        RBUV._x = tmpX;
+                    }
+                    if (tile->GetFlipY())
+                    {
+                        float tmpY = LTUV._y;
+                        LTUV._y = RBUV._y;
+                        RBUV._y = tmpY;
+                    }
+                    
+                    //
                     _tileSBuffer->AddData(worldPos.value(), LTUV, RBUV, _tileSize);
                 }
             }
@@ -352,9 +367,15 @@ void TileComponent::Save(std::ofstream& file)
     {
         eTileType type = tile->GetTileType();
         int32 texFrame = tile->GetTextureFrame();
+        bool flipX = tile->GetFlipX();
+        bool flipY = tile->GetFlipY();
         file.write((char*)&type, sizeof(eTileType));
         file.write((char*)&texFrame, sizeof(int32));
+        file.write((char*)&flipX, sizeof(bool));
+        file.write((char*)&flipY, sizeof(bool));
     }
+
+    
 }
 
 void TileComponent::Load(std::ifstream& file)
@@ -396,12 +417,16 @@ void TileComponent::Load(std::ifstream& file)
     file.read((char*)&tileCount, sizeof(int32));
     for (int32 i = 0; i < tileCount && i < (int32)_tiles.size(); ++i)
     {
-        eTileType type;
-        int32 texFrame;
+        eTileType type; int32 texFrame;
+        bool flipX = false, flipY = false;
         file.read((char*)&type, sizeof(eTileType));
         file.read((char*)&texFrame, sizeof(int32));
+        file.read((char*)&flipX, sizeof(bool));
+        file.read((char*)&flipY, sizeof(bool));
         _tiles[i]->SetTileType(type);
         _tiles[i]->SetTextureFrame(texFrame);
+        _tiles[i]->SetFlipX(flipX);
+        _tiles[i]->SetFlipY(flipY);
     }
 
     SetTileInstRefresh(true);

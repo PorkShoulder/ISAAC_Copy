@@ -39,6 +39,15 @@ protected:
 	//드래그 선택 범위
 	bool _hasDragSelection = false;
 
+	//반전 토글
+	bool _flipX = false;
+	bool _flipY = false;
+
+	// 이름 설정
+	char _roomName[64] = "Room_01";
+
+
+
 
 
 public:

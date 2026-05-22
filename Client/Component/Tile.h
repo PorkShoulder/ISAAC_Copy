@@ -26,6 +26,10 @@ private:
     //타일의 텍스쳐 프레임
     int32 _textureFrame = -1;
 
+    // 타일 회전 반전
+    bool _flipX = false;    // 좌우
+    bool _flipY = false;    // 상하
+
 public:
     const eTileType GetTileType() const;
     void SetTileType(eTileType type);
@@ -42,7 +46,13 @@ public:
     const int32 GetTextureFrame() const;
     void SetTextureFrame(int32 frame);
 
-    
+    // 등록된 타일 반전
+    bool GetFlipX() const { return _flipX; }
+    bool GetFlipY() const { return _flipY; }
+    void SetFlipX(bool flip) { _flipX = flip; }
+    void SetFlipY(bool flip) { _flipY = flip; }
+    void ToggleFlipX() { _flipX = !_flipX; }
+    void ToggleFlipY() { _flipY = !_flipY; }
 
     virtual void Destroy() override;
 };

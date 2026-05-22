@@ -9,6 +9,12 @@
 #include <stack>
 #include <string>
 #include <fstream>
+// 랜덤맵 불러오기
+#include <cstdlib>
+#include <filesystem>
+#include <ctime>
+
+
 
 //미리컴파일된 헤더
 //자주 쓰는 헤더들을 미리 컴파일해서 캐싱해두고 빌드시간을 단축

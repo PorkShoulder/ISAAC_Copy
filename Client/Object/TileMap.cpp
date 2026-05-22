@@ -51,20 +51,20 @@ void TileMap::Tick(float deltaTime)
             if (idx >= 0)
             {
                 _tileSelectEndIdx = idx;
-                if (_paintFrameIndex >= 0)
+
+                if (_viewFrameIndex >= 0)
                 {
                     Ptr<Tile> tile = _tileComponent->GetTile(idx);
                     if (tile)
                     {
-                        tile->SetTextureFrame(_paintFrameIndex);
+                        tile->SetTextureFrame(_viewFrameIndex);
+                        tile->SetFlipX(_viewFlipX);
+                        tile->SetFlipY(_viewFlipY);
                         _tileComponent->SetTileInstRefresh(true);
                     }
 
                 }
             }
-
-
-
         }
 
         // 좌클릭 릴리즈 → 선택 확정
@@ -76,17 +76,24 @@ void TileMap::Tick(float deltaTime)
             if (_tileSelectStartIdx == _tileSelectEndIdx)
             {
                 Ptr<Tile> tile = _tileComponent->GetTile(_tileSelectStartIdx);
-                if (tile && _paintFrameIndex >= 0)
+                if (tile && _viewFrameIndex >= 0)
                 {
-                    tile->SetTextureFrame(_paintFrameIndex);
+                    tile->SetTextureFrame(_viewFrameIndex);
+                    tile->SetFlipX(_viewFlipX);
+                    tile->SetFlipY(_viewFlipY);
                     _tileComponent->SetTileInstRefresh(true);
                 }
                 _hasTileSelection = false;
             }
             else
             {
-                // 범위 선택 확정 → 프레임 목록에서 클릭 대기
-                _hasTileSelection = true;
+                // 칠하기 모드였으면 이미 Hold에서 전부 칠했으므로 선택 해제
+                // 칠하기 모드가 아니면 범위 선택 유지 
+                if (_viewFrameIndex >= 0)
+                    _hasTileSelection = false;
+                else
+                    _hasTileSelection = true;
+
             }
         }
 
@@ -95,6 +102,19 @@ void TileMap::Tick(float deltaTime)
         {
             ChangeTileType(InputSystem::Instance().GetMouseWorldPos());
         }
+
+        //// X키: 좌우 반전, Y키: 상하 반전
+        //if (InputSystem::Instance().GetMouseDown(MOUSE_BUTTON_TYPE::LButton))
+        //{
+        //    if (GetAsyncKeyState('R') & 0x8000)
+        //    {
+        //        FlipTileX(mousePos);
+        //    }
+        //    if (GetAsyncKeyState('T') & 0x8000)
+        //    {
+        //        FlipTileY(mousePos);
+        //    }
+        //}
 
     }
    
@@ -159,6 +179,13 @@ void TileMap::ChangeTileType(const FVector2D& pos)
 
 void TileMap::Save(std::ofstream& file)
 {
+    //Actor 이름 저장
+    std::string name = GetName();
+    int32 nameLen = (int32)name.size();
+    file.write((char*)&nameLen, sizeof(int32));
+    file.write(name.c_str(), nameLen);
+
+
     // Actor 위치
     FVector3D pos = GetWorldPosition();
     file.write((char*)&pos, sizeof(FVector3D));
@@ -169,6 +196,13 @@ void TileMap::Save(std::ofstream& file)
 
 void TileMap::Load(std::ifstream& file)
 {
+    // Actor 이름 읽기
+    int32 nameLen = 0;
+    file.read((char*)&nameLen, sizeof(int32));
+    std::string name(nameLen, '\0');
+    file.read(&name[0], nameLen);
+    SetName(name);
+
     // Actor 위치
     FVector3D pos;
     file.read((char*)&pos, sizeof(FVector3D));
@@ -178,7 +212,7 @@ void TileMap::Load(std::ifstream& file)
     _tileComponent->Load(file);
 }
 
-void TileMap::ApplyFrameToSelection(int32 frameIndex)
+void TileMap::ApplyFrameToSelection(int32 frameIndex, bool flipX, bool flipY)
 {
     if (!_hasTileSelection) return;
 
@@ -206,7 +240,12 @@ void TileMap::ApplyFrameToSelection(int32 frameIndex)
             int32 idx = y * countX + x;
             Ptr<Tile> tile = _tileComponent->GetTile(idx);
             if (tile)
+            {
                 tile->SetTextureFrame(frameIndex);
+                tile->SetFlipX(flipX);
+                tile->SetFlipY(flipY);
+            }
+            
         }
     }
 
@@ -214,4 +253,20 @@ void TileMap::ApplyFrameToSelection(int32 frameIndex)
     _hasTileSelection = false;
     _tileSelectStartIdx = -1;
     _tileSelectEndIdx = -1;
+}
+
+void TileMap::FlipTileX(const FVector2D& pos)
+{
+    Ptr<Tile> tile = _tileComponent->GetTile(pos);
+    if (!tile) return;
+    tile->ToggleFlipX();
+    _tileComponent->SetTileInstRefresh(true);
+}
+
+void TileMap::FlipTileY(const FVector2D& pos)
+{
+    Ptr<Tile> tile = _tileComponent->GetTile(pos);
+    if (!tile) return;
+    tile->ToggleFlipY();
+    _tileComponent->SetTileInstRefresh(true);
 }

@@ -89,11 +89,12 @@ void TileMapUI::Render(float deltaTime)
 
         // 여기에 위젯 추가
         ImGui::SeparatorText("Create Room");
+        ImGui::InputText("Room Name", _roomName, sizeof(_roomName));
         ImGui::DragInt("CountX", &_countX, 1.f, 1, 100);
         ImGui::DragInt("CountY", &_countY, 1.f, 1, 100);
         ImGui::DragFloat2("TileSize", _tileSize, 1.f, 1.f, 512.f);
         // UI 버튼 사이즈 조절.
-        ImVec2 buttonSize(100.f, 20.f);
+        ImVec2 buttonSize(80.f, 20.f);
 
 
         // 1. 방 만들기 
@@ -112,7 +113,7 @@ void TileMapUI::Render(float deltaTime)
 
 
                     // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
-                    Ptr<TileMap> tilemap = level->SpawnActor<TileMap>("Room_Editor", pos, scale, rot);
+                    Ptr<TileMap> tilemap = level->SpawnActor<TileMap>(_roomName, pos, scale, rot);
                     if (tilemap)
                     {
                         _targetTileMap = tilemap;
@@ -170,16 +171,16 @@ void TileMapUI::Render(float deltaTime)
                         if (_selectedTexture)
                             tileComp->SetTexture(_selectedTexture);
 
-                        // 선택한 프레임이 있으면 최소 1개 등록
-                        if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
-                        {
-                            tileComp->AddTileFrame(
-                                (float)_selectedFrameX,
-                                (float)_selectedFrameY,
-                                (float)_frameWidth,
-                                (float)_frameHeight
-                                );
-                        }
+                        //// 선택한 프레임이 있으면 최소 1개 등록
+                        //if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+                        //{
+                        //    tileComp->AddTileFrame(
+                        //        (float)_selectedFrameX,
+                        //        (float)_selectedFrameY,
+                        //        (float)_frameWidth,
+                        //        (float)_frameHeight
+                        //        );
+                        //}
                         // 숨김 상태였다면 다시 보이게
                         selectedTileMap->SetEnable(true);
                         selectedTileMap->SetActive(true);
@@ -463,6 +464,8 @@ void TileMapUI::Render(float deltaTime)
                         ImVec2 dragRectMax(imagePos.x + snapMaxX * scaleX, imagePos.y + snapMaxY * scaleY);
                         drawList->AddRect(dragRectMin, dragRectMax, IM_COL32(0, 120, 255, 255), 0.f, 0, 2.f);
                         drawList->AddRectFilled(dragRectMin, dragRectMax, IM_COL32(0, 120, 255, 40));
+                        
+                        // 
                         if(_selectedFrameX >= 0 && _selectedFrameY >= 0)
                         {
                             ImVec2 uv0(
@@ -473,8 +476,22 @@ void TileMapUI::Render(float deltaTime)
                                 (float)(_selectedFrameX + _frameWidth) / texW,
                                 (float)(_selectedFrameY + _frameHeight) / texH);
 
+                            // 선택프레임 | 등록프레임
                             ImGui::Text("Selected: %d, %d", _selectedFrameX, _selectedFrameY);
                             ImGui::Image(texID, ImVec2(64.f, 64.f), uv0, uv1);
+
+                            //AddFrame 옆에 등록된 프레임 미리보기
+                            ImGui::SameLine(); 
+                            if (_selectedFrameIndex >= 0 && _selectedFrameIndex < tileComp->GetTileFrameCount())
+                            {
+                                const FAnimationFrame& selFrame = tileComp->GetTileFrame(_selectedFrameIndex);
+                                ImVec2 pUv0(selFrame._start._x / texW, selFrame._start._y / texH);
+                                ImVec2 pUv1((selFrame._start._x + selFrame._size._x) / texW,
+                                    (selFrame._start._y + selFrame._size._y) / texH);
+                                if (_flipX) { float t = pUv0.x; pUv0.x = pUv1.x; pUv1.x = t; }
+                                if (_flipY) { float t = pUv0.y; pUv0.y = pUv1.y; pUv1.y = t; }
+                                ImGui::Image(texID, ImVec2(48.f, 48.f), pUv0, pUv1);
+                            }
 
                             // 프레임 추가 하기
                             if (ImGui::Button("Add Frame"))
@@ -503,69 +520,88 @@ void TileMapUI::Render(float deltaTime)
                                 _hasDragSelection = false; // 등록후 드래그 범위 제거
                             }
 
-                        }
+                            
 
-                    }
 
-                }
+                            ImGui::SameLine();
+                            // Flip X 토글 버튼
+                            if (_flipX)
+                                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.4f, 0.8f, 1.0f));
+                            else
+                                ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_Button]);
+                            if (ImGui::Button("Flip X"))
+                                _flipX = !_flipX;
+                            ImGui::PopStyleColor();
 
-            }
-        }
+                            ImGui::SameLine();
 
-        ImGui::SeparatorText("Registered Frames");
-        if (_targetTileMap)
-        {
-            Ptr<TileComponent> tileComp = _targetTileMap->GetTileComponent();
-            Ptr<Texture> tex = tileComp->GetTexture();
-            if(tileComp && tex)
-            {
-                const FTextureInfo* texInfo = tex->GetTexture(0);
-                if (texInfo && texInfo->_srv)
-                {
-                    ImTextureID texID = (ImTextureID)texInfo->_srv.Get();
-                    float texW = (float)texInfo->_width;
-                    float texH = (float)texInfo->_height;
-                    int32 frameCount = tileComp->GetTileFrameCount();
+                            // Flip Y 토글 버튼
+                            if (_flipY)
+                                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.4f, 0.8f, 1.0f));
+                            else
+                                ImGui::PushStyleColor(ImGuiCol_Button, ImGui::GetStyle().Colors[ImGuiCol_Button]);
+                            if (ImGui::Button("Flip Y"))
+                                _flipY = !_flipY;
+                            ImGui::PopStyleColor();
+                           
 
-                    for (int32 i = 0; i < frameCount; ++i)
-                    {
-                        const FAnimationFrame& frame = tileComp->GetTileFrame(i);
-                        ImVec2 uv0(frame._start._x / texW, frame._start._y / texH);
-                        ImVec2 uv1((frame._start._x + frame._size._x) / texW,
-                                   (frame._start._y + frame._size._y) / texH);
-
-                        ImGui::PushID(i);
-                        ImGui::BeginGroup();
-                        if (i == _selectedFrameIndex)
-                            ImGui::Text("[%d]", i);
-                        else
-                            ImGui::Text("[%d", i);
-                        ImGui::SameLine();
-                        ImGui::Image(texID, ImVec2(48.f, 48.f), uv0, uv1); // 프레임 미리보기 사이즈 ->To do 값대로변경 
-                        if (ImGui::IsItemClicked())
-                        {
-                            _selectedFrameIndex = i;
+                            
+                            ImGui::SeparatorText("Registered Frames");
                             if (_targetTileMap)
-                                _targetTileMap->SetPaintFrameIndex(i);
-                        }
+                            {
+                                int32 frameCount = tileComp->GetTileFrameCount();
+                                // --- 프레임 목록 (리스트박스) ---
+                                if (frameCount > 0)
+                                {
+                                    // 리스트박스: 프레임 번호만 텍스트로 나열
+                                    ImGui::Text("Frame Count: %d", frameCount);
 
-                        if (ImGui::SmallButton("X"))
-                        {
-                            tileComp->RemoveTileFrame(i);
-                            ImGui::EndGroup();
-                            ImGui::PopID();
-                            break;
+                                    if (ImGui::BeginListBox("##FrameList", ImVec2(-1, 100)))
+                                    {
+                                        int32 removeIdx = -1; // 삭제할 인덱스 저장
+                                        for (int32 i = 0; i < frameCount; ++i)
+                                        {
+                                            ImGui::PushID(i);
+                                            bool isSelected = (_selectedFrameIndex == i);
+                                            char label[32];
+                                            sprintf_s(label, "Frame [%d]", i);
+                                            if (ImGui::Selectable(label, isSelected, ImGuiSelectableFlags_AllowOverlap))
+                                            {
+                                                _selectedFrameIndex = i;
+                                                if (_targetTileMap)
+                                                {
+                                                    _targetTileMap->SetviewFrameIndex(i);
+                                                    _targetTileMap->SetViewFlipX(_flipX);
+                                                    _targetTileMap->SetViewFlipY(_flipY);
+                                                }
+                                                if (_targetTileMap->HasTileSelection())
+                                                    _targetTileMap->ApplyFrameToSelection(i, _flipX, _flipY);
+                                            }
+                                            // 삭제 버튼 (같은 줄)
+                                            ImGui::SameLine();
+                                            if (ImGui::SmallButton("X"))
+                                            {
+                                                removeIdx = i; // 루프 안에서 삭제하지 않고 저장만.
+                                            }
+                                            ImGui::PopID();
+                                        }
+                                        ImGui::EndListBox();
+
+                                        //루프가 끝난 뒤 삭제 처리
+                                        if (removeIdx >= 0)
+                                        {
+                                            tileComp->RemoveTileFrame(removeIdx);
+                                            if (_selectedFrameIndex >= (int32)tileComp->GetTileFrameCount())
+                                                _selectedFrameIndex = max(0, (int32)tileComp->GetTileFrameCount() - 1);
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        ImGui::EndGroup();
-                        ImGui::PopID();
-                        ImGui::SameLine();
                     }
                 }
             }
         }
-
-
-
     }
 	EndWindow();
 }

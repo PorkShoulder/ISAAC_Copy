@@ -12,14 +12,14 @@ private:
     //타일 드래그 선택 범위 
     bool _isTileDragging = false;
     bool _hasTileSelection = false;
-    int32 _paintFrameIndex = -1;
+    int32 _viewFrameIndex = -1;
 
     int32 _tileSelectStartIdx = -1;
     int32 _tileSelectEndIdx = -1;
 
-    // 타일 회전 반전
-    bool _flipX = false;    // 좌우
-    bool _flipY = false;    // 상하
+    // 타일 flip 상태 추가
+    bool _viewFlipX = false;
+    bool _viewFlipY = false;
     
     Ptr<class TileComponent> _tileComponent;
 
@@ -36,16 +36,25 @@ public:
     void ChangeTileType(const FVector2D& pos);
     void Save(std::ofstream& file);
     void Load(std::ifstream& file);
-    void SetPaintFrameIndex(int32 idx) { _paintFrameIndex = idx; }
+    void SetviewFrameIndex(int32 idx) { _viewFrameIndex = idx; }
     bool HasTileSelection() const { return _hasTileSelection; }
 
     // 선택된 범위에 프레임 일괄 적용
-    void ApplyFrameToSelection(int32 frameIndex);
+    void ApplyFrameToSelection(int32 frameIndex, bool flipX, bool flipY);
 
     // 선택 범위의 시작/끝 타일 인덱스
     int32 GetTileSelectStartIdx() const { return _tileSelectStartIdx; }
     int32 GetTileSelectEndIdx() const { return _tileSelectEndIdx; }
     void ClearTileSelection() { _hasTileSelection = false; _tileSelectStartIdx = -1; _tileSelectEndIdx = -1; }
+
+    // 반전 토글기능추가
+    void FlipTileX(const FVector2D& pos);
+    void FlipTileY(const FVector2D& pos);
+
+    // 미리보기 반전
+    void SetViewFlipX(bool v) { _viewFlipX = v; }
+    void SetViewFlipY(bool v) { _viewFlipY = v; }
+
 
 };
 

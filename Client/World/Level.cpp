@@ -23,6 +23,8 @@
 #include "UI/ProgressBar.h"
 #include "UI/TextBlock.h"
 
+#include "RoomManager.h"
+
 
 Level::Level()
 {
@@ -46,6 +48,23 @@ bool Level::Init(const std::string& path)
     _uiManager = New<UIManager>();
     _uiManager->Init(This<Level>());
 
+    //if (_useRandomMap)
+    //{
+    //    _roomManager = New<RoomManager>();
+    //    _roomManager->Init(This<Level>(), 960.f, 576.f);  // 15*64, 9*64
+    //    _roomManager->CollectRoomFiles(L"../Resources/Room");  // .room 수집
+
+    //    // 방호출 제한 
+    //    int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount());
+    //    _roomManager->GenerateLayout(count);
+    //    _roomManager->AssignRooms();                             // 각 셀에 .room 배정
+    //    _roomManager->LoadAllRooms();                            // 전부 스폰 + 로드
+    //    _roomManager->ActivateStartRoom();                       // 시작 방 활성화
+    //}
+    
+
+
+
     //todo : level save & load
     
     // 초기값 설정
@@ -58,19 +77,14 @@ bool Level::Init(const std::string& path)
     {
         t1->AddTags("Player", "Human"); 
     }
-    
-
-
-
-   
-
-   
-
     return true;
 }
 
 void Level::Tick(float deltaTime)
 {
+    if (_roomManager)
+        _roomManager->Tick(deltaTime);
+
     //지울 액터들
     for (auto it : _removeActors)
     {
@@ -105,6 +119,8 @@ void Level::Tick(float deltaTime)
     }
 
     _uiManager->Tick(deltaTime);
+    
+
 }
 
 void Level::Collision(float deltaTime)
@@ -158,6 +174,9 @@ void Level::RenderUI(float deltaTime)
 
 void Level::Destroy()
 {
+    if (_roomManager)
+        DESTROY(_roomManager);
+
     for (auto& it : _actors)
         DESTROY(it.second)
 
@@ -167,6 +186,7 @@ void Level::Destroy()
     DESTROY(_cameraManager);
     DESTROY(_collisionManager);
     DESTROY(_uiManager);
+    
 }
 
 void Level::Save(std::ofstream& file)
@@ -287,4 +307,18 @@ void Level::FindActors(const std::string& tag, OUT std::vector<Ptr<class Actor>>
 void Level::RemoveActor(int32 id)
 {
     _removeActors.push_back(id);
+}
+
+void Level::GenerateRandomMap()
+{
+    _roomManager = New<RoomManager>();
+    _roomManager->Init(This<Level>(), 960.f, 576.f);
+    _roomManager->CollectRoomFiles(L"../Resources/Room");
+    int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount());
+    _roomManager->GenerateLayout(count);
+    _roomManager->AssignRooms();
+    _roomManager->LoadAllRooms();
+    _roomManager->ActivateStartRoom();
+
+
 }

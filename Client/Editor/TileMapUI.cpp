@@ -15,6 +15,7 @@
 
 #include "../World/Level.h"
 #include "../World/World.h"
+#include "../World/RoomManager.h"
 
 
 
@@ -38,6 +39,8 @@ void TileMapUI::Render(float deltaTime)
 {
     EditorUI::Render(deltaTime);
 
+    
+    
     bool EditorOnOff = BeginWindow(); //"Room_Editor"
 
     if (EditorOnOff)
@@ -86,6 +89,12 @@ void TileMapUI::Render(float deltaTime)
             }
 
         }
+        ImGui::SameLine();
+        if (ImGui::Button("Random Map Create"))
+        {
+            Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+            level->GenerateRandomMap();
+        }
 
         // 여기에 위젯 추가
         ImGui::SeparatorText("Create Room");
@@ -111,6 +120,9 @@ void TileMapUI::Render(float deltaTime)
                     FVector3D scale(1, 1, 1);
                     FRotator rot(0, 0, 1);
 
+                    // 이름 번호 추가 
+                    snprintf(_roomName, sizeof(_roomName), "Room_%02d", _roomNameCounter++);
+                    
 
                     // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
                     Ptr<TileMap> tilemap = level->SpawnActor<TileMap>(_roomName, pos, scale, rot);

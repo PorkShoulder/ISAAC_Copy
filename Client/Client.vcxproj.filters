@@ -541,6 +541,7 @@
     <ClInclude Include="Component\CameraComponent.h">
       <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="World\RoomManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -919,6 +920,7 @@
     <ClCompile Include="Component\CameraComponent.cpp">
       <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="World\RoomManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

@@ -15,7 +15,7 @@ public:
     Level(Level&&) = delete;
     Level& operator=(const Level&) = delete;
     Level& operator=(Level&&) = delete;
-
+    
 private:
     int32 _actorID = 0;
     std::map<int32, Ptr<class Actor>> _actors;
@@ -24,6 +24,9 @@ private:
     Ptr<class CameraManager> _cameraManager;
     Ptr<class CollisionManager> _collisionManager;
     Ptr<class UIManager> _uiManager;
+    Ptr<class RoomManager> _roomManager;
+    // 랜덤맵 on/off 초기 -> off
+    bool _useRandomMap = false; 
 
 public:
     virtual bool Init(const std::string& path);
@@ -60,6 +63,8 @@ public:
     void FindActors(const std::string& tag, OUT std::vector<Ptr<class Actor>>& outArr);
 
     void RemoveActor(int32 id);
+
+    void GenerateRandomMap();
 
     //레벨에서 객체들을 Actor 클래스로 관리하고 있으므로
     //Actor 클래스 타입으로 가져온다.

@@ -325,6 +325,7 @@
     <ClInclude Include="UI\Widget.h" />
     <ClInclude Include="World\CameraManager.h" />
     <ClInclude Include="World\Level.h" />
+    <ClInclude Include="World\RoomManager.h" />
     <ClInclude Include="World\TagManager.h" />
     <ClInclude Include="World\World.h" />
   </ItemGroup>
@@ -495,6 +496,7 @@
     <ClCompile Include="UI\Widget.cpp" />
     <ClCompile Include="World\CameraManager.cpp" />
     <ClCompile Include="World\Level.cpp" />
+    <ClCompile Include="World\RoomManager.cpp" />
     <ClCompile Include="World\TagManager.cpp" />
     <ClCompile Include="World\World.cpp" />
   </ItemGroup>

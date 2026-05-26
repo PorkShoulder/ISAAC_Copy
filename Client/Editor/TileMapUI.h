@@ -43,7 +43,10 @@ protected:
 	bool _flipX = false;
 	bool _flipY = false;
 
+	
 	// 이름 설정
+	int _roomNameCounter = 1;
+
 	char _roomName[64] = "Room_01";
 
 

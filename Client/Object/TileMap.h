@@ -24,6 +24,16 @@ private:
     Ptr<class TileComponent> _tileComponent;
 
 public:
+    // 타일 빈 공간확인
+    int32 _gridW = 1;
+    int32 _gridH = 1;
+    std::vector <std::pair<int32, int32>> _emptyCells;
+    // Apply 그리드 확인용
+    int32 GetGridW() const { return _gridW; }
+    int32 GetGridH() const { return _gridH; }
+    const std::vector<std::pair<int32, int32>>& GetEmptyCells() const { return _emptyCells; }
+
+public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
     virtual void Tick(float deltaTime) override;
     virtual void Collision(float deltaTime) override;
@@ -54,6 +64,13 @@ public:
     // 미리보기 반전
     void SetViewFlipX(bool v) { _viewFlipX = v; }
     void SetViewFlipY(bool v) { _viewFlipY = v; }
+
+    //빈 공간 판별
+    void DetectEmptyCells();
+
+    //그리드 2x2 빈칸 정보 전달
+    void SetEmptyCells(const std::vector<std::pair<int32, int32>>& cells) { _emptyCells = cells; }
+
 
 
 };

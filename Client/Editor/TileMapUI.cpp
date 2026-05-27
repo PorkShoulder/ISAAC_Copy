@@ -9,6 +9,7 @@
 #include "../Core/GameEngine.h"
 #include "../Core/Texture.h"
 #include "../Core/AssetManager.h"
+#include "../Core/DirectoryManager.h"
 
 #include "../Component/TileComponent.h"
 #include "../Component/CameraComponent.h"
@@ -16,6 +17,10 @@
 #include "../World/Level.h"
 #include "../World/World.h"
 #include "../World/RoomManager.h"
+
+
+
+#include <algorithm>
 
 
 
@@ -47,7 +52,7 @@ void TileMapUI::Render(float deltaTime)
     {
         ImGui::SeparatorText("Texture Select");
 
-        // 현재 선택된 텍스처 이름 표시
+        // 현재 선택된 텍스처 이름 표시 ->나중에 고치기
         ImGui::Text("Selected: %s", _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str());
         ImGui::SameLine();
         // ...Browse->찾아보기 버튼.
@@ -61,7 +66,16 @@ void TileMapUI::Render(float deltaTime)
             ofn.lpstrFilter = L"PNG Files\0*.png\0All Files\0*.*\0";
             ofn.lpstrFile = filePath;
             ofn.nMaxFile = MAX_PATH;
-            ofn.lpstrInitialDir = L"ISAAC_Map\\room";
+            static std::wstring texDirW;
+            auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
+            if (resPath.has_value())
+            {
+                std::filesystem::path texDir;
+                if (DirectoryManager::Instance().GetDirectory(resPath.value(), "Texture", texDir))
+                    texDirW = texDir.wstring();
+            }
+            if (!texDirW.empty())
+                ofn.lpstrInitialDir = texDirW.c_str();
             ofn.Flags = OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
             if (GetOpenFileName(&ofn))
@@ -89,6 +103,7 @@ void TileMapUI::Render(float deltaTime)
             }
 
         }
+
         ImGui::SameLine();
         if (ImGui::Button("Random Map Create"))
         {
@@ -121,8 +136,8 @@ void TileMapUI::Render(float deltaTime)
                     FRotator rot(0, 0, 1);
 
                     // 이름 번호 추가 
-                    snprintf(_roomName, sizeof(_roomName), "Room_%02d", _roomNameCounter++);
-                    
+                    if(strlen(_roomName) == 0)
+                        snprintf(_roomName, sizeof(_roomName), "Room_%02d", _roomNameCounter++);
 
                     // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
                     Ptr<TileMap> tilemap = level->SpawnActor<TileMap>(_roomName, pos, scale, rot);
@@ -178,30 +193,24 @@ void TileMapUI::Render(float deltaTime)
                         // 렌더 갱신 
                         tileComp->SetTileInstRefresh(true);
                         tileComp->SetTileLineInstRefresh(true);
-                        
+
+                        // 그리드 정보 불러오기
+                        _gridW = selectedTileMap->GetGridW();
+                        _gridH = selectedTileMap->GetGridH();
+                        _emptyCells = selectedTileMap->GetEmptyCells();
+
                         // 선택한 텍스처가 있으면 적용
                         if (_selectedTexture)
                             tileComp->SetTexture(_selectedTexture);
 
-                        //// 선택한 프레임이 있으면 최소 1개 등록
-                        //if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
-                        //{
-                        //    tileComp->AddTileFrame(
-                        //        (float)_selectedFrameX,
-                        //        (float)_selectedFrameY,
-                        //        (float)_frameWidth,
-                        //        (float)_frameHeight
-                        //        );
-                        //}
+                    
                         // 숨김 상태였다면 다시 보이게
                         selectedTileMap->SetEnable(true);
                         selectedTileMap->SetActive(true);
                      
                     }
-
                 }
             }
-
         }
 
         // 가로로 나란히
@@ -229,7 +238,6 @@ void TileMapUI::Render(float deltaTime)
                     }
                 }
             }
-
         }
         // 4. Save
         if (ImGui::Button("Save", buttonSize))
@@ -243,6 +251,17 @@ void TileMapUI::Render(float deltaTime)
             ofn.lpstrFile = filePath;
             ofn.nMaxFile = MAX_PATH;
             ofn.lpstrDefExt = L"room";
+            static std::wstring roomDirW;
+            auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
+            if (resPath.has_value())
+            {
+                std::filesystem::path roomDir;
+                if (DirectoryManager::Instance().GetDirectory(resPath.value(), "Room", roomDir))
+                    roomDirW = roomDir.wstring();
+            }
+            if (!roomDirW.empty())
+                ofn.lpstrInitialDir = roomDirW.c_str();
+
             ofn.Flags = OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
 
             if (GetSaveFileName(&ofn))
@@ -253,22 +272,15 @@ void TileMapUI::Render(float deltaTime)
                     Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
                     const auto& actors = level->GetActors();
 
-                    // TileMap 개수 세기
-                    int32 roomCount = 0;
-                    for (auto& [id, actor] : actors)
-                    {
-                        if (Cast<Actor, TileMap>(actor))
-                            roomCount++;
-                    }
+                    // 변경 — 선택된 TileMap 1개만 저장
+                    int32 roomCount = 1;
                     file.write((char*)&roomCount, sizeof(int32));
 
-                    // 각 방 저장
-                    for (auto& [id, actor] : actors)
-                    {
-                        Ptr<TileMap> room = Cast<Actor, TileMap>(actor);
-                        if (room)
-                            room->Save(file);
-                    }
+                    
+                    if (_targetTileMap)
+                        _targetTileMap->SetEmptyCells(_emptyCells);
+                        _targetTileMap->Save(file);
+                    
                     file.close();
                 }
             }
@@ -287,6 +299,19 @@ void TileMapUI::Render(float deltaTime)
             ofn.lpstrFilter = L"Room Files\0*.room\0";
             ofn.lpstrFile = filePath;
             ofn.nMaxFile = MAX_PATH;
+
+            // 초기 폴더를 Resources/Room으로 설정
+            static std::wstring roomDirW;
+            auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
+            if (resPath.has_value())
+            {
+                std::filesystem::path roomDir;
+                if (DirectoryManager::Instance().GetDirectory(resPath.value(), "Room", roomDir))
+                    roomDirW = roomDir.wstring();
+            }
+            if (!roomDirW.empty())
+                ofn.lpstrInitialDir = roomDirW.c_str();
+
             ofn.Flags = OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
 
             if (GetOpenFileName(&ofn))
@@ -313,6 +338,46 @@ void TileMapUI::Render(float deltaTime)
                 }
             }
         }
+        // 빈칸 확인용
+        ImGui::SeparatorText("Grid Info");
+        ImGui::InputInt("Grid W", &_gridW);
+        ImGui::InputInt("Grid H", &_gridH);
+
+        // 빈 칸 토글 (2x2 기준)
+        if (_gridW > 1 || _gridH > 1)
+        {
+            for (int32 y = 0; y < _gridH; ++y)
+            {
+                for (int32 x = 0; x < _gridW; ++x)
+                {
+                    // 빈 칸인지 체크
+                    bool isEmpty = false;
+                    for (auto& e : _emptyCells)
+                        if (e.first == x && e.second == y)
+                        {
+                            isEmpty = true; break;
+                        }
+
+                    ImGui::PushID(y * _gridW + x);
+                    if (ImGui::Checkbox("##cell", &isEmpty))
+                    {
+                        if (isEmpty)
+                            _emptyCells.push_back({ x, y });
+                        else
+                            _emptyCells.erase(
+                                std::remove(_emptyCells.begin(), _emptyCells.end(),
+                                    std::make_pair(x, y)), _emptyCells.end());
+                    }
+                    ImGui::PopID();
+
+                    if (x < _gridW - 1) ImGui::SameLine();
+                }
+            }
+        }
+
+
+
+
 
         ////////////////////////////
         // 6. 프레임 추가.

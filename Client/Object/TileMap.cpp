@@ -190,6 +190,26 @@ void TileMap::Save(std::ofstream& file)
     FVector3D pos = GetWorldPosition();
     file.write((char*)&pos, sizeof(FVector3D));
 
+    //그리드 사이즈 자동 계산
+    if (_tileComponent)
+    {
+        int32 totalTilesX = _tileComponent->GetTileCountX();
+        int32 totalTilesY = _tileComponent->GetTileCountY();
+        _gridW = (totalTilesX + 14) / 15;  // 올림 나눗셈
+        _gridH = (totalTilesY + 8) / 9;    // 올림 나눗셈
+    }
+
+    //타일 빈공간 확인용 -> 그리드 읽기
+    file.write((char*)&_gridW, sizeof(int32));
+    file.write((char*)&_gridH, sizeof(int32));
+    int32 emptyCount = (int32)_emptyCells.size();
+    file.write((char*)&emptyCount, sizeof(int32));
+    for (auto& cell : _emptyCells)
+    {
+        file.write((char*)&cell.first, sizeof(int32));
+        file.write((char*)&cell.second, sizeof(int32));
+    }
+
     // TileComponent 저장
     _tileComponent->Save(file);
 }
@@ -207,7 +227,23 @@ void TileMap::Load(std::ifstream& file)
     FVector3D pos;
     file.read((char*)&pos, sizeof(FVector3D));
     SetWorldPosition(pos);
+    
+    
 
+    //그리드 읽기
+    file.read((char*)&_gridW, sizeof(int32));
+    file.read((char*)&_gridH, sizeof(int32));
+    int32 emptyCount = 0;
+    file.read((char*)&emptyCount, sizeof(int32));
+    _emptyCells.clear();
+
+    for (int32 i = 0; i < emptyCount; ++i)
+    {
+        int32 x, y;
+        file.read((char*)&x, sizeof(int32));
+        file.read((char*)&y, sizeof(int32));
+        _emptyCells.push_back({ x, y });
+    }
     // TileComponent 불러오기
     _tileComponent->Load(file);
 }
@@ -269,4 +305,11 @@ void TileMap::FlipTileY(const FVector2D& pos)
     if (!tile) return;
     tile->ToggleFlipY();
     _tileComponent->SetTileInstRefresh(true);
+}
+
+void TileMap::DetectEmptyCells()
+{
+    _emptyCells.clear();
+
+
 }

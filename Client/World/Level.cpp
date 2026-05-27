@@ -5,7 +5,7 @@
 
 #include "Collision/CollisionManager.h"
 
-#include "Object/TestActor.h"
+//#include "Object/TestActor.h"
 #include "Object/Player.h"
 #include "Object/Monster.h"
 #include "Object/TileMap.h"
@@ -312,13 +312,11 @@ void Level::RemoveActor(int32 id)
 void Level::GenerateRandomMap()
 {
     _roomManager = New<RoomManager>();
-    _roomManager->Init(This<Level>(), 960.f, 576.f);
-    _roomManager->CollectRoomFiles(L"../Resources/Room");
+    _roomManager->Init(This<Level>());
+    _roomManager->CollectRoomFiles();
     int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount());
     _roomManager->GenerateLayout(count);
     _roomManager->AssignRooms();
     _roomManager->LoadAllRooms();
     _roomManager->ActivateStartRoom();
-
-
 }

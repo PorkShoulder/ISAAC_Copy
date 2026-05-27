@@ -275,12 +275,11 @@
     <ClInclude Include="Object\Bullet.h" />
     <ClInclude Include="Object\Camera.h" />
     <ClInclude Include="Object\IsaacPlayer.h" />
+    <ClInclude Include="Object\Item.h" />
     <ClInclude Include="Object\Monster.h" />
     <ClInclude Include="Object\Pawn.h" />
     <ClInclude Include="Object\Player.h" />
     <ClInclude Include="Object\RotBullet.h" />
-    <ClInclude Include="Object\TestActor.h" />
-    <ClInclude Include="Object\TestObject.h" />
     <ClInclude Include="Object\TileMap.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Render\BlendState.h" />
@@ -444,12 +443,11 @@
     <ClCompile Include="Object\Bullet.cpp" />
     <ClCompile Include="Object\Camera.cpp" />
     <ClCompile Include="Object\IsaacPlayer.cpp" />
+    <ClCompile Include="Object\Item.cpp" />
     <ClCompile Include="Object\Monster.cpp" />
     <ClCompile Include="Object\Pawn.cpp" />
     <ClCompile Include="Object\Player.cpp" />
     <ClCompile Include="Object\RotBullet.cpp" />
-    <ClCompile Include="Object\TestActor.cpp" />
-    <ClCompile Include="Object\TestObject.cpp" />
     <ClCompile Include="Object\TileMap.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -56,6 +56,7 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 
     SetRootComponent(body);
     body->SetRelativeScale(64.f, 64.f, 64.f);
+
     //InputComponent를 가져온다.
     Ptr<InputComponent> inputComp = GetController<PlayerController>()->GetInputComponent();
 

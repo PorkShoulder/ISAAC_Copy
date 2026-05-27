@@ -106,29 +106,32 @@
     <Filter Include="12.UI">
       <UniqueIdentifier>{69b50d97-771a-493e-9cb5-6990489bad0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\05.Tile">
-      <UniqueIdentifier>{ea4a2647-990e-45f4-ba40-538ffb5fc18b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\04-01..Animation">
-      <UniqueIdentifier>{e18a8393-ac33-4626-bc64-979121d6f997}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="04.Component\04-02.">
+    <Filter Include="04.Component\AI">
       <UniqueIdentifier>{4541e56a-5043-4f73-a09d-742dd1244169}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\04-04.SceneComponent">
+    <Filter Include="04.Component\Animation">
+      <UniqueIdentifier>{e18a8393-ac33-4626-bc64-979121d6f997}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\Actor">
+      <UniqueIdentifier>{7ad3c180-8368-42b0-a0ea-28037aa68f26}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="04.Component\SceneComponent">
       <UniqueIdentifier>{fe0929e7-f1d2-4098-8779-0ca644c6ba54}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\04-04.SceneComponent\Collider">
+    <Filter Include="04.Component\SceneComponent\Collider">
       <UniqueIdentifier>{9ffe7761-8e19-4baa-9955-8c4caf6f6468}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\04-04.SceneComponent\Mesh">
+    <Filter Include="04.Component\SceneComponent\Mesh">
       <UniqueIdentifier>{dd2a37a8-db11-4afe-8d25-0fdf0e630e28}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\04-04.SceneComponent\Camera">
+    <Filter Include="04.Component\SceneComponent\Camera">
       <UniqueIdentifier>{7bd708d0-5f4a-4ba1-8ee5-2b1b19a9ed99}</UniqueIdentifier>
     </Filter>
-    <Filter Include="04.Component\04-03.Actor">
-      <UniqueIdentifier>{7ad3c180-8368-42b0-a0ea-28037aa68f26}</UniqueIdentifier>
+    <Filter Include="04.Component\Tile">
+      <UniqueIdentifier>{ea4a2647-990e-45f4-ba40-538ffb5fc18b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="03.Object\Player">
+      <UniqueIdentifier>{dd6ef431-27c6-43cd-9e70-0172ef2fdc32}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -303,9 +306,6 @@
     <ClInclude Include="Object\Pawn.h">
       <Filter>03.Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object\Player.h">
-      <Filter>03.Object</Filter>
-    </ClInclude>
     <ClInclude Include="Controller\PlayerController.h">
       <Filter>06.Controller</Filter>
     </ClInclude>
@@ -355,7 +355,7 @@
       <Filter>01.Core\Asset\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Component\Animation2D.h">
-      <Filter>04.Component\04-01..Animation</Filter>
+      <Filter>04.Component\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Shader\AnimCBuffer.h">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -382,19 +382,19 @@
       <Filter>05.Collision</Filter>
     </ClInclude>
     <ClInclude Include="Component\AABBCollisionComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\CollisionComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\OBBCollisionComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\SphereCollisionComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Component\TileComponent.h">
-      <Filter>04.Component\05.Tile</Filter>
+      <Filter>04.Component\Tile</Filter>
     </ClInclude>
     <ClInclude Include="Shader\TileMapCBuffer.h">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -414,19 +414,9 @@
     <ClInclude Include="Shader\TileSBuffer.h">
       <Filter>09.Shader\StructBuffer</Filter>
     </ClInclude>
-    <ClInclude Include="Component\MachineBase.h" />
-    <ClInclude Include="UI\ProgressBar.h" />
-    <ClInclude Include="UI\TextBlock.h" />
-    <ClInclude Include="UI\UIManager.h" />
-    <ClInclude Include="UI\Widget.h" />
-    <ClInclude Include="Shader\ProgressBarCBuffer.h">
-      <Filter>09.Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Shader\ProgressBarShader.h">
       <Filter>09.Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Shader\UICBuffer.h" />
-    <ClInclude Include="Shader\UIShader.h" />
     <ClInclude Include="Core\Sound.h">
       <Filter>01.Core</Filter>
     </ClInclude>
@@ -487,18 +477,9 @@
     <ClInclude Include="Object\RotBullet.h">
       <Filter>03.Object</Filter>
     </ClInclude>
-    <ClInclude Include="Object\TileMap.h" />
-    <ClInclude Include="Object\TestActor.h">
-      <Filter>03.Object</Filter>
-    </ClInclude>
-    <ClInclude Include="Object\TestObject.h">
-      <Filter>03.Object</Filter>
-    </ClInclude>
     <ClInclude Include="Core\MeshManager.h">
       <Filter>01.Core</Filter>
     </ClInclude>
-    <ClInclude Include="Core\IsaacAnimationLoader.h" />
-    <ClInclude Include="Object\IsaacPlayer.h" />
     <ClInclude Include="Editor\LoadUI.h">
       <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
@@ -518,30 +499,71 @@
       <Filter>12.UI</Filter>
     </ClInclude>
     <ClInclude Include="Component\Tile.h">
-      <Filter>04.Component\05.Tile</Filter>
+      <Filter>04.Component\Tile</Filter>
     </ClInclude>
     <ClInclude Include="Component\AIBoard.h">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClInclude>
     <ClInclude Include="Component\AIComponent.h">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClInclude>
     <ClInclude Include="Component\AIState.h">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClInclude>
     <ClInclude Include="Component\AITransition.h">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClInclude>
     <ClInclude Include="Component\ActorComponent.h">
-      <Filter>04.Component\04-03.Actor</Filter>
+      <Filter>04.Component\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Component\MeshComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Mesh</Filter>
+      <Filter>04.Component\SceneComponent\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="Component\CameraComponent.h">
-      <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
+      <Filter>04.Component\SceneComponent\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="World\RoomManager.h" />
+    <ClInclude Include="Shader\UICBuffer.h">
+      <Filter>09.Shader\StructBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\ProgressBarCBuffer.h">
+      <Filter>09.Shader\StructBuffer</Filter>
+    </ClInclude>
+    <ClInclude Include="Component\MachineBase.h">
+      <Filter>04.Component\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\TileMap.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\IsaacAnimationLoader.h">
+      <Filter>01.Core\Asset\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="World\RoomManager.h">
+      <Filter>08.World</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader\UIShader.h">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UIManager.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\ProgressBar.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\TextBlock.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\Widget.h">
+      <Filter>12.UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\IsaacPlayer.h">
+      <Filter>03.Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Player.h">
+      <Filter>03.Object\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Item.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -685,9 +707,6 @@
     <ClCompile Include="Object\Pawn.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
-    <ClCompile Include="Object\Player.cpp">
-      <Filter>03.Object</Filter>
-    </ClCompile>
     <ClCompile Include="Controller\PlayerController.cpp">
       <Filter>06.Controller</Filter>
     </ClCompile>
@@ -737,7 +756,7 @@
       <Filter>01.Core\Asset\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Component\Animation2D.cpp">
-      <Filter>04.Component\04-01..Animation</Filter>
+      <Filter>04.Component\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Shader\AnimCBuffer.cpp">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -764,19 +783,19 @@
       <Filter>05.Collision</Filter>
     </ClCompile>
     <ClCompile Include="Component\AABBCollisionComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\CollisionComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\OBBCollisionComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\SphereCollisionComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Collider</Filter>
+      <Filter>04.Component\SceneComponent\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Component\TileComponent.cpp">
-      <Filter>04.Component\05.Tile</Filter>
+      <Filter>04.Component\Tile</Filter>
     </ClCompile>
     <ClCompile Include="Shader\TileMapCBuffer.cpp">
       <Filter>09.Shader\ConstantBuffer</Filter>
@@ -796,19 +815,9 @@
     <ClCompile Include="Shader\TileSBuffer.cpp">
       <Filter>09.Shader\StructBuffer</Filter>
     </ClCompile>
-    <ClCompile Include="Component\MachineBase.cpp" />
-    <ClCompile Include="UI\ProgressBar.cpp" />
-    <ClCompile Include="UI\TextBlock.cpp" />
-    <ClCompile Include="UI\UIManager.cpp" />
-    <ClCompile Include="UI\Widget.cpp" />
-    <ClCompile Include="Shader\ProgressBarCBuffer.cpp">
-      <Filter>09.Shader</Filter>
-    </ClCompile>
     <ClCompile Include="Shader\ProgressBarShader.cpp">
       <Filter>09.Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Shader\UICBuffer.cpp" />
-    <ClCompile Include="Shader\UIShader.cpp" />
     <ClCompile Include="Core\Sound.cpp">
       <Filter>01.Core</Filter>
     </ClCompile>
@@ -866,18 +875,9 @@
     <ClCompile Include="Object\RotBullet.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
-    <ClCompile Include="Object\TileMap.cpp" />
-    <ClCompile Include="Object\TestActor.cpp">
-      <Filter>03.Object</Filter>
-    </ClCompile>
-    <ClCompile Include="Object\TestObject.cpp">
-      <Filter>03.Object</Filter>
-    </ClCompile>
     <ClCompile Include="Core\MeshManager.cpp">
       <Filter>01.Core</Filter>
     </ClCompile>
-    <ClCompile Include="Core\IsaacAnimationLoader.cpp" />
-    <ClCompile Include="Object\IsaacPlayer.cpp" />
     <ClCompile Include="Editor\LoadUI.cpp">
       <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
@@ -897,30 +897,71 @@
       <Filter>12.UI</Filter>
     </ClCompile>
     <ClCompile Include="Component\Tile.cpp">
-      <Filter>04.Component\05.Tile</Filter>
+      <Filter>04.Component\Tile</Filter>
     </ClCompile>
     <ClCompile Include="Component\AIBoard.cpp">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClCompile>
     <ClCompile Include="Component\AIComponent.cpp">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClCompile>
     <ClCompile Include="Component\AIState.cpp">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClCompile>
     <ClCompile Include="Component\AITransition.cpp">
-      <Filter>04.Component\04-02.</Filter>
+      <Filter>04.Component\AI</Filter>
     </ClCompile>
     <ClCompile Include="Component\ActorComponent.cpp">
-      <Filter>04.Component\04-03.Actor</Filter>
+      <Filter>04.Component\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Component\MeshComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Mesh</Filter>
+      <Filter>04.Component\SceneComponent\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="Component\CameraComponent.cpp">
-      <Filter>04.Component\04-04.SceneComponent\Camera</Filter>
+      <Filter>04.Component\SceneComponent\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="World\RoomManager.cpp" />
+    <ClCompile Include="Shader\UICBuffer.cpp">
+      <Filter>09.Shader\StructBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\ProgressBarCBuffer.cpp">
+      <Filter>09.Shader\StructBuffer</Filter>
+    </ClCompile>
+    <ClCompile Include="Component\MachineBase.cpp">
+      <Filter>04.Component\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\TileMap.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\IsaacAnimationLoader.cpp">
+      <Filter>01.Core\Asset\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="World\RoomManager.cpp">
+      <Filter>08.World</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader\UIShader.cpp">
+      <Filter>09.Shader\ShaderClass</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UIManager.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\ProgressBar.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\TextBlock.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\Widget.cpp">
+      <Filter>12.UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\IsaacPlayer.cpp">
+      <Filter>03.Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Player.cpp">
+      <Filter>03.Object\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Item.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

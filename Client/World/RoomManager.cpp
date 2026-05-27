@@ -1,7 +1,15 @@
 #include "pch.h"
 #include "RoomManager.h"
 #include "Level.h"
+
 #include "../Object/TileMap.h"
+
+#include "../Core/DirectoryManager.h"
+
+#include "../Component/TileComponent.h"
+
+
+
 
 RoomManager::RoomManager()
 {
@@ -11,37 +19,76 @@ RoomManager::~RoomManager()
 {
 }
 
-void RoomManager::Init(Ptr<class Level > level, float roomWorldW, float roomWorldH)
+void RoomManager::Init(Ptr<class Level > level)
 {
 	// 초기화 레벨 참조 저장, 방 크기 설정.
 	_level = level;
-	_roomWorldWidth = roomWorldW;
-	_roomWorldHeight = roomWorldH;
+    // To do 타일 자동으로 계산되도록 향후 변경
+	_roomWorldWidth =780.f;
+	_roomWorldHeight =468.f;
 }
 
-void RoomManager::CollectRoomFiles(const std::wstring& folderPath)
+void RoomManager::CollectRoomFiles()
 {
-	//.room 파일 수집 
     _roomFiles.clear();
 
-    WIN32_FIND_DATA findData;
-    std::wstring searchPath = folderPath + L"\\*.room";
-
-    HANDLE hFind = FindFirstFile(searchPath.c_str(), &findData);
-    if (hFind == INVALID_HANDLE_VALUE)
+    // Resources 캐시 경로 가져오기
+    auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
+    if (!resPath.has_value())
         return;
-    do
+
+    // Resources/Room 폴더 경로 가져오기
+    std::filesystem::path roomDir;
+    if (!DirectoryManager::Instance().GetDirectory(resPath.value(), "Room", roomDir))
+        return;
+
+    // Room 폴더 내 파일 순회
+    for (auto& entry : std::filesystem::directory_iterator(roomDir))
     {
-        // 폴더는 건너뛰고 파일만 수집
-        if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-            continue;
-        std::wstring fullPath = folderPath + L"\\" + findData.cFileName;
-        std::string path(fullPath.begin(), fullPath.end());
-        _roomFiles.push_back(path);
+        // 파일인지 확인 + .room 확장자인지 확인
+        if (DirectoryManager::Instance().IsFile(entry.path()) &&
+            DirectoryManager::Instance().IsExtension(entry.path(), ".room"))
+        {
+            FRoomFileEntry roomEntry;
+            roomEntry.filePath = entry.path().string();
 
-    } while (FindNextFile(hFind, &findData));
+            // gridW, gridH 미리 읽기
+            std::ifstream tempFile(entry.path(), std::ios::binary);
+            if (tempFile.is_open())
+            {
+                int32 roomCount = 0;
+                tempFile.read((char*)&roomCount, sizeof(int32));
 
-    FindClose(hFind);
+                // 이름 길이 + 이름 스킵
+                int32 nameLen = 0;
+                tempFile.read((char*)&nameLen, sizeof(int32));
+                tempFile.seekg(nameLen, std::ios::cur);
+
+                // 위치(FVector3D) 스킵
+                tempFile.seekg(sizeof(FVector3D), std::ios::cur);
+
+                // gridW, gridH 읽기
+                tempFile.read((char*)&roomEntry.gridW, sizeof(int32));
+                tempFile.read((char*)&roomEntry.girdH, sizeof(int32));
+
+                // emptyCells 읽기
+                int32 emptyCount = 0;
+                tempFile.read((char*)&emptyCount, sizeof(int32));
+
+                for (int32 i = 0; i < emptyCount; ++i)
+                {
+                    int32 ex, ey;
+                    tempFile.read((char*)&ex, sizeof(int32));
+                    tempFile.read((char*)&ey, sizeof(int32));
+                    roomEntry.emptyCells.push_back({ ex, ey });
+                }
+
+                
+            }
+
+            _roomFiles.push_back(roomEntry);
+        }
+    }
 }
 
 void RoomManager::GenerateLayout(int32 roomCount)
@@ -72,6 +119,7 @@ void RoomManager::GenerateLayout(int32 roomCount)
         std::vector<std::pair<int32, int32>> keys;
         for (auto& pair : _roomPos)
             keys.push_back(pair.first);
+
         // 기존 위치값 중 랜덤 하나를 선택 
         int32 randIdx = rand() % (int32)keys.size();
         int32 baseX = keys[randIdx].first;
@@ -113,6 +161,28 @@ void RoomManager::ConnectNeighbors()
     }
 }
 
+bool RoomManager::TryPlaceRoom(FRoomInfo& cell)
+{
+    // 방이 차지할 모든 셀이 비어있는지 확인
+    for (auto& offset : cell.occupiedCells)
+    {
+        int32 gx = cell.gridX + offset.first;
+        int32 gy = cell.gridY + offset.second;
+        // 겹침 확인.
+        if (_occupiedGrid.find({ gx, gy }) != _occupiedGrid.end())
+            return false;
+
+    }
+    // 전부 비어져있으면 공간 확보.
+    for (auto& offset : cell.occupiedCells)
+    {
+        int32 gx = cell.gridX + offset.first;
+        int32 gy = cell.gridY + offset.second;
+        _occupiedGrid.insert({ gx, gy });
+    }
+    return true;
+}
+
 void RoomManager::AssignRooms()
 {
     // .room 파일 랜덤 배정
@@ -120,7 +190,7 @@ void RoomManager::AssignRooms()
         return;
 
     // 셔플용 복사본
-    std::vector<std::string> shuffled = _roomFiles;
+    std::vector<FRoomFileEntry> shuffled = _roomFiles;
     
     //  랜덤셔플
     for (int32 i = (int32)shuffled.size() - 1; i > 0; --i)
@@ -128,47 +198,87 @@ void RoomManager::AssignRooms()
         int32 j = rand() % (i + 1);
         std::swap(shuffled[i], shuffled[j]);
     }
+
     int32 idx = 0;
     for (auto& [key, cell] : _roomPos)
     {
         if (idx >= (int32)shuffled.size())
             break;
-        cell.roomFilePath = shuffled[idx];
-        ++idx;
+
+        // 변경 — 빈칸 제외
+        cell.occupiedCells.clear();
+        for (int32 gy = 0; gy < shuffled[idx].girdH; ++gy)
+        {
+            for (int32 gx = 0; gx < shuffled[idx].gridW; ++gx)
+            {
+                // emptyCells에 포함되어 있으면 건너뜀
+                bool skip = false;
+                for (auto& e : shuffled[idx].emptyCells)
+                {
+                    if (e.first == gx && e.second == gy)
+                    {
+                        skip = true; break;
+                    }
+                }
+                if (!skip)
+                    cell.occupiedCells.push_back({ gx, gy });
+            }
+        }
+
+        // 겹침 확인
+        if (TryPlaceRoom(cell))
+        {
+
+            cell.roomFilePath = shuffled[idx].filePath;
+            ++idx;
+        }
+        else
+        {
+            // 겹치면 이 셀은 건너뜀 (occupiedCells 비우기)
+            cell.occupiedCells.clear();
+        }
     }
 }
 
 void RoomManager::LoadAllRooms()
 {
+    // 1차: 로드만 해서 실제 크기 파악
     for (auto& [key, cell] : _roomPos)
     {
-        // 그리드 좌표 × 방 크기 = 월드 좌표
-        FVector3D worldPos;
-        worldPos._x = cell.gridX * (_roomWorldWidth + _roomGap);
-        worldPos._y = cell.gridY * (_roomWorldHeight + _roomGap);
-        worldPos._z = 0.f;
-
-        // 방 이름: "Room_X_Y" 형식
-        std::string name = "Room_" + std::to_string(cell.gridX)
-            + "_" + std::to_string(cell.gridY);
-
-        // Level에 TileMap 액터 스폰
-        cell.tileMap = _level->SpawnActor<TileMap>(name, worldPos, FVector3D(1, 1, 1), FRotator(0, 0, 0));
-
-        // .room 파일에서 타일 데이터 로드
         if (!cell.roomFilePath.empty())
         {
-            std::ifstream file(cell.roomFilePath, std::ios::binary);
-            if (file.is_open())
+            std::filesystem::path filePath(cell.roomFilePath);
+            if (DirectoryManager::Instance().IsFile(filePath))
             {
-                int32 roomCount = 0;
-                file.read((char*)&roomCount, sizeof(int32));
-                
-                // 첫 번째 방 데이터 로드
-                cell.tileMap->Load(file);
-                cell.tileMap->SetWorldPosition (worldPos);
-                cell.isLoaded = true;
+                std::ifstream file(filePath, std::ios::binary);
+                if (file.is_open())
+                {
+                    int32 roomCount = 0;
+                    file.read((char*)&roomCount, sizeof(int32));
+
+                    cell.tileMap = _level->SpawnActor<TileMap>(
+                        "Room_" + std::to_string(cell.gridX) + "_" + std::to_string(cell.gridY),
+                        FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));
+                    cell.tileMap->SetEnable(false);  // ← 렌더링 방지
+                    cell.tileMap->Load(file);
+                    cell.isLoaded = true;
+
+                }
             }
+        }
+    }
+
+    // 2차: 실제 크기 기반으로 위치 재배치
+    for (auto& [key, cell] : _roomPos)
+    {
+        if (cell.tileMap)
+        {
+            FVector3D worldPos;
+            worldPos._x = cell.gridX * (_roomWorldWidth + _roomGap);
+            worldPos._y = cell.gridY * (_roomWorldHeight + _roomGap);
+            worldPos._z = 0.f;
+            cell.tileMap->SetWorldPosition(worldPos);
+            cell.tileMap->SetEnable(true);  // ← 활성화
         }
     }
 }

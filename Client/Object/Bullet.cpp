@@ -10,18 +10,7 @@ bool Bullet::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 {
     Actor::Init(id, pos, scale, rot, name);
 
-    //Ptr<MeshComponent> meshComp = CreateSceneComponent<MeshComponent>("Mesh");
-    //meshComp->SetMesh("Triangle");
-    //meshComp->SetShader("ColorMeshShader");
-
-    //SetRootComponent(meshComp);
-
-    ////생기고나서 10초 후에 자동으로 삭제
-    //_timerID = TimeManager::Instance().SetTimer(10.f, false, this, &Bullet::RemoveBullet);
-
-    //Ptr<MovementComponent> movement = CreateActorComponent<MovementComponent>("Movement");
-    //
-    //movement->SetUpdateComponent(_root);
+    
 
     return true;
 }

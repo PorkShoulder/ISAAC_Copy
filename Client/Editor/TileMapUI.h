@@ -10,9 +10,9 @@ public:
 	virtual ~TileMapUI();
 protected:
 	// 만들 타일맵 크기/ 선택된 타일맵
-	int _countX = 1;
-	int _countY = 1;
-	float _tileSize[2] = { 52.f, 52.f }; // 타일 크기 정수로 바꿔야하나? 
+	int _countX = 15;
+	int _countY = 9;
+	float _tileSize[2] = { 52.f, 52.f }; //  
 	//std::vector<Ptr<class TileMap>> _targetTileMap;
 	Ptr<class TileMap> _targetTileMap;
 
@@ -22,6 +22,7 @@ protected:
 
 	// 선택한 텍스처 객체
 	Ptr<class Texture> _selectedTexture;
+
 	//텍스처 아틀라스에서 선택한 프레임의 시작 좌표
 	int _selectedFrameX = -1;
 	int _selectedFrameY = -1;
@@ -46,11 +47,14 @@ protected:
 	
 	// 이름 설정
 	int _roomNameCounter = 1;
+	char _roomName[64] = "";
 
-	char _roomName[64] = "Room_01";
-
-
-
+	// 그리드 레이아웃 (ㄱ/ㄴ형 빈칸 편집용)
+	int32 _gridW = 1;
+	int32 _gridH = 1;
+	std::vector<std::pair<int32, int32>> _emptyCells;
+public:
+	
 
 
 public:

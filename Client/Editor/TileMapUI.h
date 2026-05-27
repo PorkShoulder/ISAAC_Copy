@@ -1,6 +1,9 @@
 #pragma once
 #include "EditorUI.h"
 
+
+// 정상적 커밋 확인용 글입니다.
+
 class TileMapUI : public EditorUI
 {
 	//class TileMap;

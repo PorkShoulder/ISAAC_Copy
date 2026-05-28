@@ -15,7 +15,7 @@
 #include "PopUpUI.h"
 #include "SaveUI.h"
 #include "LoadUI.h"
-#include "TileMapUI.h"
+#include "EditorMode.h"
 
 #include "Client.h"
 
@@ -34,11 +34,11 @@ bool EditorEngine::Init()
 
     g_isRun = true;
 
-
+    // 이름 등록후 찾는다 
     CreateEditorUI<MainMenuUI>("MainMenu");
     CreateEditorUI<OutLinerUI>("OutLiner");
     CreateEditorUI<InspectorUI>("Inspector");
-    CreateEditorUI<TileMapUI>("Room_Editor");
+    CreateEditorUI<EditorMode>("EditorMode");
 
     
     return true;

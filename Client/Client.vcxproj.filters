@@ -133,6 +133,21 @@
     <Filter Include="03.Object\Player">
       <UniqueIdentifier>{dd6ef431-27c6-43cd-9e70-0172ef2fdc32}</UniqueIdentifier>
     </Filter>
+    <Filter Include="11.Editor\EditorMode">
+      <UniqueIdentifier>{b81c11a0-a350-439d-8f59-d94de2482112}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.Editor\EditorMode\ObjectUI">
+      <UniqueIdentifier>{78650dae-0cb4-47d2-aef7-4f75e626f958}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.Editor\EditorMode\TileMapUI">
+      <UniqueIdentifier>{d5ccd3d2-134f-4fd4-990a-7105b59a587b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.Editor\EditorMode\MonsterUI">
+      <UniqueIdentifier>{73ae0473-c412-4e52-a107-8bb1d71c5b8c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="11.Editor\EditorMode\CharacterUI">
+      <UniqueIdentifier>{a1631771-4eed-4fe2-a022-0e63f72fd9d3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\Info.h">
@@ -468,9 +483,6 @@
     <ClInclude Include="Editor\imstb_truetype.h">
       <Filter>11.Editor\Imgui</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\EditorEngine.h">
-      <Filter>11.Editor\Interface</Filter>
-    </ClInclude>
     <ClInclude Include="Object\Bullet.h">
       <Filter>03.Object</Filter>
     </ClInclude>
@@ -487,9 +499,6 @@
       <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="Editor\SaveUI.h">
-      <Filter>11.Editor\EditorUI</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\TileMapUI.h">
       <Filter>11.Editor\EditorUI</Filter>
     </ClInclude>
     <ClInclude Include="UI\Button.h">
@@ -563,6 +572,28 @@
     </ClInclude>
     <ClInclude Include="Object\Item.h">
       <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorEngine.h">
+      <Filter>11.Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\EditorMode.h" />
+    <ClInclude Include="Editor\DoorUI.h">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ItemUI.h">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\NpcUI.h">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ObjectEditorUI.h">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\ObstacleUI.h">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\TileMapUI.h">
+      <Filter>11.Editor\EditorMode\TileMapUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -866,9 +897,6 @@
     <ClCompile Include="Editor\imgui_widgets.cpp">
       <Filter>11.Editor\Imgui</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\EditorEngine.cpp">
-      <Filter>11.Editor\Interface</Filter>
-    </ClCompile>
     <ClCompile Include="Object\Bullet.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
@@ -885,9 +913,6 @@
       <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="Editor\SaveUI.cpp">
-      <Filter>11.Editor\EditorUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\TileMapUI.cpp">
       <Filter>11.Editor\EditorUI</Filter>
     </ClCompile>
     <ClCompile Include="UI\Button.cpp">
@@ -961,6 +986,28 @@
     </ClCompile>
     <ClCompile Include="Object\Item.cpp">
       <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorEngine.cpp">
+      <Filter>11.Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\EditorMode.cpp" />
+    <ClCompile Include="Editor\DoorUI.cpp">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ItemUI.cpp">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\NpcUI.cpp">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ObjectEditorUI.cpp">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\ObstacleUI.cpp">
+      <Filter>11.Editor\EditorMode\ObjectUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\TileMapUI.cpp">
+      <Filter>11.Editor\EditorMode\TileMapUI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

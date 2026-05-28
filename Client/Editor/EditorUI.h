@@ -12,8 +12,9 @@ public:
     virtual ~EditorUI();
 
 protected:
-    std::string _name;
     bool _open = true;
+    std::string _name;
+
 protected:
     bool BeginWindow();
     void EndWindow();

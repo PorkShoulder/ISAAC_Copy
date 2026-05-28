@@ -30,6 +30,8 @@ bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const F
 
     _name = name;
 
+    _type = eActorType::Actor;
+
     return true;
 }
 

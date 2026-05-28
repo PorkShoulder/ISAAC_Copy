@@ -43,6 +43,8 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     
     Ptr<SpriteComponent> meshComp = CreateSceneComponent<SpriteComponent>("Mesh");
 
+    _type = eActorType::Monster;
+
     return true;
 }
 

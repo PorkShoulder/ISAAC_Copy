@@ -134,8 +134,19 @@ enum class eActorType
 {
     Actor,
     Pawn,
+
+    //
+    Tile,
     Player,
     Monster,
+    
+
+    //
+    Item = 10,
+    Npc,
+    Obstacle,
+    Door,
+
     End
 };
 
@@ -332,3 +343,4 @@ enum class BUTTONTYPE
     NUM,
     END
 };
+

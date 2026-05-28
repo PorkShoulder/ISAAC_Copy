@@ -17,6 +17,8 @@ bool Pawn::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FR
 {
     Actor::Init(id, pos, scale, rot, name);
 
+    _type = eActorType::Pawn;
+
     return true;
 }
 

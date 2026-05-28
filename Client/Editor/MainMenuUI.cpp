@@ -2,6 +2,7 @@
 #include "MainMenuUI.h"
 
 #include "EditorEngine.h"
+#include "EditorMode.h"
 #include "OutLinerUI.h"
 #include "InspectorUI.h"
 #include "TileMapUI.h"
@@ -86,22 +87,22 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
             
         }
 
-        if (ImGui::MenuItem("Room_Editor"))
+        if (ImGui::MenuItem("EditorMode"))
         {
-            Ptr<TileMapUI> tilemap = EditorEngine::Instance().FindEditorUI<TileMapUI>("Room_Editor");
-            if (tilemap)
+            Ptr<EditorMode>editor = EditorEngine::Instance().FindEditorUI<EditorMode>("EditorMode");
+            if (editor)
             {
-                tilemap->SetEnable(true);
-                tilemap->SetOpen(true);
+                editor->SetEnable(true);
+                editor->SetOpen(true);
             }
              
             
         }
-       /* if (ImGui::MenuItem("Save/Load"))
+        if (ImGui::MenuItem("Save/Load"))
         {
 
         }
-*/
+
 
 
 

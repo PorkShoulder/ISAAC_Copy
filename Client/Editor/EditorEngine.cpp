@@ -15,7 +15,7 @@
 #include "PopUpUI.h"
 #include "SaveUI.h"
 #include "LoadUI.h"
-#include "EditorMode.h"
+#include "EditorTool.h"
 
 #include "Client.h"
 
@@ -38,7 +38,7 @@ bool EditorEngine::Init()
     CreateEditorUI<MainMenuUI>("MainMenu");
     CreateEditorUI<OutLinerUI>("OutLiner");
     CreateEditorUI<InspectorUI>("Inspector");
-    CreateEditorUI<EditorMode>("EditorMode");
+    CreateEditorUI<EditorTool>("EditorTool");
 
     
     return true;

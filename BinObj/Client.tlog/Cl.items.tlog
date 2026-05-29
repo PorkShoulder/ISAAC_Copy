@@ -60,7 +60,7 @@ C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\TimeManager.cpp;
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Core\Timer.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Timer.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\DoorUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\DoorUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\EditorEngine.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\EditorEngine.obj
-C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\EditorMode.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\EditorMode.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\EditorTool.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\EditorTool.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\EditorUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\EditorUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\imgui.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\imgui.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\imgui_demo.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\imgui_demo.obj
@@ -73,11 +73,13 @@ C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\InspectorUI.cp
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\ItemUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\ItemUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\LoadUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\LoadUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\MainMenuUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\MainMenuUI.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\MonsterUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\MonsterUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\NpcUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\NpcUI.obj
-C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\ObjectEditorUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\ObjectEditorUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\ObstacleUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\ObstacleUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\OutLinerUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\OutLinerUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\PopUpUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\PopUpUI.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\RoomEditor.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\RoomEditor.obj
+C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\RoomObjectUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\RoomObjectUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\SaveUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\SaveUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Editor\TileMapUI.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\TileMapUI.obj
 C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Client\Input\Input.cpp;C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\BinObj\Input.obj

@@ -1,15 +1,17 @@
 #pragma once
 #include "EditorUI.h"
 
-
-class DoorUI : public EditorUI
+class MonsterUI : public EditorUI
 {
+
 public:
-	DoorUI();
-	virtual ~DoorUI();
+	MonsterUI();
+	virtual ~MonsterUI();
 public:
 	virtual bool Init(const std::string& name) override;
-	virtual void Render(float delteTime) override;
+	virtual void Render(float deltaTime) override;
 	virtual void Destroy() override;
 
+
 };
+

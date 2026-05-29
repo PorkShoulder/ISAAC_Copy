@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "MainMenuUI.h"
-
 #include "EditorEngine.h"
-#include "EditorMode.h"
 #include "OutLinerUI.h"
 #include "InspectorUI.h"
-#include "TileMapUI.h"
+#include "EditorTool.h"
+
 
 MainMenuUI::MainMenuUI()
 {}
@@ -87,9 +86,9 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
             
         }
 
-        if (ImGui::MenuItem("EditorMode"))
+        if (ImGui::MenuItem("EditorTool"))
         {
-            Ptr<EditorMode>editor = EditorEngine::Instance().FindEditorUI<EditorMode>("EditorMode");
+            Ptr<EditorTool>editor = EditorEngine::Instance().FindEditorUI<EditorTool>("EditorTool");
             if (editor)
             {
                 editor->SetEnable(true);
@@ -98,10 +97,7 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
              
             
         }
-        if (ImGui::MenuItem("Save/Load"))
-        {
-
-        }
+      
 
 
 

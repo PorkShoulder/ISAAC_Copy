@@ -134,14 +134,11 @@ enum class eActorType
 {
     Actor,
     Pawn,
-
-    //
-    Tile,
-    Player,
-    Monster,
     
-
-    //
+    // 개별 UI
+    Tile,
+    Player, 
+    Monster,
     Item = 10,
     Npc,
     Obstacle,
@@ -225,9 +222,12 @@ enum eCollisionChannel : unsigned char
 {
     COLLISION_CHANNEL_PLAYER,
     COLLISION_CHANNEL_MONSTER,
+    COLLISION_CHANNEL_MONSTER_BULLET,
     COLLISION_CHANNEL_BULLET,
     COLLISION_CHANNEL_ITEM,
+    COLLISION_CHANNEL_DOOR,
     COLLISION_CHANNEL_BOSS,
+    COLLISION_CHANNEL_NPC,
     COLLISION_CHANNEL_END,
 };
 

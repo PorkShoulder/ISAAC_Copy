@@ -1,9 +1,9 @@
 #pragma once
-#include "EditorEngine.h"
-#include "ObjectEditorUI.h"
+#include "EditorUI.h"
 
 
-class NpcUI : public ObjectEditorUI
+
+class NpcUI : public EditorUI
 {
 public:
 	NpcUI();

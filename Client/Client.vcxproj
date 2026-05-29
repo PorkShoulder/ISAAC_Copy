@@ -251,7 +251,7 @@
     <ClInclude Include="Core\Timer.h" />
     <ClInclude Include="Editor\DoorUI.h" />
     <ClInclude Include="Editor\EditorEngine.h" />
-    <ClInclude Include="Editor\EditorMode.h" />
+    <ClInclude Include="Editor\EditorTool.h" />
     <ClInclude Include="Editor\EditorUI.h" />
     <ClInclude Include="Editor\imconfig.h" />
     <ClInclude Include="Editor\imgui.h" />
@@ -265,11 +265,13 @@
     <ClInclude Include="Editor\ItemUI.h" />
     <ClInclude Include="Editor\LoadUI.h" />
     <ClInclude Include="Editor\MainMenuUI.h" />
+    <ClInclude Include="Editor\MonsterUI.h" />
     <ClInclude Include="Editor\NpcUI.h" />
-    <ClInclude Include="Editor\ObjectEditorUI.h" />
     <ClInclude Include="Editor\ObstacleUI.h" />
     <ClInclude Include="Editor\OutLinerUI.h" />
     <ClInclude Include="Editor\PopUpUI.h" />
+    <ClInclude Include="Editor\RoomEditor.h" />
+    <ClInclude Include="Editor\RoomObjectUI.h" />
     <ClInclude Include="Editor\SaveUI.h" />
     <ClInclude Include="Editor\TileMapUI.h" />
     <ClInclude Include="framework.h" />
@@ -400,7 +402,7 @@
     <ClCompile Include="Core\Timer.cpp" />
     <ClCompile Include="Editor\DoorUI.cpp" />
     <ClCompile Include="Editor\EditorEngine.cpp" />
-    <ClCompile Include="Editor\EditorMode.cpp" />
+    <ClCompile Include="Editor\EditorTool.cpp" />
     <ClCompile Include="Editor\EditorUI.cpp" />
     <ClCompile Include="Editor\imgui.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
@@ -440,11 +442,13 @@
     <ClCompile Include="Editor\ItemUI.cpp" />
     <ClCompile Include="Editor\LoadUI.cpp" />
     <ClCompile Include="Editor\MainMenuUI.cpp" />
+    <ClCompile Include="Editor\MonsterUI.cpp" />
     <ClCompile Include="Editor\NpcUI.cpp" />
-    <ClCompile Include="Editor\ObjectEditorUI.cpp" />
     <ClCompile Include="Editor\ObstacleUI.cpp" />
     <ClCompile Include="Editor\OutLinerUI.cpp" />
     <ClCompile Include="Editor\PopUpUI.cpp" />
+    <ClCompile Include="Editor\RoomEditor.cpp" />
+    <ClCompile Include="Editor\RoomObjectUI.cpp" />
     <ClCompile Include="Editor\SaveUI.cpp" />
     <ClCompile Include="Editor\TileMapUI.cpp" />
     <ClCompile Include="Input\Input.cpp" />

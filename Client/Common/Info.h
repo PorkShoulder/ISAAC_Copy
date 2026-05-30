@@ -139,10 +139,10 @@ enum class eActorType
     Tile,
     Player, 
     Monster,
-    Item = 10,
-    Npc,
     Obstacle,
     Door,
+    Npc,
+    Item = 10,
 
     End
 };

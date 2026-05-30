@@ -27,7 +27,7 @@ protected:
 
 	// 스냅
 	bool _snapGrid = true;
-	float _grideSize = 52.f;
+	float _gridSize = 52.f;
 
 	// 반전
 	bool _flipX = false;
@@ -46,7 +46,7 @@ protected:
 protected:
 	// 렌더 함수
 	void RenderSnapOption();
-	void RenderTextureBrowser();
+	void RenderTextureSelect();
 public:
 	virtual bool Init(const std::string& name) override;
 	virtual void Render(float deltaTime) override;

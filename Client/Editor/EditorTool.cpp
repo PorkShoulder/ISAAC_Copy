@@ -3,7 +3,7 @@
 #include "EditorTool.h"
 // UI 목록
 #include "TileMapUI.h"
-
+#include "RoomObjectUI.h"
 
 
 namespace
@@ -13,12 +13,11 @@ namespace
         const char* name;
         eActorType type;
     };
-    const FEditorTab EditorTabs[] =
+    // 탭 등록용.
+    const FEditorTab EditorTabs[] = 
     {
         { "Tile", eActorType::Tile },
-
-        
-        
+        { "Object", eActorType::Obstacle},
     };
 }
 
@@ -36,7 +35,7 @@ bool EditorTool::Init(const std::string& name)
     SetEnable(false);
     // UI 초기화 및 등록
     RegisterMode<TileMapUI>(eActorType::Tile, "TileEdit");
-    
+    RegisterMode<RoomObjectUI>(eActorType::Obstacle, "RoomObjectEdit");
     
     
     return true;

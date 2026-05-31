@@ -249,7 +249,6 @@
     <ClInclude Include="Core\TextureManager.h" />
     <ClInclude Include="Core\TimeManager.h" />
     <ClInclude Include="Core\Timer.h" />
-    <ClInclude Include="Editor\DoorUI.h" />
     <ClInclude Include="Editor\EditorEngine.h" />
     <ClInclude Include="Editor\EditorTool.h" />
     <ClInclude Include="Editor\EditorUI.h" />
@@ -262,12 +261,8 @@
     <ClInclude Include="Editor\imstb_textedit.h" />
     <ClInclude Include="Editor\imstb_truetype.h" />
     <ClInclude Include="Editor\InspectorUI.h" />
-    <ClInclude Include="Editor\ItemUI.h" />
     <ClInclude Include="Editor\LoadUI.h" />
     <ClInclude Include="Editor\MainMenuUI.h" />
-    <ClInclude Include="Editor\MonsterUI.h" />
-    <ClInclude Include="Editor\NpcUI.h" />
-    <ClInclude Include="Editor\ObstacleUI.h" />
     <ClInclude Include="Editor\OutLinerUI.h" />
     <ClInclude Include="Editor\PopUpUI.h" />
     <ClInclude Include="Editor\RoomEditor.h" />
@@ -400,7 +395,6 @@
     <ClCompile Include="Core\TextureManager.cpp" />
     <ClCompile Include="Core\TimeManager.cpp" />
     <ClCompile Include="Core\Timer.cpp" />
-    <ClCompile Include="Editor\DoorUI.cpp" />
     <ClCompile Include="Editor\EditorEngine.cpp" />
     <ClCompile Include="Editor\EditorTool.cpp" />
     <ClCompile Include="Editor\EditorUI.cpp" />
@@ -439,12 +433,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Editor|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="Editor\InspectorUI.cpp" />
-    <ClCompile Include="Editor\ItemUI.cpp" />
     <ClCompile Include="Editor\LoadUI.cpp" />
     <ClCompile Include="Editor\MainMenuUI.cpp" />
-    <ClCompile Include="Editor\MonsterUI.cpp" />
-    <ClCompile Include="Editor\NpcUI.cpp" />
-    <ClCompile Include="Editor\ObstacleUI.cpp" />
     <ClCompile Include="Editor\OutLinerUI.cpp" />
     <ClCompile Include="Editor\PopUpUI.cpp" />
     <ClCompile Include="Editor\RoomEditor.cpp" />

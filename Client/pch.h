@@ -8,6 +8,7 @@
 #include <queue>
 #include <stack>
 #include <string>
+#include <set>
 #include <fstream>
 // 랜덤맵 불러오기
 #include <cstdlib>

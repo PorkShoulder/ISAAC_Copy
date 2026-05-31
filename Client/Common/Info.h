@@ -142,7 +142,7 @@ enum class eActorType
     Obstacle,
     Door,
     Npc,
-    Item = 10,
+    Item,
 
     End
 };

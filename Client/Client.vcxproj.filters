@@ -564,21 +564,6 @@
     <ClInclude Include="Editor\EditorEngine.h">
       <Filter>11.Editor</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\MonsterUI.h">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\DoorUI.h">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\ItemUI.h">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\NpcUI.h">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\ObstacleUI.h">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\TileMapUI.h">
       <Filter>11.Editor\EditorTool</Filter>
     </ClInclude>
@@ -983,21 +968,6 @@
     </ClCompile>
     <ClCompile Include="Editor\EditorEngine.cpp">
       <Filter>11.Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\MonsterUI.cpp">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\DoorUI.cpp">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ItemUI.cpp">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\NpcUI.cpp">
-      <Filter>11.Editor\EditorTool</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ObstacleUI.cpp">
-      <Filter>11.Editor\EditorTool</Filter>
     </ClCompile>
     <ClCompile Include="Editor\TileMapUI.cpp">
       <Filter>11.Editor\EditorTool</Filter>

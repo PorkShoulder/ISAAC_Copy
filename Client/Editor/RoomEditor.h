@@ -10,9 +10,12 @@ public:
 	RoomEditor();
 	virtual ~RoomEditor();
 protected:
+	// 모드선택 (타일, 오브젝트)
+	eActorType _mode = eActorType::Tile;
 
+	// 타일맵 
 	Ptr<class TileMap> _targetTileMap;
-	// 공통 기능 정리
+	
 	// 텍스처
 	Ptr<class Texture> _selectedTexture;
 	std::string _selectedTextureName;
@@ -24,6 +27,8 @@ protected:
 	int _selectedFrameIndex = 0;
 	int _selectedFrameX = -1;
 	int _selectedFrameY = -1;
+	int _selectedFolder = 0;
+
 
 	// 스냅
 	bool _snapGrid = true;
@@ -43,10 +48,15 @@ protected:
 	int _nameCounter = 1;
 	char _objectName[64] = "";
 
+	// 텍스처 목록
+	std::vector<std::string> _texFileList;
+	std::vector<std::string> _texFolderList;
+	bool _needRefresh = true;
 protected:
 	// 렌더 함수
 	void RenderSnapOption();
-	void RenderTextureSelect();
+	void RenderTextureSelect(const std::string& defaultFolder = "");
+	void RenderTexturePreview();
 public:
 	virtual bool Init(const std::string& name) override;
 	virtual void Render(float deltaTime) override;

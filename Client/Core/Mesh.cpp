@@ -82,6 +82,7 @@ void Mesh::Render()
 
 	// GPu에게 정점을 어떤 도형 규칙으로 해석할지.
 	Device::Instance().GetContext()->IASetPrimitiveTopology(_primitive);
+
 	// GPU에게 정점 버퍼 세팅
 	Device::Instance().GetContext()->IASetVertexBuffers(0, 1, _vertexBuffer._buffer.GetAddressOf(), &stride, &offset);
 

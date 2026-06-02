@@ -71,6 +71,9 @@ public:
     //그리드 2x2 빈칸 정보 전달
     void SetEmptyCells(const std::vector<std::pair<int32, int32>>& cells) { _emptyCells = cells; }
 
+    
+
+
 
 
 };

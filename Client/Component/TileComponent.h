@@ -32,6 +32,8 @@ protected:
     //타일의 총 Y축 개수
     int32 _countY = -1;
 
+    //타일 중앙 좌표
+
     //타일을 그릴때 필요한 메쉬
     Ptr<class Mesh> _tileMesh;
 
@@ -77,6 +79,8 @@ protected:
     //저장 불러오기 기능
     std::wstring _texturePath; // 텍스처 파일 상대 경로
     std::string _textureName; // 텍스처 파일 이름(키)
+    
+    
     
 
     //이전 타일 위치 

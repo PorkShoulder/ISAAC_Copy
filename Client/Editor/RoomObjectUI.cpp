@@ -14,9 +14,11 @@
 #include "../Object/Item.h"
 #include "../Object/Npc.h"
 #include "../Object/Obstacle.h"
+#include "../Object/TileMap.h"
 
 #include "../Component/SpriteComponent.h"
 #include "../Component/StaticMeshComponent.h"
+#include "../Component/TileComponent.h" 
 
 
 namespace
@@ -110,80 +112,74 @@ void RoomObjectUI::Render(float deltaTime)
 		{
 			// 마우스 월드 좌표
 			FVector2D worldPos = InputSystem::Instance().GetMouseWorldPos();
-
-			// 스냅 적용
+			
 			if (_snapGrid)
 			{
-				worldPos._x = floor(worldPos._x / _gridSize) * _gridSize; // 소수점 아래는 버리는 함수.
-				worldPos._y = floor(worldPos._y / _gridSize) * _gridSize;
+				Ptr<TileComponent> tileComp = _targetTileMap->GetTileComponent();
+				if (tileComp)
+				{
+					int32 tileIndex = tileComp->GetTileIndex(worldPos);
+					if (tileIndex >= 0)
+					{
+						auto tileWorldPos = tileComp->GetTileWorldPos(tileIndex);
+						if (tileWorldPos.has_value())
+						{
+							const FVector2D& tileSize = tileComp->GetTileSize();
+
+							worldPos = tileWorldPos.value();
+							//worldPos._x += tileSize._x; // * 0.5f;
+							//worldPos._y += tileSize._y; // *0.5f;
+							
+						}
+					}
+				}
 			}
 
-			Ptr<Actor> spawned = nullptr;
+			FVector3D pos(worldPos._x, worldPos._y, 2.f);
+			FVector3D scale(50.f, 50.f, 1.f);
+			FRotator rot(0, 0, 0);
+
+			//Ptr<Actor> spawned = nullptr;
 			// 현재 레벨
 			Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
 			if (level)
 			{
-
-
-				FVector3D pos(worldPos._x, worldPos._y, 2.f);
-				FVector3D scale(52.f, 52.f, 1.f);
-				FRotator rot(0, 0, 0);
 				std::string name = MakeObjectName((*SubTypeTable[categoryIndex])[_currentIndex]);
 
 				switch (_placeType)
 				{
 				case eActorType::Obstacle:
-					spawned = level->SpawnActor<Obstacle>(name, pos, scale, rot);
-					if (spawned)
-					{
-						//Ptr<StaticMeshComponent> mesh = spawned->FindSceneComponent<StaticMeshComponent>("Mesh");
-						//if (!mesh)
-						//	mesh = Cast<SceneComponent, StaticMeshComponent>(spawned->GetRoot());
-						//if (mesh)
-						//{
-						//	mesh->SetMesh("TexRect");
-						//	mesh->AddTexture(0, _selectedTextureName, 0);
-						//}
-
-						auto mesh = spawned->FindSceneComponent<SpriteComponent>("Mesh");
-						if (!mesh)
-							mesh = Cast<SceneComponent, SpriteComponent>(spawned->GetRoot());
-						if (mesh)
-						{
-							size_t retLength = 0;
-							std::wstring wstr;
-							wstr.resize(_selectedTextureName.size()+1);
-							mbstowcs_s(&retLength, wstr.data(), wstr.size(), _selectedTextureName.c_str(), _selectedTextureName.size());
-							
-							mesh->SetTexture(_selectedTextureName);
-							//mesh->AddAnimSequence(_selectedTextureName, {wstr}); 파일이름 여러개 
-
-							//std::string name = std::format("{}_{}_{}_{}_{}", _selectedTextureName, _selectedFrameX, _selectedFrameY, _frameWidth, _frameHeight);
-							//mesh->AddAnimSequence(name, wstr, {
-							//	FVector4D(_selectedFrameX, _selectedFrameY, _frameWidth, _frameHeight)
-							//	});
-						}
-					}
+				{
+					auto obstacle = level->SpawnActor<Obstacle>(name, pos, scale, rot);
+				}
 					break;
 				case eActorType::Door:
-					spawned = level->SpawnActor<Door>(name, pos, scale, rot);
+				{
+					auto obstacle = level->SpawnActor<Door>(name, pos, scale, rot);
+				}
 					break;
 				case eActorType::Item:
-					spawned = level->SpawnActor<Item>(name, pos, scale, rot);
+				{
+					auto item = level->SpawnActor<Item>(name, pos, scale, rot);
+
+					item->SetTexture(_selectedTextureName);
+				}
 					break;
 				case eActorType::Monster:
-					spawned = level->SpawnActor<Monster>(name, pos, scale, rot);
+				{
+					auto monster = level->SpawnActor<Monster>(name, pos, scale, rot);
+				}
 					break;
 				}
 
 			}
-			// 생성된 Actor에 텍스처 적용
-			if (spawned && _selectedTexture)
-			{
-				Ptr<SpriteComponent> sprite = spawned->FindSceneComponent<SpriteComponent>("Mesh");
-				if (sprite)
-					sprite->SetRelativeScale(52.f, 52.f, 1.f);
-			}
+			//// 생성된 Actor에 텍스처 적용
+			//if (spawned && _selectedTexture)
+			//{
+			//	Ptr<SpriteComponent> sprite = spawned->FindSceneComponent<SpriteComponent>("Mesh");
+			//	if (sprite)
+			//		sprite->SetRelativeScale(52.f, 52.f, 1.f);
+			//}
 
 		}
 	}

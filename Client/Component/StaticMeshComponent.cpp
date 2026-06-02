@@ -64,8 +64,11 @@ bool StaticMeshComponent::Init(int32 id, const std::string& name, Ptr<class Acto
 {
     MeshComponent::Init(id, name, owner);
 
+    SetMesh("TexRect");
+
     SetShader("StaticMeshShader");
 
+    SetRenderLayer("Monster");
     return true;
 }
 

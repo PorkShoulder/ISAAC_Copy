@@ -136,7 +136,8 @@ void SpriteComponent::SetOpacity(float op)
 
 void SpriteComponent::SetTexture(const std::string& name, int textureIndex)
 {
-	_texture = TEXTURE_MANAGER->Findtexture(name);
+	Ptr<Texture> texture = AssetManager::Instance().Get<TextureManager>(eAssetType::TEXTURE)->Findtexture(name);
+	_texture = texture;
 	_textureIndex = textureIndex;
 }
 

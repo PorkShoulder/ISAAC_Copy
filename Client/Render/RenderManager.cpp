@@ -12,12 +12,14 @@
 
 bool RenderManager::Init()
 {
-
+    // 
     CreateRenderLayer("BackGround", 0);
+    CreateRenderLayer("Tile", 10);
+    CreateRenderLayer("Object", 20);
+    CreateRenderLayer("Monster", 30);
+    CreateRenderLayer("Player", 40);
+    CreateRenderLayer("UI", 100);          
     CreateRenderLayer("Default", 1000);
-    CreateRenderLayer("Monster", 50);
-    CreateRenderLayer("Monster1", 51);
-    CreateRenderLayer("UI", 100);
     CreateRenderLayer("Collider", INT_MAX);
 
     _renderStateManager = New<RenderStateManager>();

@@ -343,4 +343,22 @@ enum class BUTTONTYPE
     NUM,
     END
 };
+// 아이템 능력치
+// ***이곳으로 뺀 이유는 나머지 액티브나 소모품과 시너지 및 소모품이나 액티브도 능력치를 올릴수있게끔 하려고
+struct FItemStat
+{
+    float attackPower = 0.f;
+    float speed = 0.f;
+    float hp = 0.f;
+    float range = 0.f;
+    float fireRate = 0.f;
+};
+
+// 소모품을 따로 뺀이유 -> 나중에 UI에서 보여져야할떄 이곳에 있는게 표기하기 더 편할거 같음
+struct FConsumableStat
+{
+    int _coin = 0;
+    int _key = 0;
+    int _bomb = 0;
+};
 

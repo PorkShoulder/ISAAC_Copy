@@ -25,5 +25,8 @@ public:
 private:
     std::string MakeObjectName(const std::string& typeName);
 
+    //void SpawnActor(const FVector3D& pos, const FVector3D& scale, const FVector3D& rot, eActorType type, )
+
+
 
 };

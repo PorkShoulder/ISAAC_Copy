@@ -37,11 +37,11 @@ public:
     const FMatrix& GetProjMatrix() const { return _matProj; }
 
     eCameraType GetProjectionType() const { return _type; }
-    float GetViewAnglg() const { return _viewAngle; }
+    float GetViewAngle() const { return _viewAngle; }
     void SetViewAngle(float angle) { _viewAngle = angle; }
 
     float GetWidth() const { return _width; }
-    void SetWidht(float width) { _width = width; }
+    void SetWidth(float width) { _width = width; }
 
     float GetHeight() const { return _height; }
     void SetHeight(float height) { _height = height; }

@@ -567,13 +567,22 @@
     <ClInclude Include="Editor\TileMapUI.h">
       <Filter>11.Editor\EditorTool</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\RoomEditor.h" />
     <ClInclude Include="Editor\RoomObjectUI.h">
       <Filter>11.Editor\EditorTool</Filter>
     </ClInclude>
     <ClInclude Include="Editor\EditorTool.h">
       <Filter>11.Editor\EditorTool</Filter>
     </ClInclude>
+    <ClInclude Include="Object\Door.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Obstacle.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor\RoomEditor.h">
+      <Filter>11.Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="Object\Npc.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -972,13 +981,22 @@
     <ClCompile Include="Editor\TileMapUI.cpp">
       <Filter>11.Editor\EditorTool</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\RoomEditor.cpp" />
     <ClCompile Include="Editor\RoomObjectUI.cpp">
       <Filter>11.Editor\EditorTool</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditorTool.cpp">
       <Filter>11.Editor\EditorTool</Filter>
     </ClCompile>
+    <ClCompile Include="Object\Door.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Obstacle.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
+    <ClCompile Include="Editor\RoomEditor.cpp">
+      <Filter>11.Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="Object\Npc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

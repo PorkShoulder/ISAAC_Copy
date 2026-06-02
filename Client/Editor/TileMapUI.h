@@ -23,6 +23,11 @@ protected:
     int32 _gridH = 1;
     std::vector<std::pair<int32, int32>> _emptyCells;
 
+    // 이름
+    int _roomNameCounter = 1;
+    char _roomName[64] = "";
+
+
 public:
 	virtual bool Init(const std::string& name) override; 
 	virtual void Render(float deltaTime)override;

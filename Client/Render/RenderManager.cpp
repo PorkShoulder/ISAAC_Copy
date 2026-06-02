@@ -14,7 +14,7 @@ bool RenderManager::Init()
 {
 
     CreateRenderLayer("BackGround", 0);
-    CreateRenderLayer("Default", 10);
+    CreateRenderLayer("Default", 1000);
     CreateRenderLayer("Monster", 50);
     CreateRenderLayer("Monster1", 51);
     CreateRenderLayer("UI", 100);

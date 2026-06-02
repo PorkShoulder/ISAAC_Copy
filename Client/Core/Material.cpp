@@ -57,7 +57,15 @@ void Material::AddTexture(const std::string& name, int32 registerNum, int32 shad
 {
     Ptr<Texture> texture = TEXTURE_MANAGER->Findtexture(name);
     if (nullptr == texture)
-        return;
+    {
+        size_t retLength = 0;
+        std::wstring wstr;
+        wstr.resize(name.size());
+        mbstowcs_s(&retLength, wstr.data(), wstr.size(), name.c_str(), name.size());
+
+        if (TEXTURE_MANAGER->LoadTexture(name, wstr));
+            texture = TEXTURE_MANAGER->Findtexture(name);
+    }
 
     FMaterialTextureInfo info;
     info._texture = texture;

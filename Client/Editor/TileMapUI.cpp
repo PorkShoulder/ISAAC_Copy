@@ -56,7 +56,7 @@ void TileMapUI::Render(float deltaTime)
 
     // 여기에 위젯 추가
     ImGui::SeparatorText("Create Room");
-    ImGui::InputText("Room Name", _objectName, sizeof(_objectName));
+    ImGui::InputText("Room Name", _roomName, sizeof(_roomName));
     ImGui::DragInt("CountX", &_countX, 1.f, 1, 100);
     ImGui::DragInt("CountY", &_countY, 1.f, 1, 100);
     ImGui::DragFloat2("TileSize", _tileSize, 1.f, 1.f, 512.f);
@@ -79,11 +79,11 @@ void TileMapUI::Render(float deltaTime)
                 FRotator rot(0, 0, 1);
 
                 // 이름 번호 추가 
-                if (strlen(_objectName) == 0)
-                    snprintf(_objectName, sizeof(_objectName), "Room_%02d", _nameCounter++);
+                if (strlen(_roomName) == 0)
+                    snprintf(_roomName, sizeof(_roomName), "Room_%02d", _roomNameCounter++);
 
                 // Level에 TileMap Actor를 새로 생성하고, 생성된 객체를 받아온다
-                Ptr<TileMap> tilemap = level->SpawnActor<TileMap>(_objectName, pos, scale, rot);
+                Ptr<TileMap> tilemap = level->SpawnActor<TileMap>(_roomName, pos, scale, rot);
                 if (tilemap)
                 {
                     _targetTileMap = tilemap;

@@ -18,7 +18,6 @@ Actor::~Actor()
 bool Actor::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
     _id = id;
-
     _root = CreateSceneComponent<SceneComponent>("DefaultRoot");
 
     SetRelativePosition(pos);

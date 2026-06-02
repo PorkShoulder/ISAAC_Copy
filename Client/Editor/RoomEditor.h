@@ -44,9 +44,8 @@ protected:
 	FVector2D _dragStartTex;	// 텍스트 좌표 기준 시작점.
 	FVector2D _dragEndTex;		// 텍스처 좌표 기준 끝점.
 
-	// 이름
-	int _nameCounter = 1;
-	char _objectName[64] = "";
+	
+	
 
 	// 텍스처 목록
 	std::vector<std::string> _texFileList;
@@ -62,6 +61,9 @@ public:
 	virtual void Render(float deltaTime) override;
 	virtual void Destroy() override;
 
+
+	void SetTargetTileMap(Ptr<TileMap> tileMap) { _targetTileMap = tileMap; }
+	Ptr<TileMap> GetTargetTileMap() const { return _targetTileMap; }
 
 
 };

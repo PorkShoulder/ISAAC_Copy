@@ -23,6 +23,7 @@ struct FItemStat
 
 class Item :public Actor
 {
+public:
 	Item();
 	virtual ~Item();
 protected:

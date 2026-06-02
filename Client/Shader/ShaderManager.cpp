@@ -30,8 +30,8 @@
 void ShaderManager::CreateSampler()
 {
     D3D11_SAMPLER_DESC desc = {};
-    desc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
-    desc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+    desc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
+    desc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     desc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
     desc.ComparisonFunc = D3D11_COMPARISON_NEVER;
     

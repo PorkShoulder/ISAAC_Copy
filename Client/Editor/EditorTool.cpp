@@ -51,9 +51,9 @@ void EditorTool::Render(float deltaTime)
 
     if (open)
     {
-        if (ImGui::BeginTabBar("##EditorTabs")) // 탭 생성 ##nn -> 이름없이 내부 ID만주는 문자열
+        if (ImGui::BeginTabBar("##EditorTabs"))
         {
-            for (const auto& tab : EditorTabs)  // 초기화 해둔 배열 순회 
+            for (const auto& tab : EditorTabs)
             {
                 if (ImGui::BeginTabItem(tab.name))
                 {
@@ -70,7 +70,16 @@ void EditorTool::Render(float deltaTime)
         auto it = _findUIs.find(_mode);
         if (it != _findUIs.end() && it->second)
         {
+            // 타일맵 전달
+            Ptr<RoomEditor> roomUI = Cast<EditorUI, RoomEditor>(it->second);
+            if (roomUI && _editingTileMap)
+                roomUI->SetTargetTileMap(_editingTileMap);
+
             it->second->Render(deltaTime);
+
+            // 타일맵 회수
+            if (roomUI)
+                _editingTileMap = roomUI->GetTargetTileMap();
         }
     }
 

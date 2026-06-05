@@ -26,7 +26,11 @@ private:
     Ptr<class UIManager> _uiManager;
     Ptr<class RoomManager> _roomManager;
     // 랜덤맵 on/off 초기 -> off
-    bool _useRandomMap = false; 
+    bool _useRandomMap = false;
+    Weak<class TileMap> _tileMap;
+public:
+    Ptr<class TileMap> GetTileMap() const { return Lock<TileMap>(_tileMap); }
+    void SetTileMap(Ptr<class TileMap> tileMap) { _tileMap = tileMap; }
 
 public:
     virtual bool Init(const std::string& path);
@@ -65,6 +69,9 @@ public:
     void RemoveActor(int32 id);
 
     void GenerateRandomMap();
+    // 타일 맵 막힘.
+    
+
 
     //레벨에서 객체들을 Actor 클래스로 관리하고 있으므로
     //Actor 클래스 타입으로 가져온다.

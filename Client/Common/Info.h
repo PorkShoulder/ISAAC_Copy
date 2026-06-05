@@ -138,12 +138,11 @@ enum class eActorType
     // 개별 UI
     Tile,
     Player, 
-    Monster,
     Obstacle,
     Door,
-    Npc,
     Item,
-
+    Npc,
+    Monster,
     End
 };
 
@@ -245,18 +244,18 @@ enum class eCollisionShape
 //ex ) 부딪힐때만 반응, 겹칠때도 반응, 무시
 enum eCollisionResponse : unsigned char
 {
-    COLLISION_RESPONSE_IGNORE,      //충돌 x
-    COLLISION_RESPONSE_BLOCK,       //부딪힘
-    COLLISION_RESPONSE_OVERLAP,     //겹침
+    COLLISION_RESPONSE_IGNORE,      //충돌 무시
+    COLLISION_RESPONSE_BLOCK,       //충돌 막힘
+    COLLISION_RESPONSE_OVERLAP,     //충돌 겹침
     COLLISION_RESPONSE_END,
 };
 
 //현재 충돌 상태
 enum eCollisionState
 {
-    COLLISION_STATE_RELEASE, //충돌했다가 떨어질때
-    COLLISION_STATE_BLOCK,  //처음 충돌할때
-    COLLISION_STATE_OVERLAP,//겹쳐져 있을때
+    COLLISION_STATE_RELEASE,    //충돌했다가 떨어질때
+    COLLISION_STATE_BLOCK,      //처음 충돌할때
+    COLLISION_STATE_OVERLAP,    //겹쳐져 있을때
     COLLISION_STATE_END
 };
 

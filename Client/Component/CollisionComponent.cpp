@@ -11,6 +11,10 @@
 #include "Shader/ColorCBuffer.h"
 #include "Core/Mesh.h"
 
+
+
+
+
 CollisionComponent::CollisionComponent()
 {
 #ifdef _DEBUG
@@ -113,6 +117,8 @@ void CollisionComponent::Render(float deltaTime)
 
     //todo : debug render
 #if _DEBUG
+
+
     if (!_mesh || !_shader)
         return;
 

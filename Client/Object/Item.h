@@ -2,13 +2,15 @@
 
 #include "Actor.h"
 
+
 enum class eItemType
 {
-	PASSIVE,
-	ACTIVE,
-	CONSUMABLE,
+	PASSIVE,	// 
+	ACTIVE,		//
+	CONSUMABLE,	//
 	END
 };
+inline const char* ItemTypeName[] = { "PASSIVE", "ACTIVE", "CONSUMANLE" };
 
 class Item :public Actor
 {
@@ -33,7 +35,12 @@ public:
 
 public:
 	void SetTexture(const std::string& name);
+	void SetItemType(eItemType type) { _itemType = type; }
+	eItemType GetItemType() const { return _itemType; }
 	
+	void SetPickedUp(bool picked) { _isPickedUp = picked; }
+	bool IspickedUp() const { return _isPickedUp; }
+
 
 
 };

@@ -131,7 +131,7 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     _camera->AttachToComponent(_root);
 
     _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
-    _col->SetBoxSize(300.f, 300.f);
+    _col->SetBoxSize(32.f, 32.f);
     _col->AttachToComponent(_root);
     _col->SetCollisionProfile("Player");
 

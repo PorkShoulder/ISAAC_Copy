@@ -253,6 +253,22 @@ void TileComponent::RenderOutLine()
     }
 }
 
+bool TileComponent::IsBlocked(const FVector2D& worldPos)
+{
+    Ptr<Tile> tile = GetTile(worldPos);
+
+    if (!tile)
+        return true;
+
+    return tile->GetTileType() == eTileType::BLOCK;
+
+}
+
+bool TileComponent::IsBlocked(const FVector3D& worldPos)
+{
+    return IsBlocked(FVector2D(worldPos._x, worldPos._y));
+}
+
 bool TileComponent::Init(int32 id, const std::string& name, Ptr<class Actor> owner)
 {
     SceneComponent::Init(id, name, owner);

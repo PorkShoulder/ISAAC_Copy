@@ -94,6 +94,10 @@ protected:
 private:
     void RenderTile();
     void RenderOutLine();
+public:
+    bool IsBlocked(const FVector2D& worldPos);
+    bool IsBlocked(const FVector3D& worldPos);
+
 
 
 public:

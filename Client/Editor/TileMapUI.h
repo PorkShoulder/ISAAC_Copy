@@ -26,12 +26,14 @@ protected:
     // 이름
     int _roomNameCounter = 1;
     char _roomName[64] = "";
-
+    // 타일 상태 전환
+    eTileType _changeTileType = eTileType::NORMAL;
 
 public:
 	virtual bool Init(const std::string& name) override; 
 	virtual void Render(float deltaTime)override;
 	virtual void Destroy() override;
+    
 
 };
 

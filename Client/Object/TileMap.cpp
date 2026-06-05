@@ -2,6 +2,7 @@
 #include "TileMap.h"
 
 #include "Component/TileComponent.h"
+#include "../World/Level.h"
 
 #include "Input/InputSystem.h"
 #include "../Editor/imgui.h"
@@ -19,6 +20,9 @@ bool TileMap::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
 
     _tileComponent = CreateSceneComponent<TileComponent>("Tile");
     SetRootComponent(_tileComponent);
+
+    if (Ptr<Level> level = GetLevel())
+        level->SetTileMap(This<TileMap>());
     
     return true;
 }

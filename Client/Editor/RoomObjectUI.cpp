@@ -21,37 +21,6 @@
 #include "../Component/TileComponent.h" 
 
 
-namespace
-{
-	std::vector<std::string> CategoryNames{ "Obstacle", "Door", "Item", "Monster" };
-
-	std::vector<std::string> ObstacleType{ "Rock", "Pit", "Spike" };
-	std::vector<std::string> DoorType{ "NextDoor", "LockDoor", "HiddenDoor" };
-	std::vector<std::string> ItemType{ "Heart", "Key", "Bomb", "Passive", "Active" };
-	std::vector<std::string> MonsterType{ "Fly", "Gaper", "Spider" };
-
-	eActorType CategoryToType[] = {
-		eActorType::Obstacle,
-		eActorType::Door,
-		eActorType::Item,
-		eActorType::Monster
-	};
-
-	std::vector<std::string>* SubTypeTable[] = {
-		&ObstacleType,
-		&DoorType,
-		&ItemType,
-		&MonsterType
-	};
-
-	static bool ComboFromVector(const char* label, int* index, const std::vector<std::string>& items)
-	{
-		std::vector<const char*> ptrs;
-		for (auto& s : items)
-			ptrs.push_back(s.c_str());
-		return ImGui::Combo(label, index, ptrs.data(), (int)ptrs.size());
-	}
-}
 
 RoomObjectUI::RoomObjectUI()
 {
@@ -75,37 +44,60 @@ void RoomObjectUI::Render(float deltaTime)
 
 	RenderTextureSelect();
 	RenderTexturePreview();
-
 	ImGui::Separator();
-
+	
 	// 카테고리 선택
+	const char* categories[] = { "Obstacle", "Door", "Item", "Npc", "Monster" };
+	eActorType categoryTypes[] = {
+		eActorType::Obstacle, 
+		eActorType::Door, 
+		eActorType::Item,
+		eActorType::Npc, 
+		eActorType::Monster
+	};
+
+	// 현재 선택된 타입을 찾는다.
 	int categoryIndex = 0;
-	for (int i = 0; i < (int)CategoryNames.size(); i++)
+	for (int i = 0; i < IM_ARRAYSIZE(categories); i++)
 	{
-		if (CategoryToType[i] == _placeType)
+		if (categoryTypes[i] == _placeType)
 		{
 			categoryIndex = i;
 			break;
 		}
 	}
-
-	if (ComboFromVector("Category", &categoryIndex, CategoryNames))
+	if (ImGui::Combo("Category", &categoryIndex, categories, IM_ARRAYSIZE(categories))) 
 	{
-		_placeType = CategoryToType[categoryIndex];
+		_placeType = categoryTypes[categoryIndex];
 		_currentIndex = 0;
 	}
 
-	// 서브타입 선택
-	ComboFromVector("Type", &_currentIndex, *SubTypeTable[categoryIndex]);
-
-	ImGui::Separator();
+	// 오브젝트 타입 선택
+	switch (_placeType)
+	{
+	case eActorType::Obstacle:
+		ImGui::Combo("Type", &_currentIndex, ObstacleTypeName, (int)eObstacleType::END);
+		break;
+	case eActorType::Door:
+		ImGui::Combo("Type", &_currentIndex, DoorTypeName, (int)eDoorType::END);
+		break;
+	case eActorType::Item:
+		ImGui::Combo("Type", &_currentIndex, ItemTypeName, (int)eItemType::END);
+		break;
+	case eActorType::Npc:
+		ImGui::Combo("Type", &_currentIndex, NpcTypeName, (int)eNpcType::END);
+		break;
+	case eActorType::Monster:
+		break;
+	}
 
 	// 스냅 기능
+	ImGui::Separator();
 	RenderSnapOption();
 	ImGui::Separator();
 	ImGui::Text("Click on tilemap to place object");
 
-	// 마우스가 없을 때 클릭
+	// 배치하기 
 	if (!ImGui::GetIO().WantCaptureMouse)
 	{
 		if (InputSystem::Instance().GetMouseDown(MOUSE_BUTTON_TYPE::LButton) && _targetTileMap)
@@ -123,14 +115,7 @@ void RoomObjectUI::Render(float deltaTime)
 					{
 						auto tileWorldPos = tileComp->GetTileWorldPos(tileIndex);
 						if (tileWorldPos.has_value())
-						{
-							const FVector2D& tileSize = tileComp->GetTileSize();
-
 							worldPos = tileWorldPos.value();
-							//worldPos._x += tileSize._x; // * 0.5f;
-							//worldPos._y += tileSize._y; // *0.5f;
-							
-						}
 					}
 				}
 			}
@@ -144,47 +129,58 @@ void RoomObjectUI::Render(float deltaTime)
 			Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
 			if (level)
 			{
-				std::string name = MakeObjectName((*SubTypeTable[categoryIndex])[_currentIndex]);
+				std::string name = MakeObjectName(categories[categoryIndex]);
 
 				switch (_placeType)
 				{
 				case eActorType::Obstacle:
 				{
 					auto obstacle = level->SpawnActor<Obstacle>(name, pos, scale, rot);
-				}
-					break;
-				case eActorType::Door:
-				{
-					auto obstacle = level->SpawnActor<Door>(name, pos, scale, rot);
+					if (obstacle)
+					{
+						obstacle->SetTexture(_selectedTextureName);
+						obstacle->SetObstacleType((eObstacleType)_currentIndex);
+					}
+					
 				}
 					break;
 				case eActorType::Item:
 				{
 					auto item = level->SpawnActor<Item>(name, pos, scale, rot);
-
-					item->SetTexture(_selectedTextureName);
+					if (item) 
+					{
+						item->SetTexture(_selectedTextureName);
+						item->SetItemType((eItemType)_currentIndex);
+					}
+				}
+				break;
+				case eActorType::Door:
+				{
+					auto door= level->SpawnActor<Door>(name, pos, scale, rot);
+					if (door)
+					{
+						door->SetTexture(_selectedTextureName);
+						door->SetDoorType((eDoorType)_currentIndex;);
+					}
 				}
 					break;
+				
 				case eActorType::Monster:
 				{
 					auto monster = level->SpawnActor<Monster>(name, pos, scale, rot);
+					if (monster) 
+					{
+						//monster-
+					
+					}
 				}
 					break;
 				}
 
 			}
-			//// 생성된 Actor에 텍스처 적용
-			//if (spawned && _selectedTexture)
-			//{
-			//	Ptr<SpriteComponent> sprite = spawned->FindSceneComponent<SpriteComponent>("Mesh");
-			//	if (sprite)
-			//		sprite->SetRelativeScale(52.f, 52.f, 1.f);
-			//}
 
 		}
 	}
-
-
 }
 
 void RoomObjectUI::Destroy()
@@ -203,4 +199,41 @@ std::string RoomObjectUI::MakeObjectName(const std::string& typeName)
 
 
 
+}
+
+bool RoomObjectUI::IsAnimatedObject(eActorType type) const
+{
+	if (type == eActorType::Monster)
+		return true;
+
+	if (type == eActorType::Npc)
+		return true;
+
+	return false;
+}
+
+void RoomObjectUI::RenderAnimationSelect()
+{
+	const char* MonsterAnim[] = { "MONSTER_IDLE" };
+	const char* NpcAnim[]{ "NPC_IDLE" };
+
+
+	if (_placeType == eActorType::Monster)
+	{
+		ImGui::Combo(
+			"Animation",
+			&_currentAnimIndex,
+			MonsterAnim,
+			IM_ARRAYSIZE(MonsterAnim)
+		);
+	}
+	else if (_placeType == eActorType::Npc)
+	{
+		ImGui::Combo(
+			"Animation",
+			&_currentAnimIndex,
+			NpcAnim,
+			IM_ARRAYSIZE(NpcAnim)
+		);
+	}
 }

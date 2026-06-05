@@ -15,9 +15,9 @@ bool Obstacle::Init(int32 id, const FVector3D& pos, const FVector3D& scale, cons
 {
     Actor::Init(id, pos, scale, rot, name);
     
-    auto meshComp = CreateSceneComponent<StaticMeshComponent>("Mesh");
-    meshComp->SetMesh("TexRect");
-    SetRootComponent(meshComp);
+    _mesh = CreateSceneComponent<StaticMeshComponent>("Mesh");
+    _mesh->SetMesh("TexRect");
+    SetRootComponent(_mesh);
 
     _type = eActorType::Obstacle;
 
@@ -42,4 +42,10 @@ void Obstacle::Render(float deltaTime)
 void Obstacle::Destroy()
 {
     Actor::Destroy();
+}
+
+void Obstacle::SetTexture(const std::string& name)
+{
+    if (_mesh)
+        _mesh->AddTexture(0, name, 0);
 }

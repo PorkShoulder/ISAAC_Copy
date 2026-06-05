@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "Item.h"
-#include"../Component/SpriteComponent.h"
+
 #include "Component/StaticMeshComponent.h"
 
 Item::Item()

@@ -43,14 +43,14 @@ protected:
 	bool _hasDragSelection = false;
 	FVector2D _dragStartTex;	// 텍스트 좌표 기준 시작점.
 	FVector2D _dragEndTex;		// 텍스처 좌표 기준 끝점.
-
-	
-	
-
 	// 텍스처 목록
 	std::vector<std::string> _texFileList;
 	std::vector<std::string> _texFolderList;
 	bool _needRefresh = true;
+
+public:
+	// 충돌체 확인.
+	static bool _showCollider;
 protected:
 	// 렌더 함수
 	void RenderSnapOption();

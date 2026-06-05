@@ -36,8 +36,7 @@ protected:
 	bool _isRender = false;
 
 public:
-	virtual bool Init(int32 id, const std::string& name, //
-		Ptr<class Actor> owner) override;
+	virtual bool Init(int32 id, const std::string& name, Ptr<class Actor> owner) override;
 	virtual void Tick(float deltaTime) override;
 	virtual void Collision(float deltaTime) override;
 	virtual void Render(float deltaTime) override;

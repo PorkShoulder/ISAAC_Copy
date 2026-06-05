@@ -573,9 +573,6 @@
     <ClInclude Include="Editor\EditorTool.h">
       <Filter>11.Editor\EditorTool</Filter>
     </ClInclude>
-    <ClInclude Include="Object\Door.h">
-      <Filter>03.Object</Filter>
-    </ClInclude>
     <ClInclude Include="Object\Obstacle.h">
       <Filter>03.Object</Filter>
     </ClInclude>
@@ -583,6 +580,9 @@
       <Filter>11.Editor</Filter>
     </ClInclude>
     <ClInclude Include="Object\Npc.h" />
+    <ClInclude Include="Object\Door.h">
+      <Filter>03.Object</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -987,9 +987,6 @@
     <ClCompile Include="Editor\EditorTool.cpp">
       <Filter>11.Editor\EditorTool</Filter>
     </ClCompile>
-    <ClCompile Include="Object\Door.cpp">
-      <Filter>03.Object</Filter>
-    </ClCompile>
     <ClCompile Include="Object\Obstacle.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
@@ -997,6 +994,9 @@
       <Filter>11.Editor</Filter>
     </ClCompile>
     <ClCompile Include="Object\Npc.cpp" />
+    <ClCompile Include="Object\Door.cpp">
+      <Filter>03.Object</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

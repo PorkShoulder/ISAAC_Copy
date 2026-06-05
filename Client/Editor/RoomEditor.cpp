@@ -2,10 +2,13 @@
 #include "RoomEditor.h"
 #include "EditorEngine.h"
 
+
 #include "../Core/DirectoryManager.h"
 #include "../Core/AssetManager.h"
 #include "../Core/Texture.h"
 
+// RoomEditor.cpp 상단에 정의
+bool RoomEditor::_showCollider = true;
 RoomEditor::RoomEditor()
 {
 }
@@ -16,6 +19,7 @@ RoomEditor::~RoomEditor()
 
 void RoomEditor::RenderSnapOption() //스냅
 {
+    ImGui::Checkbox("Show Collder", &_showCollider);
 
     ImGui::Checkbox("snap to Grid", &_snapGrid);
     if (_snapGrid)
@@ -56,6 +60,16 @@ void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
                     {
                         auto relPath = std::filesystem::relative(entry.path(), texDir);
                         auto folder = relPath.parent_path().string();
+                        if (!defaultFolder.empty())
+                        {   
+                            std::string prefix = defaultFolder + "\\";
+                            
+                            bool isSameFolder = (folder == defaultFolder);
+                            bool isChildFolder = (folder.find(prefix) == 0);
+                            if (!isSameFolder && !isChildFolder)
+                                continue;
+                        }
+
                         if (!folder.empty())
                             folders.insert(folder);
                         _texFileList.push_back(relPath.string());

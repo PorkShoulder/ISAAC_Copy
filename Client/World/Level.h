@@ -38,10 +38,8 @@ public:
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
     virtual void RenderUI(float deltaTime);
-
-
     virtual void Destroy() override;
-
+    
     virtual void Save(std::ofstream& file);
     virtual void Load(std::ifstream& file);
 
@@ -49,12 +47,13 @@ public:
     void DeleteTag(Ptr<class Actor> actor);
 
     const std::map<int32, Ptr<class Actor>>& GetActors() const;
-
     void SetMainCamera(Ptr<class CameraComponent> camera);
+    
     Ptr<class CameraComponent> GetMainCamera() const;
     const FMatrix& GetViewMatrix() const;
     const FMatrix& GetProjMatrix() const;
     const FVector3D& GetCameraWorldPos() const;
+    Ptr<CameraManager> GetCameraManager() const { return _cameraManager; }
 
     const FMatrix& GetUIProjMatrix() const;
 

@@ -26,9 +26,9 @@
 bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
     Pawn::Init(id, pos, scale, rot, name);
+    _type = eActorType::Monster;
 
     //AI State Machine 사용방법
-    // 
     //1. AI컨트롤러를 생성(PlayerController로)
     _controller = GetLevel()->SpawnActor<AIController>("AIController", pos, scale, rot);
 
@@ -40,11 +40,15 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     Ptr<AIComponent> aicomp = ctrl->GetAI();
 
     //4. MachineBase를 상속받은 스테이트머신 자식클래스로 스테이트머신을 생성
+    _mesh= CreateSceneComponent<SpriteComponent>("Mesh");
+    SetRootComponent(_mesh);
+
+    // 충돌체
+    _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
+    _col->SetBoxSize(32.f, 32.f);   // 에디터에서 추가 설정변경 -> 동적(RoomObjectUI)
+    _col->AttachToComponent(_root);
+    _col->SetCollisionProfile("Monster");
     
-    Ptr<SpriteComponent> meshComp = CreateSceneComponent<SpriteComponent>("Mesh");
-
-    _type = eActorType::Monster;
-
     return true;
 }
 

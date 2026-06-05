@@ -28,6 +28,8 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 {
     Pawn::Init(id, pos, scale, rot, name);
 
+    
+
     //컨트롤러를 생성(PlayerController로)
     _controller = GetLevel()->SpawnActor<PlayerController>("PlayerController", pos, scale, rot);
 
@@ -122,14 +124,17 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     //MovementComponent 생성한다.
     _movement = CreateActorComponent<MovementComponent>("Movement");
     _movement->SetUpdateComponent(_root);
-
-    _movement->SetSpeed(100.f);
+    _movement->SetSpeed(0.f);
+    _movement->SetMaxSpeed(120.f);
+    _movement->SetAccel(200.f);    // 낮추면 천천히 가속
+    _movement->SetFriction(400.f); // 가속보다 크면 빠르게 멈춤
 
      _camera = CreateSceneComponent<CameraComponent>("Cam");
 
     //카메라 컴포넌트를 루트컴포넌트의 자식 컴포넌트로 붙힌다.
     _camera->AttachToComponent(_root);
-
+    
+    // 충돌체 설정.
     _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
     _col->SetBoxSize(32.f, 32.f);
     _col->AttachToComponent(_root);
@@ -186,7 +191,7 @@ void Player::UpdateMovement()
     // 아무 키도 안 눌림 → 정지
     if (axis._x == 0.f && axis._y == 0.f)
     {
-        _movement->Stop();
+        _movement->SetMoveAxis(FVector3D::Zero);
         body->ChangeAnimation("IASSC_BODY_FRONT");
         body->SetAnimFilp(false);
         body->SetPlay("IASSC_BODY_FRONT", false);

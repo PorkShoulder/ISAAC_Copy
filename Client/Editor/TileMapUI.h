@@ -33,6 +33,11 @@ public:
 	virtual bool Init(const std::string& name) override; 
 	virtual void Render(float deltaTime)override;
 	virtual void Destroy() override;
+private:
+    void RenderTileFrameEditor();
+    void RenderRoomShapeEditor();
+
+
     
 
 };

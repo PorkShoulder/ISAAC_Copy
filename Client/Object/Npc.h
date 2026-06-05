@@ -18,6 +18,7 @@ public:
 	virtual ~Npc();
 private:
 	eNpcType _npcType = eNpcType::SHOP;
+	Ptr<class AABBCollisionComponent> _col;
 	Ptr<class SpriteComponent> _mesh;
 
 public:
@@ -26,7 +27,7 @@ public:
 	virtual void Render(float deltaTime);
 	virtual void Destroy() override;
 public:
-	void SetTexture(const std::string& name);
+	
 	void SetNpcType(eNpcType type) { _npcType = type; }
 	eNpcType GetNpcType() const { return _npcType; }
 

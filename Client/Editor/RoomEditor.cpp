@@ -2,10 +2,19 @@
 #include "RoomEditor.h"
 #include "EditorEngine.h"
 
-
 #include "../Core/DirectoryManager.h"
 #include "../Core/AssetManager.h"
 #include "../Core/Texture.h"
+#include "../Core/GameEngine.h"
+
+#include "../World/Level.h"
+#include "../World/World.h"
+#include "../World/CameraManager.h"
+
+#include "../Component/CameraComponent.h"
+
+
+
 
 // RoomEditor.cpp 상단에 정의
 bool RoomEditor::_showCollider = true;
@@ -19,136 +28,145 @@ RoomEditor::~RoomEditor()
 
 void RoomEditor::RenderSnapOption() //스냅
 {
-    ImGui::Checkbox("Show Collder", &_showCollider);
-
-    ImGui::Checkbox("snap to Grid", &_snapGrid);
     if (_snapGrid)
     {
         ImGui::SameLine();
         ImGui::SetNextItemWidth(80.f);
         ImGui::InputFloat("Grid Size", &_gridSize, 1.f, 10.f, "%.0f");
     }
+    RenderCameraToggle();
 }
 
 void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
 {
 
-    ImGui::SeparatorText("Texture Select");
-
-    // 갱신이 필요하면
-    if (ImGui::Button("Refresh"))
-        _needRefresh = true;
-
-    // 텍스처 찾기
-    if (_needRefresh)
+    if (ImGui::CollapsingHeader("Texture Select"))
     {
-        _texFileList.clear();
-        _texFolderList.clear();
-        _texFolderList.push_back("All");
-
-        std::set<std::string> folders;
-        auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
-        if (resPath.has_value())
+        //// 갱신이 필요하면
+        //if (ImGui::Button("Refresh"))
+        //    _needRefresh = true;
+        
+        // 텍스처 찾기
+        if (_needRefresh)
         {
-            std::filesystem::path texDir;
-            if (DirectoryManager::Instance().GetDirectory(resPath.value(), "Texture", texDir))
-            {
-                for (auto& entry : std::filesystem::recursive_directory_iterator(texDir))
-                {
-                    // .png 아니면 무시합니다.
-                    if (entry.is_regular_file() && entry.path().extension() == L".png")
-                    {
-                        auto relPath = std::filesystem::relative(entry.path(), texDir);
-                        auto folder = relPath.parent_path().string();
-                        if (!defaultFolder.empty())
-                        {   
-                            std::string prefix = defaultFolder + "\\";
-                            
-                            bool isSameFolder = (folder == defaultFolder);
-                            bool isChildFolder = (folder.find(prefix) == 0);
-                            if (!isSameFolder && !isChildFolder)
-                                continue;
-                        }
+            _texFileList.clear();
+            _texFolderList.clear();
+            _texFolderList.push_back("All");
 
-                        if (!folder.empty())
-                            folders.insert(folder);
-                        _texFileList.push_back(relPath.string());
+            std::set<std::string> folders;
+            auto resPath = DirectoryManager::Instance().GetCachePath("Resources");
+            if (resPath.has_value())
+            {
+                std::filesystem::path texDir;
+                if (DirectoryManager::Instance().GetDirectory(resPath.value(), "Texture", texDir))
+                {
+                    for (auto& entry : std::filesystem::recursive_directory_iterator(texDir))
+                    {
+                        // .png 아니면 무시합니다.
+                        if (entry.is_regular_file() && entry.path().extension() == L".png")
+                        {
+                            auto relPath = std::filesystem::relative(entry.path(), texDir);
+                            auto folder = relPath.parent_path().string();
+                            if (!defaultFolder.empty())
+                            {
+                                std::string prefix = defaultFolder + "\\";
+
+                                bool isSameFolder = (folder == defaultFolder);
+                                bool isChildFolder = (folder.find(prefix) == 0);
+                                if (!isSameFolder && !isChildFolder)
+                                    continue;
+                            }
+
+                            if (!folder.empty())
+                                folders.insert(folder);
+                            _texFileList.push_back(relPath.string());
+                        }
                     }
                 }
             }
+            for (auto& fPath : folders)
+                _texFolderList.push_back(fPath);
 
+            // 기본 폴더가 지정되어 있으면 해당 폴더로 자동 선택
+            _selectedFolder = 0;
+            if (!defaultFolder.empty())
+            {
+                for (int i = 0; i < (int)_texFolderList.size(); i++)
+                {
+                    if (_texFolderList[i] == defaultFolder)
+                    {
+                        _selectedFolder = i;
+                        break;
+                    }
+
+                }
+
+            }
+            _needRefresh = false;
         }
-        for (auto& fPath : folders)
-            _texFolderList.push_back(fPath);
-        
-        // 기본 폴더가 지정되어 있으면 해당 폴더로 자동 선택
-        _selectedFolder = 0;
-        if (!defaultFolder.empty())
+
+        // 폴더 필터 
+        if (ImGui::BeginCombo("Folder", _texFolderList[_selectedFolder].c_str()))
         {
             for (int i = 0; i < (int)_texFolderList.size(); i++)
             {
-                if (_texFolderList[i] == defaultFolder)
-                {
+                bool isSelected = (_selectedFolder == i);
+                if (ImGui::Selectable(_texFolderList[i].c_str(), isSelected))
                     _selectedFolder = i;
-                    break;
+            }
+            ImGui::EndCombo();
+        }
+
+        // 텍스처 목록 (필터)
+
+        const char* texPreview = _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str();
+        if (ImGui::BeginCombo("Texture", texPreview))
+        {
+            for (int i = 0; i < (int)_texFileList.size(); i++)
+            {
+                // 폴더 필터링
+                if (_selectedFolder > 0)
+                {
+                    std::string folder = std::filesystem::path(_texFileList[i]).parent_path().string();
+                    if (folder != _texFolderList[_selectedFolder])
+                        continue;
                 }
-            
-            }
 
-        }
-        _needRefresh = false;
-    }
-    // 폴더 필터 
-    if (ImGui::BeginCombo("Folder", _texFolderList[_selectedFolder].c_str()))
-    {
-        for (int i = 0; i < (int)_texFolderList.size(); i++)
-        {
-            bool isSelected = (_selectedFolder == i);
-            if (ImGui::Selectable(_texFolderList[i].c_str(), isSelected))
-                _selectedFolder = i;
-        }
-        ImGui::EndCombo();
-    }
-    // 텍스처 목록 (필터)
-    if (ImGui::BeginListBox("##TexList", ImVec2(-1, 100)))
-    {
-        for (int i = 0; i < (int)_texFileList.size(); i++)
-        {
-            // 폴더 필터링
-            if (_selectedFolder > 0)
-            {
-                std::string folder = std::filesystem::path(_texFileList[i]).parent_path().string();
-                if (folder != _texFolderList[_selectedFolder])
-                    continue;
-            }
+                bool isSelected = (_texFileList[i] == _selectedTextureName);
+                if (ImGui::Selectable(_texFileList[i].c_str(), isSelected))
+                {
+                    _selectedTextureName = _texFileList[i];
+                    std::wstring wRelPath(_selectedTextureName.begin(), _selectedTextureName.end());
+                    _selectedTexturePath = wRelPath;
 
-            bool isSelected = (_texFileList[i] == _selectedTextureName);
-            if (ImGui::Selectable(_texFileList[i].c_str(), isSelected))
-            {
-                _selectedTextureName = _texFileList[i];
-                std::wstring wRelPath(_selectedTextureName.begin(), _selectedTextureName.end());
-                _selectedTexturePath = wRelPath;
-
-                TEXTURE_MANAGER->LoadTexture(_selectedTextureName, wRelPath);
-                _selectedTexture = TEXTURE_MANAGER->Findtexture(_selectedTextureName);
+                    TEXTURE_MANAGER->LoadTexture(_selectedTextureName, wRelPath);
+                    _selectedTexture = TEXTURE_MANAGER->Findtexture(_selectedTextureName);
+                }
+                if (isSelected)
+                    ImGui::SetItemDefaultFocus();
             }
+            ImGui::EndCombo();
         }
-        ImGui::EndListBox();
+
+        ImGui::Text("Selected: %s", _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str());
+
+        if (_selectedTexture == nullptr)
+            return;
+
+        // 프레임 크기
+        ImGui::SetNextItemWidth(300.f); // 크기 조절
+        ImGui::DragInt("Frame Width", &_frameWidth, 1.f, 1, 512);
+
+        ImGui::SetNextItemWidth(300.f); // 크기 조절
+        ImGui::DragInt("Frame Height", &_frameHeight, 1.f, 1, 512);
+
+        // 반전
+        ImGui::Checkbox("Flip X", &_flipX);
+        ImGui::SameLine();
+        ImGui::Checkbox("Flip Y", &_flipY);
     }
 
-    ImGui::Text("Selected: %s", _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str());
-
-    if (_selectedTexture == nullptr)
-        return;
-
-    // 프레임 크기
-    ImGui::DragInt("Frame Width", &_frameWidth, 1.f, 1, 512);
-    ImGui::DragInt("Frame Height", &_frameHeight, 1.f, 1, 512);
-
-    // 반전
-    ImGui::Checkbox("Flip X", &_flipX);
-    ImGui::SameLine();
-    ImGui::Checkbox("Flip Y", &_flipY);
+    
 }
 
 void RoomEditor::RenderTexturePreview()
@@ -305,6 +323,38 @@ void RoomEditor::RenderTexturePreview()
     }
 
 
+}
+
+void RoomEditor::RenderCameraToggle()
+{
+    if (ImGui::Checkbox("Camera Mode", &_editorCameraMode))
+    {
+        Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+        if (level)
+        {
+            if (_editorCameraMode)
+            {
+                // 현재 카메라 위치 저장 후 플레이어 추적 해제
+                _editorCamPos = level->GetCameraWorldPos();
+            }
+            else
+            {
+                // 플레이어 카메라로 복귀
+                level->GetCameraManager()->ChangeMainCamera("Cam");
+            }
+        }
+    }
+    if (_editorCameraMode)
+    {
+        ImGui::DragFloat3("Cam Pos", &_editorCamPos._x, 1.f);
+        Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+        if (level)
+        {
+            auto cam = level->GetCameraManager()->GetMainCamera();
+            if (cam)
+                cam->SetWorldPosition(_editorCamPos);
+        }
+    }
 }
 
 bool RoomEditor::Init(const std::string& name)

@@ -17,8 +17,6 @@ enum class ePopUpType
     End
 };
 
-
-
 class EditorEngine : public Singleton<EditorEngine>
 {
     SINGLETON(EditorEngine)
@@ -28,6 +26,7 @@ private:
     std::unordered_map<std::string, Ptr<class EditorUI>> _edits;
     std::unordered_map<std::string, std::function<void()>> _actorCreateFuncs;
     Ptr<class PopUpUI> _popUp;
+
 
 public:
     bool Init();

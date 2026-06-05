@@ -5,6 +5,8 @@
 #include "Core/Device.h"
 #include "Core/TimeManager.h"
 
+#include "../Component/CameraComponent.h"
+
 #include "World/World.h"
 #include "Render/RenderManager.h"
 
@@ -39,6 +41,9 @@ bool EditorEngine::Init()
     CreateEditorUI<OutLinerUI>("OutLiner");
     CreateEditorUI<InspectorUI>("Inspector");
     CreateEditorUI<EditorTool>("EditorTool");
+
+
+
 
     
     return true;

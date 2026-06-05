@@ -37,10 +37,13 @@ public:
 	void SetTexture(const std::string& name, int textureIndex = 0);
 	void SetTexture(Ptr<class Texture> texture, int textureIndex = 0);
 	void SetTextureIndex(int32 index);
-
+	// 이미지 파일 여러장
 	void AddAnimSequence(const std::string& name, const std::vector<std::wstring>& filenames, bool loop = false, bool reverse = false, float playTime = 1.f, float playRate = 1.f);
+	// 아틀라스 한장 + UV 좌표 (Sprite 방식)
 	void AddAnimSequence(const std::string& name, const std::wstring& filename, const std::vector<FVector4D>& frames, bool loop = false, bool reverse = false, float playTime = 1.f, float playRate = 1.f);
+	// 이름만 (AnimationManager에 등록된 것 -> Player 사용중)
 	void AddAnimSequence(const std::string& name, bool loop = false, bool reverse = false, float playTime = 1.f, float playRate = 1.f);
+	// Animation2DData 포인터 직접 전달. 
 	void AddAnimSequence(Ptr<class Animation2DData> data, bool loop = false, bool reverse = false, float playTime = 1.f, float playRate = 1.f);
 	void SetPlayTime(const std::string& name, float time);
 	void SetPlayRate(const std::string& name, float rate);

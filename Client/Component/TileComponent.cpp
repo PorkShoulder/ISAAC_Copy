@@ -160,6 +160,7 @@ void TileComponent::RenderOutLine()
         if (_bTileLineInstRefresh)
         {
             _tileLineSBuffer->Clear();
+
             for (int32 i = 0; i < _countY; ++i)
             {
                 for (int32 j = 0; j < _countX; ++j)
@@ -245,7 +246,7 @@ void TileComponent::RenderOutLine()
 
                 _transformCBuffer->Update();
                 _outLineCBuffer->Update();
-
+                
                 _outLineShader->SetShader();
                 _outLineMesh->Render();
             }

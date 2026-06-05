@@ -3,14 +3,10 @@
 
 enum class eMonsterType
 {
-
+    host,
     fatty,
     END
 };
-
-
-
-
 
 
 class Monster : public Pawn
@@ -23,10 +19,13 @@ private:
     int32 _bulletTimer = -1;
     int32 _rotBulletTimer = -1;
     Weak<class Player> _target;
+    eMonsterType _monsterType = eMonsterType::fatty;
+
+    // 충돌체 
     Ptr<class AABBCollisionComponent> _col;
     Ptr<class SphereCollisionComponent> _colSphere;
 
-    Ptr <class spriteComponent> _mesh = nullptr;
+    Ptr <class SpriteComponent> _mesh = nullptr;
 
 
 public:
@@ -34,10 +33,11 @@ public:
     virtual void Tick(float deltaTime);
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
-
     virtual void Destroy() override;
-
+public:
     void SetTarget(Ptr<class Player> player);
+    
+    void SetMonsterType(eMonsterType type) { _monsterType = type; }
 
 private:
     void Fire();

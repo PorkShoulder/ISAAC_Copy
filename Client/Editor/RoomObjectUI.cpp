@@ -66,6 +66,7 @@ void RoomObjectUI::Render(float deltaTime)
 			break;
 		}
 	}
+
 	if (ImGui::Combo("Category", &categoryIndex, categories, IM_ARRAYSIZE(categories))) 
 	{
 		_placeType = categoryTypes[categoryIndex];
@@ -90,6 +91,9 @@ void RoomObjectUI::Render(float deltaTime)
 	case eActorType::Monster:
 		break;
 	}
+	if (_placeType == eActorType::Monster || _placeType == eActorType::Npc)
+		RenderAnimationSelect();
+
 
 	// 스냅 기능
 	ImGui::Separator();
@@ -160,7 +164,7 @@ void RoomObjectUI::Render(float deltaTime)
 					if (door)
 					{
 						door->SetTexture(_selectedTextureName);
-						door->SetDoorType((eDoorType)_currentIndex;);
+						door->SetDoorType((eDoorType)_currentIndex);
 					}
 				}
 					break;
@@ -170,13 +174,43 @@ void RoomObjectUI::Render(float deltaTime)
 					auto monster = level->SpawnActor<Monster>(name, pos, scale, rot);
 					if (monster) 
 					{
-						//monster-
-					
+						monster->SetMonsterType((eMonsterType)_currentIndex);
+
+						auto sprite = monster->FindSceneComponent<SpriteComponent>("Mesh");
+						if (sprite && !_animSequences.empty())
+						{
+							for (auto& seq : _animSequences)
+							{
+								std::wstring wTex(seq.textureName.begin(), seq.textureName.end());
+								sprite->AddAnimSequence(seq.name, wTex, seq.frames, seq.loop);
+							}
+						}
 					}
 				}
-					break;
-				}
+				break;
 
+				case eActorType::Npc:
+				{
+					auto npc = level->SpawnActor<Npc>(name, pos, scale, rot);
+					if (npc)
+					{
+						npc->SetNpcType((eNpcType)_currentIndex);
+
+						auto sprite = npc->FindSceneComponent<SpriteComponent>("Mesh");
+						if (sprite && !_animSequences.empty())
+						{
+							for (auto& seq : _animSequences)
+							{
+								std::wstring wTex(seq.textureName.begin(), seq.textureName.end());
+								sprite->AddAnimSequence(seq.name, wTex, seq.frames, seq.loop);
+							}
+						}
+
+					}
+				}
+				break;
+
+				} // switch 끝 
 			}
 
 		}
@@ -214,26 +248,84 @@ bool RoomObjectUI::IsAnimatedObject(eActorType type) const
 
 void RoomObjectUI::RenderAnimationSelect()
 {
-	const char* MonsterAnim[] = { "MONSTER_IDLE" };
-	const char* NpcAnim[]{ "NPC_IDLE" };
+	//const char* MonsterAnim[] = { "MONSTER_IDLE" };
+	//const char* NpcAnim[]{ "NPC_IDLE" };
+	//if (_placeType == eActorType::Monster)
+	//{
+	//	ImGui::Combo(
+	//		"Animation",
+	//		&_currentAnimIndex,
+	//		MonsterAnim,
+	//		IM_ARRAYSIZE(MonsterAnim)
+	//	);
+	//}
+	//else if (_placeType == eActorType::Npc)
+	//{
+	//	ImGui::Combo(
+	//		"Animation",
+	//		&_currentAnimIndex,
+	//		NpcAnim,
+	//		IM_ARRAYSIZE(NpcAnim)
+	//	);
+	//} 보류
+
+	ImGui::SeparatorText("Animation Sequence");
+	ImGui::InputText("Anim Name", _seqName, sizeof(_seqName));
+
+	if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+		ImGui::Text("Frame: %d, %d (%dx%d)", _selectedFrameX, _selectedFrameY, _frameWidth, _frameHeight);
+	
+	// 드래그 범위 및 단일 프레임 추가
+	if (ImGui::Button("Add Frame"))
+	{	
+		if (_selectedFrameX >= 0 && _selectedFrameY >= 0 && strlen(_seqName) > 0) // 1. 텍스처 프레임 선택 2. 시퀀스 이름 
+		{
+			FAnimSequenceData* seq = nullptr;
+			// 겹치는 이름이 있는지 확인. 
+			for (auto& s : _animSequences)
+			{
+				if (s.name == _seqName)
+				{
+					seq = &s;
+					break;
+				}
+			}
+			// 새로운 시퀀스 만들기
+			if (!seq)
+			{
+				FAnimSequenceData data;
+				_animSequences.push_back(data); // 벡터에 빈 기본값 하나 추가
+				seq = &_animSequences.back();
+				seq->name = _seqName;
+				seq->textureName = _selectedTextureName;
+				seq->loop = _seqLoop;
+			}
+			int startX = _selectedFrameX;
+			int startY = _selectedFrameY;
+			int endX = (int)_dragEndTex._x;
+			int endY = (int)_dragEndTex._y;
+			if (endX <= startX) endX = startX + _frameWidth;
+			if (endY <= startY) endY = startY + _frameHeight;
+			//////////////////////////////////////////////////////////// -> 미 완료 여기 부분 함수로 빼서 작성할것  
+			seq->frames.push_back(FVector4D((float)_selectedFrameX, (float)_selectedFrameY, (float)_frameWidth, (float)_frameHeight));
+		}
+	}
+	ImGui::SameLine();
+	ImGui::Checkbox("Loop", &_seqLoop);
+
+	for (int i = 0; i < (int)_animSequences.size(); i++)
+	{
+		auto seq = _animSequences[i];
+		ImGui::Text("[%s] %d frames %s", seq.name.c_str(), (int)seq.frames.size(), seq.loop ? "(loop)" : "");
+		ImGui::SameLine();
+		ImGui::PushID(i);
+		if (ImGui::SmallButton("X"))
+		{
+			_animSequences.erase(_animSequences.begin() + i);
+			i--;
+		}
+		ImGui::PopID();
+	}
 
 
-	if (_placeType == eActorType::Monster)
-	{
-		ImGui::Combo(
-			"Animation",
-			&_currentAnimIndex,
-			MonsterAnim,
-			IM_ARRAYSIZE(MonsterAnim)
-		);
-	}
-	else if (_placeType == eActorType::Npc)
-	{
-		ImGui::Combo(
-			"Animation",
-			&_currentAnimIndex,
-			NpcAnim,
-			IM_ARRAYSIZE(NpcAnim)
-		);
-	}
 }

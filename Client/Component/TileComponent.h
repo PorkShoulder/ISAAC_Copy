@@ -105,10 +105,8 @@ public:
     virtual void Tick(float deltaTime) override;
     virtual void Collision(float deltaTiem) override;
     virtual void Render(float deltaTime) override;
-    
-    
-    
     virtual void Destroy() override;
+
 
     void Save(std::ofstream& file);
     void Load(std::ifstream& file);
@@ -139,6 +137,10 @@ public:
     Ptr<Tile> GetTile(const FVector2D& pos);
     Ptr<Tile> GetTile(int32 index);
     Ptr<Texture> GetTexture() const { return _tileTexture; }
+
+    // 아웃라인 On/Off
+    void SetOutLineRender(bool render) { _outLineRender = render; }
+    bool GetOutLineRender() { return _outLineRender; }
 
     std::optional<FVector2D> GetTileWorldPos(int32 index);
 

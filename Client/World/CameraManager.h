@@ -17,8 +17,12 @@ private:
     Weak<class Level> _level;
     Ptr<class CameraComponent> _mainCamera; //화면을 비출 메인 카메라
     std::unordered_map<std::string, Ptr<class CameraComponent>> _cameras;
-
     FMatrix _uiProj;
+    // 카메라 모드 전환
+    bool _editorCameraMode = false;
+    FVector3D _editorCamPos = FVector3D::Zero;
+
+
 
 public:
     bool Init(Ptr<class Level> level);
@@ -29,8 +33,14 @@ public:
     const FMatrix& GetViewMatrix() const;
     const FMatrix& GetProjMatrix() const;
     const FVector3D& GetCameraWorldPos() const;
-
     const FMatrix& GetUIProjMatrix() const;
+
+    // 카메라 모드 전환
+    void SetEditorCameraMode(bool on);
+    bool IsEditorCameraMode()const { return _editorCameraMode; }
+    void SetEditorCamPos(const FVector3D& pos);
+
+    const FVector3D& GetEditorCamPos()const { return _editorCamPos; }
 
 
 public:

@@ -4,7 +4,18 @@
 // UI 목록
 #include "TileMapUI.h"
 #include "RoomObjectUI.h"
+#include "EditorEngine.h"
 
+#include "../Core/DirectoryManager.h"
+#include "../Core/AssetManager.h"
+#include "../Core/Texture.h"
+#include "../Core/GameEngine.h"
+
+#include "../World/Level.h"
+#include "../World/World.h"
+#include "../World/CameraManager.h"
+
+#include "../Component/CameraComponent.h"
 
 namespace
 {
@@ -61,11 +72,20 @@ void EditorTool::Render(float deltaTime)
                     ImGui::EndTabItem();
                 }
             }
+            
+        }
+        ImGui::Separator();
 
-            ImGui::EndTabBar();
+        // Tool 탭 (UI 클래스 없이 직접)
+        if (ImGui::BeginTabItem("Tool"))
+        {
+            _mode = eActorType::End;   // 일반 모드 UI는 안 그리게
+            
+            ImGui::EndTabItem();
         }
 
-        ImGui::Separator();
+        ImGui::EndTabBar();
+
 
         auto it = _findUIs.find(_mode);
         if (it != _findUIs.end() && it->second)
@@ -91,3 +111,6 @@ void EditorTool::Destroy()
     for (auto& [key, ui] : _findUIs)
         if (ui) ui->Destroy();
 }
+
+
+

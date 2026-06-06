@@ -5,6 +5,7 @@
 
 #include "World/Level.h"
 #include "World/World.h"
+#include "world/CameraManager.h"
 
 
 #include "Component/MovementComponent.h"
@@ -240,16 +241,6 @@ void Player::MoveRightStop(float deltaTime) { _moveRight = false; UpdateMovement
 void Player::MoveLeftStop(float deltaTime) { _moveLeft = false; UpdateMovement(); }
 void Player::MoveUpStop(float deltaTime) { _moveUp = false; UpdateMovement(); }
 void Player::MoveDownStop(float deltaTime) { _moveDown = false; UpdateMovement(); }
-
-
-
-
-
-
-
-
-
-
 
 void Player::MoveStop(float deltaTime)
 {

@@ -15,5 +15,7 @@ public:
 private:
     void File();
     void Editor();
+    void Camera();
+
 };
 

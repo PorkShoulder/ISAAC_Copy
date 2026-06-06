@@ -68,9 +68,26 @@ const FMatrix& CameraManager::GetUIProjMatrix() const
     return _uiProj;
 }
 
+void CameraManager::SetEditorCameraMode(bool on)
+{
+    _editorCameraMode = on;
+    if (on)
+        _editorCamPos = GetCameraWorldPos(); // 진입 -> 현재 위치 저장
+    else
+        ChangeMainCamera("Cam");             // 해제 -> 플레이어 카메라 복귀
+}
+
+void CameraManager::SetEditorCamPos(const FVector3D& pos)
+{
+    _editorCamPos = pos;
+    if (_editorCameraMode && _mainCamera)
+        _mainCamera->SetWorldPosition(pos); 
+
+}
+
 void CameraManager::Destroy()
 {
-    //
+
 }
 
 void CameraManager::CreateUIProj(float x, float y, float dist)

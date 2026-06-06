@@ -304,11 +304,26 @@ void RoomObjectUI::RenderAnimationSelect()
 			int startY = _selectedFrameY;
 			int endX = (int)_dragEndTex._x;
 			int endY = (int)_dragEndTex._y;
-			if (endX <= startX) endX = startX + _frameWidth;
-			if (endY <= startY) endY = startY + _frameHeight;
-			//////////////////////////////////////////////////////////// -> 미 완료 여기 부분 함수로 빼서 작성할것  
-			seq->frames.push_back(FVector4D((float)_selectedFrameX, (float)_selectedFrameY, (float)_frameWidth, (float)_frameHeight));
+			if (endX <= startX) 
+				endX = startX + _frameWidth;
+			if (endY <= startY) 
+				endY = startY + _frameHeight;
+			
+			for (int y = startY; y < endY; y += _frameHeight)
+			{
+				for (int x = startX; x < endX; x += _frameWidth)
+				{
+					seq->frames.push_back(FVector4D(
+						(float)x, 
+						(float)y, 
+						(float)_frameWidth, 
+						(float)_frameHeight));
+				}
+			}
+			
 		}
+		_hasDragSelection = false;
+
 	}
 	ImGui::SameLine();
 	ImGui::Checkbox("Loop", &_seqLoop);

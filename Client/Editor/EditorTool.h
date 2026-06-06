@@ -20,10 +20,10 @@ private:
 	// 추가되는 UI (자료구조 연습해보기)
 	eActorType _mode = eActorType::End;
 	std::map<eActorType, Ptr<EditorUI>> _findUIs;
-
 	Ptr<class TileMap> _editingTileMap;
 
 private:
+
 	// UI 등록하기
 	template<typename T>
 	void RegisterMode(eActorType type, const std::string& name)

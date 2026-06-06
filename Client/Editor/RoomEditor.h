@@ -48,9 +48,7 @@ protected:
 	std::vector<std::string> _texFolderList;
 	bool _needRefresh = true;
 
-	// 카메라 분리
-	bool _editorCameraMode = false;
-	FVector3D _editorCamPos = FVector3D::Zero;
+	
 
 public:
 	// 충돌체 확인.
@@ -60,7 +58,7 @@ protected:
 	void RenderSnapOption();
 	void RenderTextureSelect(const std::string& defaultFolder = "");
 	void RenderTexturePreview();
-	void RenderCameraToggle();
+	
 public:
 	virtual bool Init(const std::string& name) override;
 	virtual void Render(float deltaTime) override;

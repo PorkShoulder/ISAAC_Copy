@@ -46,7 +46,7 @@ void TileMapUI::Destroy()
 
 void TileMapUI::Render(float deltaTime)
 {
-    RenderTextureSelect("ISAAC_Map");
+    
 
 
     ImGui::SameLine();
@@ -56,23 +56,27 @@ void TileMapUI::Render(float deltaTime)
         level->GenerateRandomMap();
     }
 
+    RenderTextureSelect("ISAAC_Map");
+    RenderTexturePreview();     // 이미지 미리보기
+
     // 여기에 위젯 추가
     if (ImGui::CollapsingHeader("Create Room"))
     {
-        ImGui::SetNextItemWidth(300);
+        ImGui::SetNextItemWidth(200);
         ImGui::InputText("Room Name", _roomName, sizeof(_roomName));
 
-        ImGui::SetNextItemWidth(300);
+        ImGui::SetNextItemWidth(200);
         ImGui::DragInt("CountX", &_countX, 1.f, 1, 100);
 
-        ImGui::SetNextItemWidth(300);
+        ImGui::SetNextItemWidth(200);
         ImGui::DragInt("CountY", &_countY, 1.f, 1, 100);
 
-        ImGui::SetNextItemWidth(300);
+        ImGui::SetNextItemWidth(200);
         ImGui::DragFloat2("TileSize", _tileSize, 1.f, 1.f, 512.f);
         
         // UI 버튼 사이즈 조절.
         ImVec2 buttonSize(80.f, 20.f);
+
         // 1. 방 만들기 
         if (ImGui::Button("New", buttonSize))
         {
@@ -292,6 +296,7 @@ void TileMapUI::Render(float deltaTime)
             }
         }
     }
+
     // 아웃라인 On/Off
     if (_targetTileMap)
     {
@@ -306,9 +311,8 @@ void TileMapUI::Render(float deltaTime)
 
  
     
-    RenderRoomShapeEditor();
-    RenderTexturePreview();
-    RenderTileFrameEditor();
+    RenderRoomShapeEditor();    // 그리드(모듈)지정
+    RenderTileFrameEditor();    //
         
 }
 

@@ -34,7 +34,7 @@ void RoomEditor::RenderSnapOption() //스냅
         ImGui::SetNextItemWidth(80.f);
         ImGui::InputFloat("Grid Size", &_gridSize, 1.f, 10.f, "%.0f");
     }
-    RenderCameraToggle();
+    
 }
 
 void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
@@ -84,6 +84,7 @@ void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
                     }
                 }
             }
+
             for (auto& fPath : folders)
                 _texFolderList.push_back(fPath);
 
@@ -118,7 +119,6 @@ void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
         }
 
         // 텍스처 목록 (필터)
-
         const char* texPreview = _selectedTextureName.empty() ? "None" : _selectedTextureName.c_str();
         if (ImGui::BeginCombo("Texture", texPreview))
         {
@@ -154,16 +154,16 @@ void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
             return;
 
         // 프레임 크기
-        ImGui::SetNextItemWidth(300.f); // 크기 조절
+        ImGui::SetNextItemWidth(200.f); // 크기 조절
         ImGui::DragInt("Frame Width", &_frameWidth, 1.f, 1, 512);
 
-        ImGui::SetNextItemWidth(300.f); // 크기 조절
+        ImGui::SetNextItemWidth(200.f); // 크기 조절
         ImGui::DragInt("Frame Height", &_frameHeight, 1.f, 1, 512);
 
         // 반전
-        ImGui::Checkbox("Flip X", &_flipX);
+        /*ImGui::Checkbox("Flip X", &_flipX);
         ImGui::SameLine();
-        ImGui::Checkbox("Flip Y", &_flipY);
+        ImGui::Checkbox("Flip Y", &_flipY);*/
     }
 
     
@@ -312,50 +312,30 @@ void RoomEditor::RenderTexturePreview()
     // 선택 프레임 미리보기
     if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
     {
+        ImVec2 cursorBelow = ImGui::GetCursorScreenPos(); 
+
         ImGui::Spacing();
         ImVec2 uv0((float)_selectedFrameX / texW, (float)_selectedFrameY / texH);
         ImVec2 uv1(
             (float)(_selectedFrameX + _frameWidth) / texW,
             (float)(_selectedFrameY + _frameHeight) / texH);
 
+        // 큰 프리뷰 오른쪽으로 커서 이동 (10px 간격)
+        ImGui::SetCursorScreenPos(ImVec2(imagePos.x + previewW + 10.f, imagePos.y));
+
+        ImGui::BeginGroup();
         ImGui::Text("Selected: %d, %d", _selectedFrameX, _selectedFrameY);
         ImGui::Image(texID, ImVec2(64.f, 64.f), uv0, uv1);
+        ImGui::EndGroup();
+
+        // 커서를 큰 프리뷰 아래로 복원 → 다음 카테고리가 안 겹침
+        ImGui::SetCursorScreenPos(cursorBelow);
     }
 
 
 }
 
-void RoomEditor::RenderCameraToggle()
-{
-    if (ImGui::Checkbox("Camera Mode", &_editorCameraMode))
-    {
-        Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
-        if (level)
-        {
-            if (_editorCameraMode)
-            {
-                // 현재 카메라 위치 저장 후 플레이어 추적 해제
-                _editorCamPos = level->GetCameraWorldPos();
-            }
-            else
-            {
-                // 플레이어 카메라로 복귀
-                level->GetCameraManager()->ChangeMainCamera("Cam");
-            }
-        }
-    }
-    if (_editorCameraMode)
-    {
-        ImGui::DragFloat3("Cam Pos", &_editorCamPos._x, 1.f);
-        Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
-        if (level)
-        {
-            auto cam = level->GetCameraManager()->GetMainCamera();
-            if (cam)
-                cam->SetWorldPosition(_editorCamPos);
-        }
-    }
-}
+
 
 bool RoomEditor::Init(const std::string& name)
 {
@@ -369,3 +349,4 @@ void RoomEditor::Render(float deltaTime)
 void RoomEditor::Destroy()
 {
 }
+

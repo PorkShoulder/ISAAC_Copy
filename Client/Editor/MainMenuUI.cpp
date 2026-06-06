@@ -5,6 +5,11 @@
 #include "InspectorUI.h"
 #include "EditorTool.h"
 
+#include "../Core/GameEngine.h"
+#include "../World/World.h"
+#include "../World/Level.h"
+#include "../World/CameraManager.h"
+#include "../Component/CameraComponent.h"
 
 MainMenuUI::MainMenuUI()
 {}
@@ -25,6 +30,7 @@ void MainMenuUI::Render(float deltaTime)
     {
         File();
         Editor();
+        Camera();
 
         ImGui::EndMainMenuBar();
     }
@@ -97,11 +103,32 @@ void MainMenuUI::Editor()   // To do 타일맵 구현하기.
              
             
         }
-      
+        ImGui::EndMenu();
+    }
+}
 
+void MainMenuUI::Camera() // 카메라 모드 전환
+{
+    if (ImGui::BeginMenu("Camera"))
+    {
+        Ptr<Level>  level = GameEngine::Instance().GetWorld()->GetCurLevel();
+        if (level)
+        {
+            Ptr<CameraManager> camMgr = level->GetCameraManager();
+            if (camMgr)
+            {
+                bool on = camMgr->IsEditorCameraMode();
+                if (ImGui::MenuItem("Camera Mode", "C", on))   // 체크표시 + 클릭 감지
+                    camMgr->SetEditorCameraMode(!on);
 
-
-
+                if (camMgr->IsEditorCameraMode())
+                {
+                    FVector3D pos = camMgr->GetEditorCamPos();
+                    if (ImGui::DragFloat3("Cam Pos", &pos._x, 1.f))
+                        camMgr->SetEditorCamPos(pos);
+                }
+            }
+        }
         ImGui::EndMenu();
     }
 }

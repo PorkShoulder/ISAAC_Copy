@@ -30,6 +30,7 @@ bool MovementComponent::Init(int32 id, const std::string& name, Ptr<class Actor>
 void MovementComponent::Tick(float deltaTime)
 {
     ActorComponent::Tick(deltaTime);
+    _blockedThisFrame = false;
 
     //움직일 대상이 없다면
     if (nullptr == _updateComponent)
@@ -96,9 +97,13 @@ void MovementComponent::Tick(float deltaTime)
                     || tileComp->IsBlocked(FVector3D(nextX - halW, curPos._y - halH, 0));
         if (!blockedX)
             result._x = nextX;
+        else
+            _blockedThisFrame = true;
     }
     else
+    {
         result._x = nextX;
+    }
     
     //Y 축 이동 체크
     float nextY = curPos._y + delta._y;
@@ -113,14 +118,20 @@ void MovementComponent::Tick(float deltaTime)
                     || tileComp->IsBlocked(FVector3D(result._x - halW, nextY - halH, 0));
         if (!blockedY)
             result._y = nextY;
+        else
+            _blockedThisFrame = true;
     }
     else
+    {
         result._y = nextY;
+    }
     
 
     //이동량을 통해 도달할 위치
     _nextPosition = result;
     _updateComponent->SetWorldPosition(_nextPosition);
+
+
 
 
 }

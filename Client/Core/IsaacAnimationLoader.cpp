@@ -47,5 +47,27 @@ void IsaacAnimationLoader::Register(AnimationManager* mgr)
     {
         mgr->AddFrame("IASSC_BODY_SIDE", i * CELL, 3.f * CELL, CELL, CELL);
     }
+
+    
+    // 총알(눈물)
+    mgr->CreateAnimation("Tears", eAnimTextureType::SPRITE);
+    mgr->SetTexture("Tears", "Tears", TEXT("ISAAC_Tears\\bulletatlas.png"));   // 눈물 스프라이트가 든 아틀라스 경로
+
+    constexpr float TEAR = 64.f; // 총알 전용 사이즈 
+    constexpr float TEAR_X = 256.f;
+    constexpr float TEAR_Y = 256.f;
+    for (int32 row = 0; row < 3; ++row)
+    {
+        for (int32 col = 0; col < 4; ++col)
+        {
+            mgr->AddFrame("Tears", TEAR_X + col * TEAR, TEAR_Y + row * TEAR, TEAR, TEAR);
+        }
+         
+    }
+
+
+
+
+
     
 }

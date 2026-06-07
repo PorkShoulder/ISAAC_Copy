@@ -10,6 +10,7 @@ struct FAnimSequenceData
     bool loop = true;                
 };
 
+
 // 타일에 배치되는 오브젝트 관리.
 
 class RoomObjectUI : public RoomEditor
@@ -29,6 +30,8 @@ private:
     std::vector<FAnimSequenceData> _animSequences;
     bool _seqLoop = true;
     char _seqName[64] = "IDLE";
+
+    int _doorDirIndex = 0;
 
 public:
     virtual bool Init(const std::string& name) override;

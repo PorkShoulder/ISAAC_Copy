@@ -14,7 +14,7 @@ public:
 
 protected:
     float _speed = 0.f;                         //움직이는 속도
-    float _maxSpeed = 100.f;                    //최대 속도
+    float _maxSpeed = 300.f;                    //최대 속도
     float _accel = 200.f;                       //가속도
     bool _isAccel = false;                      //가속 상태확인
     float _friction = 500.f;                    //마찰력
@@ -28,6 +28,9 @@ protected:
 
     // 자기는 위치가 없음 대신 지정된 SceneComopnent의 위치 변경.
     Ptr<class SceneComponent> _updateComponent = nullptr; 
+
+private:
+    bool _blockedThisFrame = false;
 
 public:
     virtual bool Init(int32 id, const std::string& name, Ptr<class Actor> owner) override;
@@ -47,7 +50,8 @@ public:
     void SetMoveAxis(const FVector3D& moveAxis);
     void AddMoveAxis(const FVector3D& moveAxis);
     void Stop();
-
+    
+    bool IsBlockedThisFrame() const { return _blockedThisFrame; }
 
 };
 

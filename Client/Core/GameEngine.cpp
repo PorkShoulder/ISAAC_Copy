@@ -110,7 +110,7 @@ bool GameEngine::Create()
 	}
 
 	// 윈도우 창 크기설정
-	RECT windowRect = { 0, 0, 1280, 720 };
+	RECT windowRect = { 0, 0, 1024, 640 }; 
 
 	// (윈도우 창 크기설정, 메뉴바) 이를 바탕으로 제외된 크기 계산해서 다시 넣어줌
 	AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, false);
@@ -215,7 +215,7 @@ bool GameEngine::InitManager()
 		return false;
 	}
 
-	if (false == Device::Instance().Init(_hWnd, 1280, 720, true))
+	if (false == Device::Instance().Init(_hWnd, 1024, 640, true)) // 윈도우 창 크기 설정
 	{
 		LogManager::Instance().Fatal("Device Init Error!");
 		return false;

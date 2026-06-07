@@ -2,6 +2,7 @@
 #include "Pawn.h"
 #include "Controller/Controller.h"
 
+#include "../Common/LogManager.h"
 #include "World/Level.h"
 
 Pawn::Pawn()
@@ -54,6 +55,25 @@ void Pawn::Destroy()
         _controller->SetActive(false);
 
     //level->RemoveActor(_controller->GetActorID());
+}
+
+void Pawn::TakeDamage(int32 dmg)
+{
+    if(_hp <= 0)    // 체력이 0보다 낮음 -> 이미 사망함.
+        return;
+    _hp -= dmg;     // 체력에 피해량 만큼 감소해서 대입
+    LogManager::Instance().Debug("TakeDamage!!! hp =" + std::to_string(_hp));
+    
+}
+
+void Pawn::OnDeath()
+{
+    // 기본 동작: 레벨에서 자기 제거
+    Ptr<Level> level = GetLevel();
+    if (level)
+        level->RemoveActor(GetActorID());
+
+
 }
 
 void Pawn::SetController(Ptr<class Controller> ctrl)

@@ -7,6 +7,8 @@
 #include "World/World.h"
 #include "world/CameraManager.h"
 
+#include "../Object/Bullet.h"
+
 
 #include "Component/MovementComponent.h"
 #include "Component/MeshComponent.h"
@@ -149,6 +151,13 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 void Player::Tick(float deltaTime)
 {
     Pawn::Tick(deltaTime);
+    LogManager::Instance().Debug("PLAYER FIRE");
+    _fireTimer -= deltaTime;
+    if (_headKeyActive && _fireTimer <= 0.f)
+    {
+        Fire();
+        _fireTimer = _fireRate;
+    }
 }
 
 void Player::Collision(float deltaTime)
@@ -259,6 +268,7 @@ void Player::MoveStop(float deltaTime)
 void Player::HeadRight(float deltaTime)
 {
     _headKeyActive = true;
+    _headDir = { 1.f, 0.f, 0.f };
     Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
     if (!head) return;
     head->ChangeAnimation("IASSC_HEAD_SIDE");
@@ -268,6 +278,7 @@ void Player::HeadRight(float deltaTime)
 void Player::HeadLeft(float deltaTime)
 {
     _headKeyActive = true;
+    _headDir = { -1.f, 0.f, 0.f };
     Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
     if (!head) return;
     head->ChangeAnimation("IASSC_HEAD_SIDE");
@@ -277,6 +288,7 @@ void Player::HeadLeft(float deltaTime)
 void Player::HeadUp(float deltaTime)
 {
     _headKeyActive = true;
+    _headDir = { 0.f, 1.f, 0.f };
     Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
     if (!head) return;
     head->ChangeAnimation("IASSC_HEAD_BACK");
@@ -286,6 +298,7 @@ void Player::HeadUp(float deltaTime)
 void Player::HeadDown(float deltaTime)
 {
     _headKeyActive = true;
+    _headDir = { 0.f, -1.f, 0.f };
     Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
     if (!head) return;
     head->ChangeAnimation("IASSC_HEAD_FRONT");
@@ -302,6 +315,20 @@ void Player::mouseDown(float deltaTime)
 {
     //
     LogManager::Instance().Debug("Mouse Down!");
+}
+
+void Player::Fire()
+{
+    Ptr<Level> level = GetLevel();
+    if (!level) return;
+
+    Ptr<Bullet> bullet = level->SpawnActor<Bullet>("bullet", GetWorldPosition(), GetWorldScale() / 2, GetWorldRotation());
+    if (!bullet) return;
+
+    bullet->SetProfile("PlayerBullet");   // 몬스터를 맞히는 총알
+    bullet->SetDir(_headDir);             // 화살표(머리) 방향
+    bullet->SetSpeed(200.f);
+    
 }
 
 

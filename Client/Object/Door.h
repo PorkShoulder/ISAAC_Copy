@@ -11,8 +11,26 @@ enum class eDoorType
 	END		
 };
 inline const char* DoorTypeName[] = { "NORMAL", "LOCKED", "HIDDEN","BOSS" };
+enum  class eDoorDir
+{
+	UP,
+	DOWN,
+	LEFT,
+	RIGHT,
+	END
+};
+inline const char* DoorDirName[] = { "UP", "DOWN", "LEFT", "RIGHT" };
 
-
+enum class eDoorState
+{
+	OPEN,           // 열린 문
+	NORMAL_CLOSED,  // 전투 중 닫힌 문
+	LOCKED_CLOSED,  // 열쇠문 잠김 상태
+	HIDDEN_CLOSED,  // 히든문 닫힘/숨김
+	OPENING,        // 열리는 애니메이션 중
+	CLOSING,        // 닫히는 애니메이션 중
+	END
+};
 
 
 class Door : public Actor
@@ -22,10 +40,14 @@ public:
 	virtual ~Door();
 private:
 	eDoorType _doorType = eDoorType::NORMAL;
+	eDoorDir _doorDir = eDoorDir::UP;
+	eDoorState _doorState = eDoorState::OPEN;
 	std::string _doorName;
 
 	Ptr<class AABBCollisionComponent> _col;
-	Ptr<class StaticMeshComponent> _mesh = nullptr;
+	Ptr<class SpriteComponent> _mesh = nullptr;
+	Ptr<class SpriteComponent> _frame = nullptr;
+	Ptr<class SpriteComponent> _panel = nullptr;
 	
 
 
@@ -37,9 +59,14 @@ public:
 	virtual void Destroy() override;
 public:
 	void SetTexture(const std::string& name);
-	void SetDoorType(eDoorType type) { _doorType = type; }
+	void SetDoorType(eDoorType type);
 	eDoorType GetDoorType() const { return _doorType; }
+	
+	void SetDoorDir(eDoorDir dir) { _doorDir = dir; }
+	eDoorDir GetDoorDir() const { return _doorDir; }
 
+	void OverlapCallback(Weak<class CollisionComponent> dest);
+	void ChangeDoorState(eDoorState state);
 	
 
 };

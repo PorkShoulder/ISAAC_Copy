@@ -290,6 +290,10 @@ void RoomManager::ActivateStartRoom()
     if (it != _roomPos.end())
     {
         _currentRoom = &(it->second);
+
+        if (_currentRoom->tileMap && _level)
+            _level->SetTileMap(_currentRoom->tileMap);
+
         ActivateRoom(_currentRoom);
     }
 

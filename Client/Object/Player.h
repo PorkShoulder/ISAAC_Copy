@@ -32,6 +32,12 @@ private:
     bool _moveUp = false;
     bool _moveDown = false;
 
+    // 총알 발사와 머리 방향 일치
+    FVector3D _headDir = FVector3D{ 0.f, -0.f, 0.f }; 
+    float _fireRate = 0.8f; // 발사간격
+    float _fireTimer = 1.f; // 쿨다운
+
+
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
     virtual void Tick(float deltaTime);
@@ -60,11 +66,10 @@ private:
     void HeadUp(float deltaTime);
     void HeadDown(float deltaTime);
     void HeadRelease(float deltaTime);
-
-    /*void OnDance(float deltaTime);*/
-
     void mouseDown(float deltaTime);
 
+    void Fire();
+    
     
 
 

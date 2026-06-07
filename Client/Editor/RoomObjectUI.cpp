@@ -81,6 +81,8 @@ void RoomObjectUI::Render(float deltaTime)
 		break;
 	case eActorType::Door:
 		ImGui::Combo("Type", &_currentIndex, DoorTypeName, (int)eDoorType::END);
+		ImGui::Combo("Direction", &_doorDirIndex, DoorDirName, IM_ARRAYSIZE(DoorDirName));
+
 		break;
 	case eActorType::Item:
 		ImGui::Combo("Type", &_currentIndex, ItemTypeName, (int)eItemType::END);
@@ -165,6 +167,7 @@ void RoomObjectUI::Render(float deltaTime)
 					{
 						door->SetTexture(_selectedTextureName);
 						door->SetDoorType((eDoorType)_currentIndex);
+						door->SetDoorDir((eDoorDir)_doorDirIndex);
 					}
 				}
 					break;

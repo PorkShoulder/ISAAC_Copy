@@ -9,6 +9,10 @@ void IsaacPlayer::InitHead()
 {
 }
 
+void IsaacPlayer::HeadDown(float deltaTime)
+{
+}
+
 void IsaacPlayer::InitInput()
 {
 }
@@ -22,9 +26,5 @@ void IsaacPlayer::HeadLeft(float deltaTime)
 }
 
 void IsaacPlayer::HeadUp(float deltaTime)
-{
-}
-
-void IsaacPlayer::HeadDown(float deltaTime)
 {
 }

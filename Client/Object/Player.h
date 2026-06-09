@@ -36,8 +36,14 @@ private:
     FVector3D _headDir = FVector3D{ 0.f, -0.f, 0.f }; 
     float _fireRate = 0.8f; // 발사간격
     float _fireTimer = 1.f; // 쿨다운
-
-
+    // 아이템 소모
+    FConsumableStat _consumable;
+public:
+    int GetKey() const { return _consumable.key; }
+    int GetCoin() const { return _consumable.coin; }
+    void AddKey(int amount) { _consumable.key += amount; }
+    void AddCoin(int amount) { _consumable.coin += amount; }
+    void OnDeath();
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
     virtual void Tick(float deltaTime);
@@ -69,12 +75,13 @@ private:
     void mouseDown(float deltaTime);
 
     void Fire();
-    
-    
-
-
 private:
     void BlockCallBack(Weak<class CollisionComponent> dest);
     void OverlapCallBack(Weak<class CollisionComponent> dest);
     void ReleaseCallBack(Weak<class CollisionComponent> dest);
+
+
+
+    // 테스트용
+    void TestDeath(float deltaTime);
 };

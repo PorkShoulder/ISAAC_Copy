@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "EditorEngine.h"
 #include "RoomObjectUI.h"
 
@@ -7,6 +7,7 @@
 #include "../World/Level.h"
 #include "../World/World.h"
 
+#include "../World/RoomManager.h"
 #include "../Core/GameEngine.h"
 
 #include "../Object/Monster.h"
@@ -45,14 +46,15 @@ void RoomObjectUI::Render(float deltaTime)
 	RenderTextureSelect();
 	RenderTexturePreview();
 	ImGui::Separator();
-	
+
 	// 카테고리 선택
-	const char* categories[] = { "Obstacle", "Door", "Item", "Npc", "Monster" };
+	const char* categories[] = { "Tile", "Obstacle", "Door", "Item", "Npc", "Monster" };
 	eActorType categoryTypes[] = {
-		eActorType::Obstacle, 
-		eActorType::Door, 
+		eActorType::Tile,
+		eActorType::Obstacle,
+		eActorType::Door,
 		eActorType::Item,
-		eActorType::Npc, 
+		eActorType::Npc,
 		eActorType::Monster
 	};
 
@@ -66,11 +68,45 @@ void RoomObjectUI::Render(float deltaTime)
 			break;
 		}
 	}
-
-	if (ImGui::Combo("Category", &categoryIndex, categories, IM_ARRAYSIZE(categories))) 
+	
+	// 초기 리소스 프레임 나누기 값 지정.
+	if (ImGui::Combo("Category", &categoryIndex, categories, IM_ARRAYSIZE(categories)))
 	{
 		_placeType = categoryTypes[categoryIndex];
 		_currentIndex = 0;
+
+		switch (_placeType)
+		{
+		case eActorType::Tile:
+			_frameWidth = 52;
+			_frameHeight = 52;
+			break;
+
+		case eActorType::Obstacle:
+			_frameWidth = 52;
+			_frameHeight = 52;
+			break;
+
+		case eActorType::Door:
+			_frameWidth = 64;
+			_frameHeight = 48;
+			break;
+
+		case eActorType::Item:
+			_frameWidth = 52;
+			_frameHeight = 52;
+			break;
+		case eActorType::Npc:
+			_frameWidth = 52;
+			_frameHeight = 52;
+			break;
+		case eActorType::Monster:
+			_frameWidth = 52;
+			_frameHeight = 52;
+			break;
+		}
+		
+
 	}
 
 	// 오브젝트 타입 선택
@@ -80,9 +116,7 @@ void RoomObjectUI::Render(float deltaTime)
 		ImGui::Combo("Type", &_currentIndex, ObstacleTypeName, (int)eObstacleType::END);
 		break;
 	case eActorType::Door:
-		ImGui::Combo("Type", &_currentIndex, DoorTypeName, (int)eDoorType::END);
-		ImGui::Combo("Direction", &_doorDirIndex, DoorDirName, IM_ARRAYSIZE(DoorDirName));
-
+		RenderDoorUI();
 		break;
 	case eActorType::Item:
 		ImGui::Combo("Type", &_currentIndex, ItemTypeName, (int)eItemType::END);
@@ -91,10 +125,13 @@ void RoomObjectUI::Render(float deltaTime)
 		ImGui::Combo("Type", &_currentIndex, NpcTypeName, (int)eNpcType::END);
 		break;
 	case eActorType::Monster:
+		RenderMonsterUI();
 		break;
 	}
 	if (_placeType == eActorType::Monster || _placeType == eActorType::Npc)
+	{
 		RenderAnimationSelect();
+	}
 
 
 	// 스냅 기능
@@ -110,7 +147,7 @@ void RoomObjectUI::Render(float deltaTime)
 		{
 			// 마우스 월드 좌표
 			FVector2D worldPos = InputSystem::Instance().GetMouseWorldPos();
-			
+
 			if (_snapGrid)
 			{
 				Ptr<TileComponent> tileComp = _targetTileMap->GetTileComponent();
@@ -127,7 +164,7 @@ void RoomObjectUI::Render(float deltaTime)
 			}
 
 			FVector3D pos(worldPos._x, worldPos._y, 2.f);
-			FVector3D scale(50.f, 50.f, 1.f);
+			FVector3D scale(52.f, 52.f, 1.f); // 타일 크기입니다.
 			FRotator rot(0, 0, 0);
 
 			//Ptr<Actor> spawned = nullptr;
@@ -147,13 +184,13 @@ void RoomObjectUI::Render(float deltaTime)
 						obstacle->SetTexture(_selectedTextureName);
 						obstacle->SetObstacleType((eObstacleType)_currentIndex);
 					}
-					
+
 				}
-					break;
+				break;
 				case eActorType::Item:
 				{
 					auto item = level->SpawnActor<Item>(name, pos, scale, rot);
-					if (item) 
+					if (item)
 					{
 						item->SetTexture(_selectedTextureName);
 						item->SetItemType((eItemType)_currentIndex);
@@ -162,32 +199,50 @@ void RoomObjectUI::Render(float deltaTime)
 				break;
 				case eActorType::Door:
 				{
-					auto door= level->SpawnActor<Door>(name, pos, scale, rot);
+					
+					scale = FVector3D(_editDoorData.renderSize._x, _editDoorData.renderSize._y, 1.f);
+					auto door = level->SpawnActor<Door>(name, pos, scale, rot);
 					if (door)
 					{
-						door->SetTexture(_selectedTextureName);
-						door->SetDoorType((eDoorType)_currentIndex);
-						door->SetDoorDir((eDoorDir)_doorDirIndex);
+						_editDoorData.textureName = _selectedTextureName;
+						_editDoorData.texturePath = _selectedTexturePath;
+						door->SetDoorData(_editDoorData);
+
+						Ptr<RoomManager> roomMgr = level->GetRoomManager();
+						if (roomMgr)
+							roomMgr->RegisterDoor(door);
 					}
 				}
-					break;
-				
+				break;
+
 				case eActorType::Monster:
 				{
+					scale = FVector3D(_editMonsterData.renderSize._x, _editMonsterData.renderSize._y, 1.f);
+					
+					// 몬스터 액터 생성.
 					auto monster = level->SpawnActor<Monster>(name, pos, scale, rot);
-					if (monster) 
+					if (monster)
 					{
-						monster->SetMonsterType((eMonsterType)_currentIndex);
-
+						// 현재 에디터에서 선택한 텍스처 정보를 몬스터 데이터에 저장
+						_editMonsterData.textureName = _selectedTextureName;
+						_editMonsterData.texturePath = _selectedTexturePath;
+						// 프리셋 능력치 + 텍스처+크기 정보를 몬스터에 전달
+						monster->SetMonsterData(_editMonsterData);
+						
+						// 애니메이션 등록.
 						auto sprite = monster->FindSceneComponent<SpriteComponent>("Mesh");
 						if (sprite && !_animSequences.empty())
 						{
 							for (auto& seq : _animSequences)
 							{
-								std::wstring wTex(seq.textureName.begin(), seq.textureName.end());
-								sprite->AddAnimSequence(seq.name, wTex, seq.frames, seq.loop);
+								sprite->AddAnimSequence(seq.name, seq.texturePath, seq.frames, seq.loop);
 							}
 						}
+						// RoomManager에 등록 (전투시 몬스터 생존 체크용.) -> 이를 알아야 door활성화 여부 가능.
+						Ptr<RoomManager> roomMgr = level->GetRoomManager();
+						if (roomMgr)
+							roomMgr->RegisterMonster(monster); 
+
 					}
 				}
 				break;
@@ -215,7 +270,6 @@ void RoomObjectUI::Render(float deltaTime)
 
 				} // switch 끝 
 			}
-
 		}
 	}
 }
@@ -249,38 +303,19 @@ bool RoomObjectUI::IsAnimatedObject(eActorType type) const
 	return false;
 }
 
-void RoomObjectUI::RenderAnimationSelect()
+void RoomObjectUI::RenderAnimationSelect() // 애니메이션 프레임 등록
 {
-	//const char* MonsterAnim[] = { "MONSTER_IDLE" };
-	//const char* NpcAnim[]{ "NPC_IDLE" };
-	//if (_placeType == eActorType::Monster)
-	//{
-	//	ImGui::Combo(
-	//		"Animation",
-	//		&_currentAnimIndex,
-	//		MonsterAnim,
-	//		IM_ARRAYSIZE(MonsterAnim)
-	//	);
-	//}
-	//else if (_placeType == eActorType::Npc)
-	//{
-	//	ImGui::Combo(
-	//		"Animation",
-	//		&_currentAnimIndex,
-	//		NpcAnim,
-	//		IM_ARRAYSIZE(NpcAnim)
-	//	);
-	//} 보류
+	
 
 	ImGui::SeparatorText("Animation Sequence");
 	ImGui::InputText("Anim Name", _seqName, sizeof(_seqName));
 
 	if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
 		ImGui::Text("Frame: %d, %d (%dx%d)", _selectedFrameX, _selectedFrameY, _frameWidth, _frameHeight);
-	
+
 	// 드래그 범위 및 단일 프레임 추가
 	if (ImGui::Button("Add Frame"))
-	{	
+	{
 		if (_selectedFrameX >= 0 && _selectedFrameY >= 0 && strlen(_seqName) > 0) // 1. 텍스처 프레임 선택 2. 시퀀스 이름 
 		{
 			FAnimSequenceData* seq = nullptr;
@@ -301,29 +336,30 @@ void RoomObjectUI::RenderAnimationSelect()
 				seq = &_animSequences.back();
 				seq->name = _seqName;
 				seq->textureName = _selectedTextureName;
+				seq->texturePath = _selectedTexturePath;
 				seq->loop = _seqLoop;
 			}
 			int startX = _selectedFrameX;
 			int startY = _selectedFrameY;
 			int endX = (int)_dragEndTex._x;
 			int endY = (int)_dragEndTex._y;
-			if (endX <= startX) 
+			if (endX <= startX)
 				endX = startX + _frameWidth;
-			if (endY <= startY) 
+			if (endY <= startY)
 				endY = startY + _frameHeight;
-			
+
 			for (int y = startY; y < endY; y += _frameHeight)
 			{
 				for (int x = startX; x < endX; x += _frameWidth)
 				{
 					seq->frames.push_back(FVector4D(
-						(float)x, 
-						(float)y, 
-						(float)_frameWidth, 
+						(float)x,
+						(float)y,
+						(float)_frameWidth,
 						(float)_frameHeight));
 				}
 			}
-			
+
 		}
 		_hasDragSelection = false;
 
@@ -345,5 +381,98 @@ void RoomObjectUI::RenderAnimationSelect()
 		ImGui::PopID();
 	}
 
+
+}
+void RoomObjectUI::RenderDoorUI()
+{
+	ImGui::SeparatorText("Door Function");
+	ImGui::DragFloat2("Render Size", &_editDoorData.renderSize._x, 1.f, 1.f, 512.f);
+	ImGui::DragFloat2("Collision Size", &_editDoorData.collisionSize._x, 1.f, 1.f, 512.f);
+
+	ImGui::SeparatorText("Door Image Parts");
+
+	if (_selectedFrameX >= 0 && _selectedFrameY >= 0)
+		ImGui::Text("Selected: %d,%d (%dx%d)",
+			_selectedFrameX, _selectedFrameY, _frameWidth, _frameHeight);
+
+	// Frame
+	if (ImGui::Button("Set Frame"))
+	{
+		_editDoorData.frame = FVector4D(
+			(float)_selectedFrameX, (float)_selectedFrameY,
+			(float)_frameWidth, (float)_frameHeight);
+
+		_editDoorData.left = _editDoorData.frame;
+		_editDoorData.right = _editDoorData.frame;
+		_editDoorData.openImage = _editDoorData.frame;
+	}
+	ImGui::SameLine();
+	ImGui::Text("(%d,%d %dx%d)", (int)_editDoorData.frame._x, (int)_editDoorData.frame._y,
+		(int)_editDoorData.frame._z, (int)_editDoorData.frame._w);
+
+	// Left
+	if (ImGui::Button("Set Left"))
+	{
+		_editDoorData.left = FVector4D(
+			(float)_selectedFrameX, (float)_selectedFrameY,
+			(float)_frameWidth, (float)_frameHeight);
+	}
+	ImGui::SameLine();
+	ImGui::Text("(%d,%d %dx%d)", (int)_editDoorData.left._x, (int)_editDoorData.left._y,
+		(int)_editDoorData.left._z, (int)_editDoorData.left._w);
+
+	// Right
+	if (ImGui::Button("Set Right"))
+	{
+		_editDoorData.right = FVector4D(
+			(float)_selectedFrameX, (float)_selectedFrameY,
+			(float)_frameWidth, (float)_frameHeight);
+	}
+	ImGui::SameLine();
+	ImGui::Text("(%d,%d %dx%d)", (int)_editDoorData.right._x, (int)_editDoorData.right._y,
+		(int)_editDoorData.right._z, (int)_editDoorData.right._w);
+
+	// Open Image
+	if (ImGui::Button("Set Open Image"))
+	{
+		_editDoorData.openImage = FVector4D(
+			(float)_selectedFrameX, (float)_selectedFrameY,
+			(float)_frameWidth, (float)_frameHeight);
+	}
+	ImGui::SameLine();
+	ImGui::Text("(%d,%d %dx%d)", (int)_editDoorData.openImage._x, (int)_editDoorData.openImage._y,
+		(int)_editDoorData.openImage._z, (int)_editDoorData.openImage._w);
+
+	ImGui::SeparatorText("Door Function");
+
+	int doorIdx = (int)_editDoorData.doorType;
+	if (ImGui::Combo("Door Type", &doorIdx, DoorTypeName, (int)eDoorType::END))
+		_editDoorData.doorType = (eDoorType)doorIdx;
+
+	ImGui::Checkbox("Open (Initial)", &_editDoorData.bOpen);
+	ImGui::Checkbox("Battle Control", &_editDoorData.bBattle);
+}
+
+void RoomObjectUI::RenderMonsterUI()
+{
+	ImGui::SeparatorText("Monster Setting");
+	// 몬스터 타입 선택 -> 프리셋 능력치 자동 적용
+	int typeIdx = (int)_editMonsterData.monsterType;
+	if (ImGui::Combo("Monster Type", &typeIdx, MonsterTypeName, (int)eMonsterType::End))
+	{
+		std::string texName = _editMonsterData.textureName;
+		std::wstring texPath = _editMonsterData.texturePath;
+		_editMonsterData = MonsterInfo[typeIdx];
+		_editMonsterData.textureName = texName;
+		_editMonsterData.texturePath = texPath;
+	}
+	// 렌더/충돌 크기 - 에디터에서 직접 조절.
+	ImGui::DragFloat2("Render Size", &_editMonsterData.renderSize._x, 1.f, 1.f, 512.f);
+	ImGui::DragFloat2("Collision Size", &_editMonsterData.collisionSize._x, 1.f, 1.f, 512.f);
+
+	//프리셋 능력치 읽기
+	ImGui::SeparatorText("Monster stats");
+	ImGui::Text("Speed: %.0f / Charge: %.0f", _editMonsterData.moveSpeed, _editMonsterData.chargeSpeed);
+	ImGui::Text("Range: %.0f / ATK: %.1f / HP: %.0f", _editMonsterData.detectRange, _editMonsterData.attackPower, _editMonsterData.hp);
 
 }

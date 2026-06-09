@@ -19,6 +19,8 @@ RoomManager::~RoomManager()
 {
 }
 
+
+
 void RoomManager::Init(Ptr<class Level > level)
 {
 	// 초기화 레벨 참조 저장, 방 크기 설정.
@@ -308,6 +310,11 @@ void RoomManager::ActivateRoom(FRoomInfo* cell)
 
     for (auto& monster : cell->monsters)
         monster->SetEnable(true);
+    // 몬스터가 있으면 전투 시작
+    if (!cell->monsters.empty())
+        StartBattle(cell);
+
+
 }
 
 void RoomManager::DeactivateRoom(FRoomInfo* cell)
@@ -323,7 +330,20 @@ void RoomManager::Tick(float deltaTime)
 {
     if (!_currentRoom)
         return;
-
+    if (!_currentRoom->isBattleActive)
+        return;
+    // 살아있는 몬스터 확인
+    bool allDead = true;
+    for (auto& monster : _currentRoom->monsters)
+    {
+        if (monster && monster->IsEnable())
+        {
+            allDead = false;
+            break;
+        }
+    }
+    if (allDead)
+        EndBattle(_currentRoom);
 }
 
 FRoomInfo* RoomManager::FindCellAtWorldPos(const FVector2D& pos)
@@ -338,4 +358,48 @@ FRoomInfo* RoomManager::FindCellAtWorldPos(const FVector2D& pos)
 void RoomManager::Destroy()
 {
 
+}
+
+void RoomManager::RegisterDoor(Ptr<Door> door)
+{
+    if (!_currentRoom || !door)
+        return;
+    _currentRoom->doors.push_back(door);
+}
+
+void RoomManager::RegisterMonster(Ptr<Monster> monster)
+{
+    if (!monster || !_currentRoom)
+        return;
+    _currentRoom->monsters.push_back(monster);
+}
+
+void RoomManager::StartBattle(FRoomInfo* room)
+{
+    if (!room || room->isBattleActive)
+        return;
+    room->isBattleActive = true;
+    for (auto& door : room->doors)
+    {
+        if (door && door->IsBattleControl())
+            door->SetOpen(false);
+    }
+}
+
+void RoomManager::EndBattle(FRoomInfo* room)
+{
+    if (!room || !room->isBattleActive)
+        return;
+
+    room->isBattleActive = false;
+
+    for (auto& door : room->doors)
+    {
+        if (!door || !door->IsBattleControl())
+            continue;
+        if (door->GetDoorType() == eDoorType::NORMAL)
+            door->SetOpen(true);
+        else
+            door->SetOpen(false);
+    }
 }

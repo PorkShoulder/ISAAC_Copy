@@ -1,4 +1,4 @@
-#include "pch.h"
+﻿#include "pch.h"
 #include "Npc.h"
 
 #include "../Component/SpriteComponent.h"
@@ -32,13 +32,18 @@ bool Npc::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRo
 
 void Npc::Collision(float deltaTime)
 {
+    Actor::Collision(deltaTime);
 }
 
 void Npc::Render(float deltaTime)
 {
+    Actor::Render(deltaTime);
 }
 
 void Npc::Destroy()
 {
+    Actor::Destroy();
 }
+
+
 

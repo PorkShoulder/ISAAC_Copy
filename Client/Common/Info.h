@@ -358,8 +358,101 @@ struct FItemStat
 // 소모품을 따로 뺀이유 -> 나중에 UI에서 보여져야할떄 이곳에 있는게 표기하기 더 편할거 같음
 struct FConsumableStat
 {
-    int _coin = 0;
-    int _key = 0;
-    int _bomb = 0;
+    int coin = 0;
+    int key = 0;
+    int bomb = 0;
 };
 
+// door.h
+// 문 관련 정보
+enum class eDoorType
+{
+    NORMAL,
+    KEY,
+    COIN,
+    END
+};
+inline const char* DoorTypeName[] = {
+    "NORMAL",
+    "KEY",
+    "COIN"
+};
+struct FDoorSpawnData
+{
+    std::string textureName; // 아틀라스 텍스처 이름
+    std::wstring texturePath; // 아틀라스 텍스처 경로
+  
+    FVector4D frame;  //문틀
+    FVector4D left;   //좌짝
+    FVector4D right;  //우짝
+    FVector4D openImage;  //열린상태
+
+    eDoorType doorType = eDoorType::NORMAL;
+    bool bOpen = false;
+    bool bBattle = false;
+
+    FVector2D renderSize = {64.f, 48.f};        // 렌더 크기
+    FVector2D collisionSize = { 40.f, 24.f };   // 충돌체 크기
+};
+
+// monster.h
+// 몬스터 관련 정보
+enum class eMonsterType
+{
+    Monster_knight,
+    Monster_fatty,
+    Monster_BOSS,
+    End
+    // 나중에 이름 달아야함.
+};
+inline const char* MonsterTypeName[] = { "Knight", "Fatty", "Boss" };
+
+struct FMonsterData
+{
+    std::string textureName;    // 아틀라스 텍스처 이름
+    std::wstring texturePath;   // 아틀라스 텍스처 경로
+    float moveSpeed = 100.f;
+    float chargeSpeed = 300.f;
+    float detectRange = 200.f;
+    float attackPower = 1.f;
+    float hp = 10.f;
+    eMonsterType monsterType = eMonsterType::End;
+
+    FVector2D renderSize = { 64.f, 48.f };      // 렌더 크기
+    FVector2D collisionSize = { 40.f, 24.f };   // 충돌체 크기
+};
+
+inline const FMonsterData MonsterInfo[] =
+{
+    // Monster_knight 
+    {
+        "", L"",
+        100.f,   // moveSpeed
+        300.f,   // chargeSpeed
+        200.f,   // detectRange
+        1.f,     // attackPower
+        10.f,    // hp
+        eMonsterType::Monster_knight,
+    },
+    // Monster_fatty
+    {
+        "", L"",
+        60.f,
+        200.f,
+        400.f,
+        3.f,
+        100.f,
+        eMonsterType::Monster_fatty,
+    },
+    //boss
+    {
+        "", L"",
+        60.f,
+        200.f,
+        400.f,
+        3.f,
+        100.f,
+        eMonsterType::Monster_BOSS,
+    }
+
+};

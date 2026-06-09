@@ -13,7 +13,7 @@ private:
 
 public:
     float GetRadius() const { return _radius; }
-    void SetRedius(float r) { _radius = r; }
+    void SetRadius(float r) { _radius = r; }
 
 public:
     virtual bool Init(int32 id, const std::string& name, Ptr<class Actor> owner) override;

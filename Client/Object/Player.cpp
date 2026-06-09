@@ -27,6 +27,8 @@
 
 #include "UI/TextBlock.h"
 
+
+
 bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
     Pawn::Init(id, pos, scale, rot, name);
@@ -46,6 +48,10 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     body->AddAnimSequence("IASSC_BODY_SIDE", true);
     body->ChangeAnimation("IASSC_BODY_FRONT");
     body->SetPlay("IASSC_BODY_FRONT", false);
+    
+    // 아이작 사망 애니메이션
+    std::vector<FVector4D> deathFrames = { FVector4D(192.f, 128.f, 64.f, 64.f) };
+    body->AddAnimSequence("IASSC_DEATH", TEXT("ISAAC_Charater\\issac_ctlas.png"), deathFrames, false);
 
     // 아이작 머리
     Ptr<SpriteComponent> head = CreateSceneComponent<SpriteComponent>("Head");
@@ -144,6 +150,11 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     _col->SetCollisionProfile("Player");
 
     GameEngine::Instance().GetWorld()->SetMainPlayer(This<Player>());
+
+    // 테스트용입니다 지울 예정
+    auto testDeath = InputSystem::Instance().FindOrAddInputAction("TEST_DEATH");
+    moveContext->BindInputAction(testDeath, 'K');  // K키로 테스트
+    inputComp->BindAction(moveContext->GetName(), testDeath->GetName(), INPUT_TYPE::DOWN, this, &Player::TestDeath);
 
     return true;
 }
@@ -331,6 +342,17 @@ void Player::Fire()
     
 }
 
+void Player::OnDeath()
+{
+    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+    if(body)
+    {
+        body->ChangeAnimation("IASSC_DEATH");
+        body->SetPlay("IASSC_DEATH", false);
+    }
+
+    // 일정 시간 이후 타이틀 복귀 or 복귀 버튼 구현.
+}
 
 void Player::BlockCallBack(Weak<class CollisionComponent> dest)
 {
@@ -346,3 +368,17 @@ void Player::ReleaseCallBack(Weak<class CollisionComponent> dest)
 {
     LogManager::Instance().Debug("충돌 해제!");
 }
+
+void Player::TestDeath(float deltaTime)
+{
+    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (head) head->SetEnable(false);  // 머리 숨기기
+    if (body)
+    {
+        body->SetRelativeScale(128.f, 128.f, 128.f);  // 64 → 128 (2배)
+        body->ChangeAnimation("IASSC_DEATH");
+        body->SetPlay("IASSC_DEATH", true);
+    }
+}
+

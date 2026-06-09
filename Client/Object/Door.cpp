@@ -3,11 +3,14 @@
 
 #include "Actor.h"
 #include "Player.h"
+#include "../Editor/EditorEngine.h"
 
+#include "../Component/SceneComponent.h"
 #include "../Component/CollisionComponent.h"
 #include "../Component/SpriteComponent.h"
 #include "../Component/AABBCollisionComponent.h"
 
+#include "../Render/RenderManager.h"
 
 Door::Door()
 {
@@ -20,38 +23,152 @@ Door::~Door()
 bool Door::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
 {
     Actor::Init(id, pos, scale, rot, name);
-
-    _mesh = CreateSceneComponent<SpriteComponent>("Mesh");
-    SetRootComponent(_mesh);
-
-    _frame = CreateSceneComponent<SpriteComponent>("DoorFrame");
-    SetRootComponent(_frame);
-
-    _frame->AddAnimSequence("Door_Frame", true);
-    _frame->ChangeAnimation("Door_Frame");
-    
-
-    _panel = CreateSceneComponent<SpriteComponent>("DoorPanel");
-    _panel->AttachToComponent(_root);
-    
-    _panel->AddAnimSequence("Door_Open", true);
-    _panel->AddAnimSequence("Door_LockedClosed", true);
-    _panel->AddAnimSequence("Door_CombatClosed", true);
-    _panel->AddAnimSequence("Door_Opening", true);
-    _panel->ChangeAnimation("Door_Open");
-    
-    _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
-    _col->SetBoxSize(52.f, 52.f);
-    _col->AttachToComponent(_root);
-    _col->SetCollisionProfile("Door");
-    _col->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Door::OverlapCallback);
-
-    
-
     _type = eActorType::Door;
 
+    _doorFrame = CreateSceneComponent<SpriteComponent>("DoorFrame");
+    _doorFrame->SetRenderLayer("DoorFrame");
+    SetRootComponent(_doorFrame);
+
+    _doorLeft = CreateSceneComponent<SpriteComponent>("DoorLeft");
+    _doorLeft->SetRelativeScale(1.f, 1.f, 1.f);  // 추가
+    _doorLeft->SetRenderLayer("DoorPanel");
+    _doorLeft->AttachToComponent(_doorFrame);
+
+    _doorRight = CreateSceneComponent<SpriteComponent>("DoorRight");
+    _doorLeft->SetRenderLayer("DoorPanel");
+    _doorRight->SetRelativeScale(1.f, 1.f, 1.f);  // 추가
+    _doorRight->AttachToComponent(_doorFrame);
+
+    _doorOpen = CreateSceneComponent<SpriteComponent>("DoorOpen");
+    _doorLeft->SetRenderLayer("DoorPanel");
+    _doorOpen->SetRelativeScale(1.f, 1.f, 1.f);  // 추가
+    _doorOpen->AttachToComponent(_doorFrame);
+    _doorOpen->SetEnable(false);
+
+    _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
+    _col->SetBoxSize(48.f, 48.f);
+    _col->AttachToComponent(_doorFrame);
+    _col->SetCollisionProfile("Door");
+    _col->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Door::OnOverlap);
+    
     return true;
 }
+
+void Door::RegisterPartAnim(Ptr<class SpriteComponent> sprite, const std::string& animName, const FVector4D& rect)
+{
+    if (!sprite)
+        return;
+    if (rect._z <= 0 || rect._w <= 0)
+        return;
+    std::vector<FVector4D> frames = { rect };
+    sprite->AddAnimSequence(animName, _doorData.texturePath, frames, false);
+    sprite->ChangeAnimation(animName);
+    sprite->SetPlay(animName, false);
+}
+
+void Door::SetDoorData(const FDoorSpawnData& data)
+{
+    _doorData = data;
+    if (_col)
+        _col->SetBoxSize(data.collisionSize._x, data.collisionSize._y);
+    
+    std::string base = GetName();
+    RegisterPartAnim(_doorFrame, base + "_FRAME", data.frame);
+    RegisterPartAnim(_doorLeft, base + "_LEFT", data.left);
+    RegisterPartAnim(_doorRight, base + "_RIGHT", data.right);
+    RegisterPartAnim(_doorOpen, base + "_OPEN", data.openImage);
+
+    SetOpen(data.bOpen);
+}
+
+void Door::SetOpen(bool bOpen)
+{
+    _doorData.bOpen = bOpen;
+    UpdateVisibility();
+}
+
+
+
+void Door::UpdateVisibility()
+{
+    if(_doorData.bOpen)
+    {
+        if (_doorLeft)
+            _doorLeft->SetEnable(false);
+        if (_doorRight)
+            _doorRight->SetEnable(false);
+        if (_doorOpen)
+            _doorOpen->SetEnable(true);
+    }
+    else
+    {
+        if (_doorLeft)
+            _doorLeft->SetEnable(true);
+        if (_doorRight)
+            _doorRight->SetEnable(true);
+        if (_doorOpen)
+            _doorOpen->SetEnable(false);
+    }
+}
+void Door::TryOpen(Ptr<class Player> player)
+{
+    if (_doorData.bOpen)
+        return;
+    switch (_doorData.doorType)
+    {case eDoorType::NORMAL:
+        SetOpen(true);
+        break;
+    case eDoorType::KEY:
+        // 열쇠 소모 --_key 
+        break;
+    case eDoorType::COIN:
+        // 코인 소모 -- coin
+        break;
+
+    }
+}
+
+void Door::OnOverlap(Weak<class CollisionComponent> dest)
+{
+    Ptr<CollisionComponent> col = Lock<CollisionComponent>(dest);
+    if (!col)
+        return;
+    Ptr<Actor> owner = col->GetOwner();
+    if (!owner)
+        return;
+    Ptr<Player> player = Cast<Actor, Player>(owner);
+    if (player)
+        TryOpen(player);
+}
+
+void Door::doorOpen(Ptr<Player> player)
+{
+    if (_doorData.bOpen)
+        return;
+    switch (_doorData.doorType)
+    {
+    case eDoorType::NORMAL:
+        SetOpen(true);
+        break;
+    case eDoorType::KEY:
+        if (player->GetKey() > 0)
+        {
+            player->AddKey(-1);
+            SetOpen(true);
+        }
+        break;
+    case eDoorType::COIN:
+        if (player->GetCoin() > 0)
+        {
+            player->AddCoin(-1);
+            SetOpen(true);
+        }
+        break;
+    }
+}
+
+
+
 
 void Door::Tick(float deltaTime)
 {
@@ -60,6 +177,7 @@ void Door::Tick(float deltaTime)
 
 void Door::Collision(float deltaTime)
 {
+    Actor::Collision(deltaTime);
 }
 
 void Door::Render(float deltaTime)
@@ -72,80 +190,3 @@ void Door::Destroy()
     Actor::Destroy();
 }
 
-void Door::SetTexture(const std::string& name)
-{
-    
-}
-
-void Door::SetDoorType(eDoorType type)
-{
-    _doorType = type;
-
-    switch (_doorType)
-    {
-    case eDoorType::LOCKED:
-        ChangeDoorState(eDoorState::LOCKED_CLOSED);
-        break;
-    default:
-        ChangeDoorState(eDoorState::OPEN);
-        break;
-    }
-
-}
-
-void Door::OverlapCallback(Weak<class CollisionComponent> dest)
-{
-    Ptr<CollisionComponent> destCol = Lock<CollisionComponent>(dest);
-    if (!destCol)
-        return;
-
-    Ptr<Actor> actor = destCol->GetOwner();
-    Ptr<Player> player = Cast<Actor, Player>(actor);
-    if (!player)
-        return;
-
-    // 문 타입별 처리
-    switch (_doorType)
-    {
-    case eDoorType::NORMAL:
-        // 이동 가능
-        break;
-    case eDoorType::LOCKED:
-        // 열쇠 확인 후 이동
-        break;
-    case eDoorType::HIDDEN:
-        // 폭탄/해금 여부 확인 후 이동
-        break;
-    case eDoorType::BOSS:
-        // 보스방 이동
-        break;
-    }
-}
-
-void Door::ChangeDoorState(eDoorState state)
-{
-    if (_doorState == state)
-        return;
-
-    _doorState = state;
-
-    switch (_doorState)
-    {
-    case eDoorState::OPEN:
-        _panel->ChangeAnimation("Door_Open");
-        break;
-
-    case eDoorState::NORMAL_CLOSED:
-        _panel->ChangeAnimation("Door_CombatClosed");
-        break;
-
-    case eDoorState::LOCKED_CLOSED:
-        _panel->ChangeAnimation("Door_LockedClosed");
-        break;
-
-    case eDoorState::OPENING:
-        _panel->ChangeAnimation("Door_Opening");
-        _panel->SetPlay("Door_Opening", true);
-        break;
-    }
-}

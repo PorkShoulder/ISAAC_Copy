@@ -30,8 +30,9 @@ private:
     Weak<class TileMap> _tileMap;
 public:
     Ptr<class TileMap> GetTileMap() const { return Lock<TileMap>(_tileMap); }
+    Ptr<class RoomManager> GetRoomManager()  const { return _roomManager; }
     void SetTileMap(Ptr<class TileMap> tileMap) { _tileMap = tileMap; }
-
+    
 public:
     virtual bool Init(const std::string& path);
     virtual void Tick(float deltaTime);

@@ -24,7 +24,7 @@ protected:
 
 	
 	Ptr<class AABBCollisionComponent> _col;			// 충돌 컴포넌트 (플레이어 접촉 감지)
-	Ptr<class StaticMeshComponent> _mesh = nullptr;
+	Ptr<class StaticMeshComponent> _mesh = nullptr;	// 아이템 렌더용 
 
 public:
 	virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name);

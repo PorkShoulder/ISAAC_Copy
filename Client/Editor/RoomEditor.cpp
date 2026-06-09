@@ -160,10 +160,7 @@ void RoomEditor::RenderTextureSelect(const std::string& defaultFolder)
         ImGui::SetNextItemWidth(200.f); // 크기 조절
         ImGui::DragInt("Frame Height", &_frameHeight, 1.f, 1, 512);
 
-        // 반전
-        /*ImGui::Checkbox("Flip X", &_flipX);
-        ImGui::SameLine();
-        ImGui::Checkbox("Flip Y", &_flipY);*/
+       
     }
 
     

@@ -28,6 +28,8 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     Pawn::Init(id, pos, scale, rot, name);
     _type = eActorType::Monster;
 
+    
+
     //AI State Machine 사용방법
     //1. AI컨트롤러를 생성(PlayerController로)
     _controller = GetLevel()->SpawnActor<AIController>("AIController", pos, scale, rot);
@@ -40,21 +42,29 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     Ptr<AIComponent> aicomp = ctrl->GetAI();
 
     //4. MachineBase를 상속받은 스테이트머신 자식클래스로 스테이트머신을 생성
-    _mesh= CreateSceneComponent<SpriteComponent>("Mesh");
-    SetRootComponent(_mesh);
+    _monsterMesh= CreateSceneComponent<SpriteComponent>("Mesh");
+    SetRootComponent(_monsterMesh);
 
-    // 충돌체
+    // 1. 피격/접촉용 충돌체
     _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
     _col->SetBoxSize(32.f, 32.f);   // 에디터에서 추가 설정변경 -> 동적(RoomObjectUI)
     _col->AttachToComponent(_root);
     _col->SetCollisionProfile("Monster");
+    _col->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Monster::OnHit); 
     
+    // 2. 감지용 충돌체 
+    _detectCol = CreateSceneComponent<SphereCollisionComponent>("Detect");
+    _detectCol->SetRadius(_monsterData.detectRange);
+    _detectCol->AttachToComponent(_root);
+    _detectCol->SetCollisionProfile("Monster");
+    _detectCol->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Monster::OnDetectPlayer);
     return true;
 }
 
 void Monster::Tick(float deltaTime)
 {
     Pawn::Tick(deltaTime);
+    UpdataeAnimation();
 }
 
 void Monster::Collision(float deltaTime)
@@ -78,6 +88,20 @@ void Monster::Destroy()
 void Monster::SetTarget(Ptr<class Player> player)
 {
     _target = player;
+}
+
+void Monster::SetMonsterData(const FMonsterData& data)
+{
+    
+    _monsterData = data;
+    SetMaxHp((int32)data.hp);
+
+    if (_col)
+        _col->SetBoxSize(data.collisionSize._x, data.collisionSize._y);
+
+    if (_detectCol)
+        _detectCol->SetRadius(data.detectRange);
+
 }
 
 void Monster::Fire()
@@ -128,6 +152,72 @@ void Monster::BlockCallback(Weak<CollisionComponent> comp)
         return;
 
     level->RemoveActor(_id);
+}
+
+void Monster::UpdataeAnimation()
+{
+    // 스프라이트가 없으면 리턴함.
+    if (!_monsterMesh)
+        return;
+    // 타겟(플레이어) 가져오기 
+    Ptr<Player> player = Lock<Player>(_target);
+    if (!player)
+    {
+        // 플레이어가 없ㅇ므ㅕㄴ 대기 애니메이션
+        _monsterMesh->ChangeAnimation("IDLE");
+        return;
+    }
+
+    //플레이어 위치 - 몬스터 위치 = 방향 벡터.
+    FVector3D dir = player->GetWorldPosition() - GetWorldPosition();
+    
+    // X차이가 Y보다 크다면 좌우 이동 
+    if (abs(dir._x) > abs(dir._y))
+    {
+        _monsterMesh->ChangeAnimation("MOVE_SIDE");
+        // dir._x < 0 -> 플레이어가 왼쪽 -> 스프라이트 좌우 반전.
+        _monsterMesh->SetAnimFilp(dir._x < 0.f);
+    }
+    // y차이가 더 크면 정면/뒷면 이동 애니메이션
+    else
+    {
+        _monsterMesh->ChangeAnimation("MOVE_FRONT");
+        _monsterMesh->SetAnimFilp(dir._y > 0.f);
+    }
+}
+
+void Monster::OnDetectPlayer(Weak<class CollisionComponent> dest)
+{
+    Ptr<CollisionComponent> col = Lock<CollisionComponent>(dest);
+    if (!col) return;
+
+    Ptr<Actor> owner = col->GetOwner();
+    if (!owner) return;
+
+    Ptr<Player> player = Cast<Actor, Player>(owner);
+    if (!player) return;
+
+    _target = player;
+    _isChasing = true;
+}
+
+void Monster::OnHit(Weak<class CollisionComponent> dest)
+{
+    Ptr<CollisionComponent> col = Lock<CollisionComponent>(dest);
+    if (!col) return;
+
+    Ptr<Actor> owner = col->GetOwner();
+    if (!owner) return;
+
+    // 플레이어 총알에 맞았을 때
+    Ptr<Bullet> bullet = Cast<Actor, Bullet>(owner);
+    if (bullet)
+    {
+        TakeDamage(1);
+        if (IsDead())
+            OnDeath();
+        
+    }
 }
 
 bool Monster::IsCheck()

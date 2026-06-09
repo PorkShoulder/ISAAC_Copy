@@ -48,11 +48,18 @@ void IsaacAnimationLoader::Register(AnimationManager* mgr)
         mgr->AddFrame("IASSC_BODY_SIDE", i * CELL, 3.f * CELL, CELL, CELL);
     }
 
+    // 플레이어 사망 애니메이션
+    mgr->CreateAnimation("IASSC_DEATH", eAnimTextureType::SPRITE);
+    mgr->SetTexture("IASSC_DEATH", "IASSC_DEATH", TEXT("ISAAC_Character\\isaac_atlas.png"));
+    mgr->AddFrame("IASSC_DEATH", 192.f, 128.f, 64.f, 64.f);
+
     
     // 총알(눈물)
     mgr->CreateAnimation("Tears", eAnimTextureType::SPRITE);
     mgr->SetTexture("Tears", "Tears", TEXT("ISAAC_Tears\\bulletatlas.png"));   // 눈물 스프라이트가 든 아틀라스 경로
 
+
+    
     constexpr float TEAR = 64.f; // 총알 전용 사이즈 
     constexpr float TEAR_X = 256.f;
     constexpr float TEAR_Y = 256.f;
@@ -64,10 +71,10 @@ void IsaacAnimationLoader::Register(AnimationManager* mgr)
         }
          
     }
+ 
+    // 플레이어 사망 애니메이션
 
 
 
 
-
-    
 }

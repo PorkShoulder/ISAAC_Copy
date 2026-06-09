@@ -16,6 +16,8 @@ bool RenderManager::Init()
     CreateRenderLayer("BackGround", 0);
     CreateRenderLayer("Tile", 10);
     CreateRenderLayer("Object", 20);
+    CreateRenderLayer("DoorPanel", 24);
+    CreateRenderLayer("DoorFrame", 25);
     CreateRenderLayer("Monster", 30);
     CreateRenderLayer("Player", 40);
     CreateRenderLayer("UI", 100);          

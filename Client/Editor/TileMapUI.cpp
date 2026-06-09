@@ -46,8 +46,6 @@ void TileMapUI::Destroy()
 
 void TileMapUI::Render(float deltaTime)
 {
-    
-
 
     ImGui::SameLine();
     if (ImGui::Button("Random"))
@@ -56,7 +54,7 @@ void TileMapUI::Render(float deltaTime)
         level->GenerateRandomMap();
     }
 
-    RenderTextureSelect("ISAAC_Map");
+    RenderTextureSelect("ISAAC_Room");
     RenderTexturePreview();     // 이미지 미리보기
 
     // 여기에 위젯 추가
@@ -156,8 +154,8 @@ void TileMapUI::Render(float deltaTime)
                         _emptyCells = selectedTileMap->GetEmptyCells();
 
                         // 선택한 텍스처가 있으면 적용
-                        if (_selectedTexture)
-                            tileComp->SetTexture(_selectedTexture);
+                        if (!_selectedTextureName.empty())
+                            tileComp->SetTexture(_selectedTextureName, _selectedTexturePath);
 
 
                         // 숨김 상태였다면 다시 보이게

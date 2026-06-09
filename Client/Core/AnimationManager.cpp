@@ -11,7 +11,7 @@ AnimationManager::~AnimationManager()
 
 bool AnimationManager::Init()
 {
-    IsaacAnimationLoader::Register(this);   // 이미지 로딩 
+    IsaacAnimationLoader::Register(this);   // 등록된  이미지 로딩 
     
 
 

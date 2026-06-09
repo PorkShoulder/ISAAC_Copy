@@ -2,12 +2,15 @@
 #include "RoomEditor.h"
 #include "../Common/Info.h"
 
+
 struct FAnimSequenceData
 {
-    std::string name;               // 현재 상태 
-    std::string textureName;        // 텍스처 파일 명
-    std::vector<FVector4D> frames;  // (startX,Y sizeX,Y)
-    bool loop = true;                
+    std::string name;           // 실제 등록용 고유 이름
+    std::string displayName;    // UI 표시용 이름: IDLE, MOVE, ATTACK
+    std::string textureName;
+    std::wstring texturePath;
+    std::vector<FVector4D> frames;
+    bool loop = true;
 };
 
 
@@ -26,12 +29,9 @@ private:
     // 애니메이션 선택 
     int _currentAnimIndex = 0;
     std::map<std::string, int> _objectNameCounter;
-    //
-    std::vector<FAnimSequenceData> _animSequences;
     bool _seqLoop = true;
     char _seqName[64] = "IDLE";
-
-    int _doorDirIndex = 0;
+    std::vector<FAnimSequenceData> _animSequences;
 
 public:
     virtual bool Init(const std::string& name) override;
@@ -40,9 +40,16 @@ public:
 
 private:
     std::string MakeObjectName(const std::string& typeName);
-
     bool IsAnimatedObject(eActorType type) const;
     void RenderAnimationSelect();
+
+    FDoorSpawnData _editDoorData;
+    void RenderDoorUI();
+
+    FMonsterData _editMonsterData;
+    void RenderMonsterUI();
+    
+    
     
 
 

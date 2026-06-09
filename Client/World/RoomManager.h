@@ -1,5 +1,12 @@
 #pragma once
 #include "../Core/Object.h"
+
+#include "../Object/Door.h"
+#include "../Object/Monster.h"
+#include "../Object/Obstacle.h"
+#include "../Object/Item.h"
+
+
 #include <functional>
 #include <set>
 
@@ -33,6 +40,9 @@ struct FRoomInfo
 	FRoomInfo* neighbors[4] = {}; 
 	// ㄱ,ㄴ형태 사용중 공간 확인.
 	std::vector<std::pair<int32, int32>> occupiedCells;
+
+	bool isBattleActive = false;
+	std::vector<Ptr<Door>> doors;
 };
 
 struct FRoomFileEntry
@@ -76,6 +86,8 @@ private:
 
 public:
 	int32 GetRoomFileCount() const { return (int32)_roomFiles.size(); }
+	void StartBattle(FRoomInfo* room);
+	void EndBattle(FRoomInfo* room);
 public:
 	// 초기화 -> 레벨참조와 방 월드 크기 설정
 	void Init(Ptr<class Level> level);
@@ -97,6 +109,11 @@ public:
 	// 매 프레임 호출 — 플레이어 위치로 방 전환 감지
 	void Tick(float deltaTime);
 	virtual void Destroy() override;
+
+	// 
+	void RegisterDoor(Ptr<Door> door);
+	void RegisterMonster(Ptr<Monster> monster);
+	FRoomInfo* GetCurrentRoom() { return _currentRoom; }
 
 private:
 	// 방의 몬스터 활성화 (SetEnable(true))

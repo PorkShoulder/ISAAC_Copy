@@ -583,6 +583,8 @@
     <ClInclude Include="Object\Door.h">
       <Filter>03.Object</Filter>
     </ClInclude>
+    <ClInclude Include="World\GameLevel.h" />
+    <ClInclude Include="World\TitleLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -997,6 +999,8 @@
     <ClCompile Include="Object\Door.cpp">
       <Filter>03.Object</Filter>
     </ClCompile>
+    <ClCompile Include="World\GameLevel.cpp" />
+    <ClCompile Include="World\TitleLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

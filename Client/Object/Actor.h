@@ -1,5 +1,7 @@
 #pragma once
 #include "Core/Object.h"
+#include <fstream>
+
 
 #include <map>
 #include <unordered_map>
@@ -37,10 +39,11 @@ public:
     virtual void Tick(float deltaTime);
     virtual void Collision(float deltaTime);
     virtual void Render(float deltaTime);
-
     virtual void DrawInspector() override;
-
     virtual void Destroy() override;
+
+    virtual void Save(std::ofstream& file);
+    virtual void Load(std::ifstream& file);
 
     Ptr<class SceneComponent> GetRoot() const;
     void SetRootComponent(const Ptr<class SceneComponent> comp);

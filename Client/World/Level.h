@@ -16,7 +16,7 @@ public:
     Level& operator=(const Level&) = delete;
     Level& operator=(Level&&) = delete;
     
-private:
+protected:
     int32 _actorID = 0;
     std::map<int32, Ptr<class Actor>> _actors;
     std::vector<int32> _removeActors;
@@ -69,7 +69,8 @@ public:
     void RemoveActor(int32 id);
 
     void GenerateRandomMap();
-    // 타일 맵 막힘.
+    
+    void SpawnPlayer();
     
 
 
@@ -115,5 +116,9 @@ public:
         return _uiManager->CreateWidget<T>(name);
     }
 
+    void AddToViewport(Ptr<class Widget> widget)
+    {
+        _uiManager->AddToViewport(widget);
+    }
 };
 

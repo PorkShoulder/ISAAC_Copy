@@ -20,6 +20,14 @@ void World::Init(const std::string& name)
 
 void World::Tick(float deltaTime)
 {
+    //레벨 전환 구현 
+    if (_nextLevel)
+    {
+        DESTROY(_curLevel);
+        _curLevel = _nextLevel;
+        _nextLevel = nullptr;
+    }
+
     if (_curLevel)
         _curLevel->Tick(deltaTime);
 }

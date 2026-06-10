@@ -223,6 +223,7 @@ enum eCollisionChannel : unsigned char
     COLLISION_CHANNEL_PLAYER_BULLET,
     COLLISION_CHANNEL_MONSTER,
     COLLISION_CHANNEL_MONSTER_BULLET,
+    COLLISION_CHANNEL_MONSTER_DETECT,
     
 
     COLLISION_CHANNEL_ITEM,
@@ -420,6 +421,14 @@ struct FMonsterData
 
     FVector2D renderSize = { 64.f, 48.f };      // 렌더 크기
     FVector2D collisionSize = { 40.f, 24.f };   // 충돌체 크기
+    
+    // 애니메이션 프레임 
+    std::vector<FVector4D> idleFrames;
+    std::vector<FVector4D> moveFrontFrames;
+    std::vector<FVector4D> moveSideFrames;
+    std::vector<FVector4D> moveBackFrames; // 없는 경우도 있음.
+    std::vector<FVector4D> deathFrames;
+
 };
 
 inline const FMonsterData MonsterInfo[] =

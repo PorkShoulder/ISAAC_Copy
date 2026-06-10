@@ -25,6 +25,11 @@ private:
     bool reverse = false;
     bool _headKeyActive = false;
     float _opacity = 0.f;
+    
+    // 피격 무적
+    float _invincibleTime = 1.0f; // 무적 지속 시간(초)
+    float _invincibleTimer = 0.f; // 남은 무적 시간.
+
 
     //이동조작 플래그
     bool _moveRight = false;
@@ -36,21 +41,32 @@ private:
     FVector3D _headDir = FVector3D{ 0.f, -0.f, 0.f }; 
     float _fireRate = 0.8f; // 발사간격
     float _fireTimer = 1.f; // 쿨다운
+
     // 아이템 소모
     FConsumableStat _consumable;
+
+    // 캐릭터 UI
+    std::vector<Ptr<class Image>> _hearts;
+    int32 _heartMax = 4; // 시작 하트 수, 아이템으로 증가 가능.
+
+public:
+    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
+    virtual void Tick(float deltaTime);
+    virtual void Collision(float deltaTime);
+    virtual void Render(float deltaTime);
+    virtual void Destroy() override;
 public:
     int GetKey() const { return _consumable.key; }
     int GetCoin() const { return _consumable.coin; }
     void AddKey(int amount) { _consumable.key += amount; }
     void AddCoin(int amount) { _consumable.coin += amount; }
     void OnDeath();
-public:
-    virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
-    virtual void Tick(float deltaTime);
-    virtual void Collision(float deltaTime);
-    virtual void Render(float deltaTime);
+    virtual void SetMaxHp(int32 v) override;
+    Ptr<class Image> CreateSingleHeart(int32 idx);
+    void CreateHeartUI(); // 체력
+    void AddHeartContainer();
+    
 
-    virtual void Destroy() override;
 
 private:
     void SetHeadDirection(const std::string& anim, bool flip);

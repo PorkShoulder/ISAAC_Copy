@@ -46,5 +46,12 @@ public:
 
         return level;
     }
+
+    template<typename T>
+    void ChangeLevel(const std::string& path)
+    {
+        _nextLevel = CreateLevel<T>(path);
+    }
+
 };
 

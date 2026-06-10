@@ -128,7 +128,7 @@ void RoomObjectUI::Render(float deltaTime)
 		RenderMonsterUI();
 		break;
 	}
-	if (_placeType == eActorType::Monster || _placeType == eActorType::Npc)
+	if (_placeType == eActorType::Npc)
 	{
 		RenderAnimationSelect();
 	}
@@ -229,15 +229,16 @@ void RoomObjectUI::Render(float deltaTime)
 						// 프리셋 능력치 + 텍스처+크기 정보를 몬스터에 전달
 						monster->SetMonsterData(_editMonsterData);
 						
-						// 애니메이션 등록.
-						auto sprite = monster->FindSceneComponent<SpriteComponent>("Mesh");
-						if (sprite && !_animSequences.empty())
-						{
-							for (auto& seq : _animSequences)
-							{
-								sprite->AddAnimSequence(seq.name, seq.texturePath, seq.frames, seq.loop);
-							}
-						}
+						//// 애니메이션 등록.
+						//auto sprite = monster->FindSceneComponent<SpriteComponent>("Mesh");
+						//if (sprite && !_animSequences.empty())
+						//{
+						//	for (auto& seq : _animSequences)
+						//	{
+						//		sprite->AddAnimSequence(seq.name, seq.texturePath, seq.frames, seq.loop);
+						//	}
+						//}
+						
 						// RoomManager에 등록 (전투시 몬스터 생존 체크용.) -> 이를 알아야 door활성화 여부 가능.
 						Ptr<RoomManager> roomMgr = level->GetRoomManager();
 						if (roomMgr)
@@ -456,6 +457,7 @@ void RoomObjectUI::RenderDoorUI()
 void RoomObjectUI::RenderMonsterUI()
 {
 	ImGui::SeparatorText("Monster Setting");
+
 	// 몬스터 타입 선택 -> 프리셋 능력치 자동 적용
 	int typeIdx = (int)_editMonsterData.monsterType;
 	if (ImGui::Combo("Monster Type", &typeIdx, MonsterTypeName, (int)eMonsterType::End))
@@ -475,4 +477,33 @@ void RoomObjectUI::RenderMonsterUI()
 	ImGui::Text("Speed: %.0f / Charge: %.0f", _editMonsterData.moveSpeed, _editMonsterData.chargeSpeed);
 	ImGui::Text("Range: %.0f / ATK: %.1f / HP: %.0f", _editMonsterData.detectRange, _editMonsterData.attackPower, _editMonsterData.hp);
 
+	ImGui::SeparatorText("Animation Frames");
+	RenderFrameList("IDLE", _editMonsterData.idleFrames);
+	RenderFrameList("MOVE_FRONT", _editMonsterData.moveFrontFrames);
+	RenderFrameList("MOVE_BACK", _editMonsterData.moveBackFrames);
+	RenderFrameList("MOVE_SIDE", _editMonsterData.moveSideFrames);
+	RenderFrameList("DEATH", _editMonsterData.deathFrames);
+}
+
+void RoomObjectUI::RenderFrameList(const char* label, std::vector<FVector4D>& frames)
+{
+	if (ImGui::TreeNode(label))
+	{
+		for (int i = 0; i < (int)frames.size(); ++i)
+		{
+			ImGui::PushID(i);
+			ImGui::DragFloat4("Frame", &frames[i]._x, 1.f, 0.f, 1024.f);
+			ImGui::SameLine();
+			if (ImGui::Button("X")) { frames.erase(frames.begin() + i); --i; }
+			ImGui::PopID();
+		}
+
+		if (ImGui::Button("+ Add Frame"))
+		{
+			float sx = (_selectedFrameX >= 0) ? (float)_selectedFrameX : 0.f;
+			float sy = (_selectedFrameY >= 0) ? (float)_selectedFrameY : 0.f;
+			frames.push_back(FVector4D(sx, sy, (float)_frameWidth, (float)_frameHeight));
+		}
+		ImGui::TreePop();
+	}
 }

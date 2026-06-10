@@ -16,6 +16,7 @@ private:
     // 충돌체 
     Ptr<class AABBCollisionComponent> _col;
     Ptr<class SphereCollisionComponent> _detectCol;
+    Ptr<class MovementComponent> _movement;
     bool _isChasing = false;
 
     Ptr<class SpriteComponent> _monsterMesh = nullptr;
@@ -30,15 +31,18 @@ public:
     virtual void Destroy() override;
     void SetTarget(Ptr<class Player> player);
     void SetMonsterData(const FMonsterData& data);
+    float GetAttackPower() const { return _monsterData.attackPower; }
+
 private:
     void Fire();
     void RotBulletFire();
     void BlockCallback(Weak<class CollisionComponent> comp);
-    void UpdataeAnimation();
+    void UpdateAnimation(const FVector3D& dir);
     void OnDetectPlayer(Weak<class CollisionComponent> dest);
     void OnHit(Weak<class CollisionComponent> dest);
-
+    void OnDeath() override;
+    void RemoveMonster();
     bool IsCheck();
-
+    
 };
 

@@ -48,35 +48,12 @@ bool Level::Init(const std::string& path)
     _uiManager = New<UIManager>();
     _uiManager->Init(This<Level>());
 
-    //if (_useRandomMap)
-    //{
-    //    _roomManager = New<RoomManager>();
-    //    _roomManager->Init(This<Level>(), 960.f, 576.f);  // 15*64, 9*64
-    //    _roomManager->CollectRoomFiles(L"../Resources/Room");  // .room 수집
-
-    //    // 방호출 제한 
-    //    int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount());
-    //    _roomManager->GenerateLayout(count);
-    //    _roomManager->AssignRooms();                             // 각 셀에 .room 배정
-    //    _roomManager->LoadAllRooms();                            // 전부 스폰 + 로드
-    //    _roomManager->ActivateStartRoom();                       // 시작 방 활성화
-    //}
-    
-
-
 
     //todo : level save & load
     
-    // 초기값 설정
-    FVector3D scale = FVector3D(1.f, 1.f, 1.f);
-    FVector3D pos = FVector3D(0.f, 0.f, 1.f);
-    FRotator rot = FRotator(0.f, 0.f, 0.f);
+    
 
-    Ptr<Player> t1 = SpawnActor<Player>("ISAAC", pos, scale, rot); // 플레이어의 이름 설정
-    if (t1) 
-    {
-        t1->AddTags("Player", "Human"); 
-    }
+
     return true;
 }
 
@@ -319,4 +296,18 @@ void Level::GenerateRandomMap()
     _roomManager->AssignRooms();
     _roomManager->LoadAllRooms();
     _roomManager->ActivateStartRoom();
+}
+
+void Level::SpawnPlayer()
+{
+    // 초기값 설정
+    FVector3D scale = FVector3D(1.f, 1.f, 1.f);
+    FVector3D pos = FVector3D(0.f, 0.f, 1.f);
+    FRotator rot = FRotator(0.f, 0.f, 0.f);
+
+    Ptr<Player> t1 = SpawnActor<Player>("ISAAC", pos, scale, rot); // 플레이어의 이름 설정
+    if (t1)
+    {
+        t1->AddTags("Player", "Human");
+    }
 }

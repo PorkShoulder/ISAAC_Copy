@@ -34,7 +34,7 @@ public:
     bool IsDead() const { return _hp <= 0; }
     int32 GetHp() const { return _hp; }
     int32 GetMaxHp() const { return _maxHp; }
-    void SetMaxHp(int32 v) { _maxHp = v; _hp = v; } 
+    virtual void SetMaxHp(int32 v) { _maxHp = v; _hp = v; } 
 
 public:
     void SetController(Ptr<Controller> ctrl); //컨트롤러 연결

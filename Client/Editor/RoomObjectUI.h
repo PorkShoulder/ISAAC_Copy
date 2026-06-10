@@ -48,7 +48,7 @@ private:
 
     FMonsterData _editMonsterData;
     void RenderMonsterUI();
-    
+    void RenderFrameList(const char* label, std::vector<FVector4D>& frames);
     
     
 

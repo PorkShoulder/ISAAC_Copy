@@ -44,8 +44,8 @@ public:
 
     void ChangeTileTexture(const FVector2D& pos, int32 frameIndex);
     void ChangeTileType(const FVector2D& pos);
-    void Save(std::ofstream& file);
-    void Load(std::ifstream& file);
+    virtual void Save(std::ofstream& file) override;
+    virtual void Load(std::ifstream& file) override;
     void SetviewFrameIndex(int32 idx) { _viewFrameIndex = idx; }
     bool HasTileSelection() const { return _hasTileSelection; }
 

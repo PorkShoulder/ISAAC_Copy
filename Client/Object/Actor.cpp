@@ -620,4 +620,43 @@ void Actor::Destroy()
             _actorComponents.clear();
     _componentFinder.clear();
 }
-//----------------------------------------------------------------------------
+void Actor::Save(std::ofstream& file)
+{
+    // 타입
+    eActorType type = _type;
+    file.write((char*)&type, sizeof(eActorType));
+
+    // 이름
+    int32 nameLen = (int32)_name.size();
+    file.write((char*)&nameLen, sizeof(int32));
+    file.write(_name.c_str(), nameLen);
+
+    // 위치, 크기, 회전
+    FVector3D pos = GetWorldPosition();
+    FVector3D scale = GetWorldScale();
+    FRotator rot = GetWorldRotation();
+    file.write((char*)&pos, sizeof(FVector3D));
+    file.write((char*)&scale, sizeof(FVector3D));
+    file.write((char*)&rot, sizeof(FRotator));
+}
+
+void Actor::Load(std::ifstream& file)
+{
+    // 타입은 Level::Load에서 이미 읽음 (SpawnActor 분기용)
+
+    // 이름
+    int32 nameLen = 0;
+    file.read((char*)&nameLen, sizeof(int32));
+    _name.resize(nameLen);
+    file.read(&_name[0], nameLen);
+
+    // 위치, 크기, 회전
+    FVector3D pos, scale;
+    FRotator rot;
+    file.read((char*)&pos, sizeof(FVector3D));
+    file.read((char*)&scale, sizeof(FVector3D));
+    file.read((char*)&rot, sizeof(FRotator));
+    SetWorldPosition(pos);
+    SetWorldScale(scale);
+    SetWorldRotation(rot);
+}

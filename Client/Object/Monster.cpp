@@ -11,10 +11,16 @@
 #include "Component/StaticMeshComponent.h"
 #include "Component/SpriteComponent.h"
 #include "Component/AIComponent.h"
-
 #include "Component/WidgetComponent.h"
 
+
+#include "../Component/MovementComponent.h"
+
+
+
 #include "World/Level.h"
+
+#include "../Core/TimeManager.h"
 
 #include "Common/LogManager.h"
 
@@ -41,9 +47,17 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     Ptr<AIController> ctrl = Cast<Controller, AIController>(_controller);
     Ptr<AIComponent> aicomp = ctrl->GetAI();
 
-    //4. MachineBase를 상속받은 스테이트머신 자식클래스로 스테이트머신을 생성
+    // 몬스터 스프라이트 생성 및 루트 컴포넌트 설정
     _monsterMesh= CreateSceneComponent<SpriteComponent>("Mesh");
     SetRootComponent(_monsterMesh);
+
+    // 이동 동작 컴포넌트
+    _movement = CreateActorComponent<MovementComponent>("Movement");
+    _movement->SetUpdateComponent(_root);
+    _movement->SetMaxSpeed(_monsterData.moveSpeed);
+    _movement->SetAccel(200.f);
+    _movement->SetFriction(400.f);
+
 
     // 1. 피격/접촉용 충돌체
     _col = CreateSceneComponent<AABBCollisionComponent>("AABB");
@@ -56,15 +70,34 @@ bool Monster::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
     _detectCol = CreateSceneComponent<SphereCollisionComponent>("Detect");
     _detectCol->SetRadius(_monsterData.detectRange);
     _detectCol->AttachToComponent(_root);
-    _detectCol->SetCollisionProfile("Monster");
+    _detectCol->SetCollisionProfile("MonsterDetect");
     _detectCol->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Monster::OnDetectPlayer);
+    
+
+
     return true;
 }
 
 void Monster::Tick(float deltaTime)
 {
     Pawn::Tick(deltaTime);
-    UpdataeAnimation();
+
+    Ptr<Player> player = Lock<Player>(_target);
+    /*if (!_monsterMesh || !_monsterMesh->HasAnimation())
+        return;*/
+    if (_isChasing && player)
+    {
+        FVector3D dir = player->GetWorldPosition() - GetWorldPosition();
+        dir.Normalize();
+        _movement->SetMoveAxis(dir);
+        UpdateAnimation(dir); //방향 전달
+    }
+    else
+    {
+        _movement->SetMoveAxis(FVector3D::Zero);
+        UpdateAnimation(FVector3D::Zero);
+    }
+    
 }
 
 void Monster::Collision(float deltaTime)
@@ -101,6 +134,27 @@ void Monster::SetMonsterData(const FMonsterData& data)
 
     if (_detectCol)
         _detectCol->SetRadius(data.detectRange);
+
+    if (_movement)
+        _movement->SetMaxSpeed(data.moveSpeed);
+
+    //애니메이션 등록
+    if (_monsterMesh && !data.texturePath.empty())
+    {
+        if (!data.idleFrames.empty())
+            _monsterMesh->AddAnimSequence("IDLE", data.texturePath, data.idleFrames, true);
+        if (!data.moveFrontFrames.empty())
+            _monsterMesh->AddAnimSequence("MOVE_FRONT", data.texturePath, data.moveFrontFrames, true);
+        if (!data.moveBackFrames.empty())
+            _monsterMesh->AddAnimSequence("MOVE_BACK", data.texturePath, data.moveBackFrames, true);
+        if (!data.moveSideFrames.empty())
+            _monsterMesh->AddAnimSequence("MOVE_SIDE", data.texturePath, data.moveSideFrames, true);
+        if (!data.deathFrames.empty())
+            _monsterMesh->AddAnimSequence("DEATH", data.texturePath, data.deathFrames, false);
+
+        if (!data.idleFrames.empty())
+            _monsterMesh->ChangeAnimation("IDLE");
+    }
 
 }
 
@@ -154,35 +208,38 @@ void Monster::BlockCallback(Weak<CollisionComponent> comp)
     level->RemoveActor(_id);
 }
 
-void Monster::UpdataeAnimation()
+void Monster::UpdateAnimation(const FVector3D& dir)
 {
     // 스프라이트가 없으면 리턴함.
     if (!_monsterMesh)
         return;
+
     // 타겟(플레이어) 가져오기 
-    Ptr<Player> player = Lock<Player>(_target);
-    if (!player)
+    
+    if (dir._x == 0.f && dir._y ==0.f)
     {
-        // 플레이어가 없ㅇ므ㅕㄴ 대기 애니메이션
+        // 플레이어가 없으면 대기 애니메이션
         _monsterMesh->ChangeAnimation("IDLE");
         return;
     }
 
-    //플레이어 위치 - 몬스터 위치 = 방향 벡터.
-    FVector3D dir = player->GetWorldPosition() - GetWorldPosition();
-    
     // X차이가 Y보다 크다면 좌우 이동 
     if (abs(dir._x) > abs(dir._y))
     {
-        _monsterMesh->ChangeAnimation("MOVE_SIDE");
         // dir._x < 0 -> 플레이어가 왼쪽 -> 스프라이트 좌우 반전.
+        _monsterMesh->ChangeAnimation("MOVE_SIDE");
         _monsterMesh->SetAnimFilp(dir._x < 0.f);
     }
     // y차이가 더 크면 정면/뒷면 이동 애니메이션
-    else
+    else if(dir._y > 0.f)
+    {
+        _monsterMesh->ChangeAnimation("MOVE_BACK");
+        
+    }
+    else 
     {
         _monsterMesh->ChangeAnimation("MOVE_FRONT");
-        _monsterMesh->SetAnimFilp(dir._y > 0.f);
+        
     }
 }
 
@@ -218,6 +275,33 @@ void Monster::OnHit(Weak<class CollisionComponent> dest)
             OnDeath();
         
     }
+}
+
+void Monster::OnDeath()
+{
+    
+    _isChasing = false;         //몬스터 사망 추격 중지
+    if(_movement)
+        _movement->SetMoveAxis(FVector3D::Zero);    // 움직임 멈춤 
+
+    if (_col) 
+        _col->SetEnable(false); 
+
+    if (_detectCol)
+        _detectCol->SetEnable(false);
+
+    if (_monsterMesh)
+    {
+        _monsterMesh->ChangeAnimation("DEATH");
+        _monsterMesh->SetPlay("DEATH", false);
+    }
+
+    TimeManager::Instance().SetTimer(0.5f, false, this, &Monster::RemoveMonster);
+}
+
+void Monster::RemoveMonster()
+{
+    Pawn::OnDeath();
 }
 
 bool Monster::IsCheck()

@@ -8,6 +8,7 @@
 #include "world/CameraManager.h"
 
 #include "../Object/Bullet.h"
+#include "../Object/Monster.h"
 
 
 #include "Component/MovementComponent.h"
@@ -26,7 +27,7 @@
 #include "Core/GameEngine.h"
 
 #include "UI/TextBlock.h"
-
+#include "UI/Image.h"
 
 
 bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name)
@@ -148,8 +149,12 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     _col->SetBoxSize(32.f, 32.f);
     _col->AttachToComponent(_root);
     _col->SetCollisionProfile("Player");
+    _col->SetCollisionCallBack(COLLISION_STATE_OVERLAP, this, &Player::OverlapCallBack);
 
     GameEngine::Instance().GetWorld()->SetMainPlayer(This<Player>());
+    
+    SetMaxHp(8);
+    CreateHeartUI();
 
     // 테스트용입니다 지울 예정
     auto testDeath = InputSystem::Instance().FindOrAddInputAction("TEST_DEATH");
@@ -162,13 +167,29 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
 void Player::Tick(float deltaTime)
 {
     Pawn::Tick(deltaTime);
-    LogManager::Instance().Debug("PLAYER FIRE");
+
+    if (_invincibleTimer > 0.f)
+        _invincibleTimer -= deltaTime;
+    for (int32 i = 0; i < _heartMax; ++i)
+    {
+        int32 slotHp = _hp - i * 2;
+        if (slotHp >= 2)
+            _hearts[i]->SetCurrentFrame(0);
+        else if (slotHp == 1)
+            _hearts[i]->SetCurrentFrame(1);
+        else
+            _hearts[i]->SetCurrentFrame(2);
+    }
+
     _fireTimer -= deltaTime;
     if (_headKeyActive && _fireTimer <= 0.f)
     {
         Fire();
         _fireTimer = _fireRate;
     }
+
+   
+
 }
 
 void Player::Collision(float deltaTime)
@@ -354,6 +375,49 @@ void Player::OnDeath()
     // 일정 시간 이후 타이틀 복귀 or 복귀 버튼 구현.
 }
 
+void Player::SetMaxHp(int32 v)
+{
+    Pawn::SetMaxHp(v);
+
+    _heartMax = v / 2;
+}
+
+Ptr<class Image> Player::CreateSingleHeart(int32 idx)
+{
+    float texW = 112.f;
+    float texH = 64.f;
+
+    Ptr<Level> level = GetLevel();
+    auto heart = level->CreateWidget<Image>("Heart_" + std::to_string(idx));
+    heart->SetTexture("UI_Heart", TEXT("ISAAC_UI\\UI_Heart.png"));
+    heart->SetBrushAnimEnable(true);
+    heart->AddBrushFrame(0.f / texW, 0.f / texH, 16.f / texW, 16.f / texH);     // 풀 하트
+    heart->AddBrushFrame(16.f / texW, 0.f / texH, 16.f / texW, 16.f / texH);    // 반 하트
+    heart->AddBrushFrame(32.f / texW, 0.f / texH, 16.f / texW, 16.f / texH);    // 빈 하트
+    heart->SetSize(FVector2D(32.f, 32.f));          // 화면 표시 크기
+    heart->SetPos(FVector2D(20.f + idx * 24.f, 600.f));  // 좌상단 배치 
+    level->AddToViewport(heart);
+    return heart;
+
+}
+
+void Player::CreateHeartUI()
+{
+    for (int32 i = 0; i < _heartMax; ++i)
+        _hearts.push_back(CreateSingleHeart(i));
+}
+
+void Player::AddHeartContainer()
+{
+    int32 idx = _heartMax;
+    _heartMax++;
+    _maxHp += 2;
+    _hp += 2;
+    _hearts.push_back(CreateSingleHeart(idx));
+}
+
+
+
 void Player::BlockCallBack(Weak<class CollisionComponent> dest)
 {
     LogManager::Instance().Debug("충돌함..!");
@@ -361,7 +425,32 @@ void Player::BlockCallBack(Weak<class CollisionComponent> dest)
 
 void Player::OverlapCallBack(Weak<class CollisionComponent> dest)
 {
-    LogManager::Instance().Debug("지금 겹쳐있음..!");
+    // 무적 중이면 무시함.
+    if (_invincibleTimer > 0.f)
+        return;
+
+    Ptr<CollisionComponent> col = Lock<CollisionComponent>(dest);
+    if (!col)
+        return;
+
+    // 탐지용 콜라이더는 데미지 무시
+    if (col->GetName() == "Detect")
+        return;
+
+    Ptr<Actor> owner = col->GetOwner();
+    if (!owner)
+        return;
+
+    Ptr<Monster> monster = Cast<Actor, Monster>(owner);
+    if (!monster)
+        return;
+    
+    //데미지 적용
+    TakeDamage((int32)monster->GetAttackPower());
+    _invincibleTimer = _invincibleTime;
+
+    if (IsDead())
+        OnDeath();
 }
 
 void Player::ReleaseCallBack(Weak<class CollisionComponent> dest)
@@ -376,7 +465,7 @@ void Player::TestDeath(float deltaTime)
     if (head) head->SetEnable(false);  // 머리 숨기기
     if (body)
     {
-        body->SetRelativeScale(128.f, 128.f, 128.f);  // 64 → 128 (2배)
+        body->SetRelativeScale(64.f, 64.f, 1.f);  // 64 → 128 (2배)
         body->ChangeAnimation("IASSC_DEATH");
         body->SetPlay("IASSC_DEATH", true);
     }

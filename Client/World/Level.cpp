@@ -8,7 +8,13 @@
 
 #include "Object/Player.h"
 #include "Object/Monster.h"
+#include "Object/Door.h"
+#include "Object/Obstacle.h"
+#include "Object/Item.h"
+#include "Object/Npc.h"
+
 #include "Object/TileMap.h"
+#include "Object/Camera.h"
 
 #include "Core/Device.h"
 
@@ -48,7 +54,8 @@ bool Level::Init(const std::string& path)
     _uiManager = New<UIManager>();
     _uiManager->Init(This<Level>());
 
-
+    SpawnPlayer();
+    
     //todo : level save & load
     
     
@@ -168,25 +175,125 @@ void Level::Destroy()
 
 void Level::Save(std::ofstream& file)
 {
-    //todo : level save
+    // 1) TileMap 저장
+    Ptr<TileMap> tileMap = GetTileMap();
+    bool hasTileMap = (tileMap != nullptr);
+    file.write((char*)&hasTileMap, sizeof(bool));
+    if (hasTileMap)
+        tileMap->Save(file);
+
+    // 2) 저장할 액터 수집 (TileMap, Player, Controller 등 제외)
+    std::vector<Ptr<Actor>> saveActors;
     for (auto& it : _actors)
     {
-        if (!it.second->IsActive())
+        Ptr<Actor> actor = it.second;
+        if (!actor || !actor->IsActive())
+            continue;
+        if (actor->_type == eActorType::Tile)      
+            continue;
+        if (actor->_type == eActorType::Player)     
+            continue;
+        if (actor->_type == eActorType::Actor)      
+            continue;
+        if (actor->_type == eActorType::Pawn)       
             continue;
 
-        //it.second->Save(file);
+        saveActors.push_back(actor);
     }
+
+    // 3) 액터 수 + 데이터 저장
+    int32 actorCount = (int32)saveActors.size();
+    file.write((char*)&actorCount, sizeof(int32));
+
+    for (auto& actor : saveActors)
+        actor->Save(file);
 }
 
 void Level::Load(std::ifstream& file)
 {
-    //todo : level load
+    // 1) 로드 대상만 제거 (카메라·플레이어·컨트롤러 유지)
+    std::vector<int32> removeList;
     for (auto& it : _actors)
     {
-        if (!it.second->IsActive())
-            continue;
+        Ptr<Actor> actor = it.second;
+        if (!actor) continue;
 
-        //it.second->Load(file);
+        if (actor->_type == eActorType::Actor)   
+            continue;  // Camera 등
+        if (actor->_type == eActorType::Player)  
+            continue;
+        if (actor->_type == eActorType::Pawn)    
+            continue;  // AIController 등
+
+        DESTROY(actor);
+        removeList.push_back(it.first);
+    }
+
+    for (int32 id : removeList)
+        _actors.erase(id);
+
+    _removeActors.clear();
+
+
+    // 3) TileMap 로드
+    bool hasTileMap = false;
+    file.read((char*)&hasTileMap, sizeof(bool));
+    if (hasTileMap)
+    {
+        Ptr<TileMap> tileMap = SpawnActor<TileMap>("TileMap", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));
+        tileMap->Load(file);  // name, pos, grid, tileComponent 복원
+    }
+
+    // 3) 나머지 액터 로드
+    int32 actorCount = 0;
+    file.read((char*)&actorCount, sizeof(int32));
+
+   
+    FVector3D pos(0.f, 0.f, 0.f);
+    FVector3D scale(1.f, 1.f, 1.f);
+    FVector3D rot(0, 0, 0);
+
+    for (int32 i = 0; i < actorCount; i++)
+    {
+        eActorType type;
+        file.read((char*)&type, sizeof(eActorType));
+
+        switch (type)
+        {
+        case eActorType::Monster:
+        {
+            Ptr<Monster> monster = SpawnActor<Monster>("Monster", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));
+            monster->Load(file);
+            break;
+        }
+        case eActorType::Obstacle:
+        {
+            Ptr<Obstacle>obstacle = SpawnActor<Obstacle>("Obstacle", pos, scale, rot);
+            obstacle->Load(file);
+            break;
+        }
+        case eActorType::Door:
+        {
+            Ptr<Door> door = SpawnActor<Door>("Door", pos, scale, rot);
+            door->Load(file);
+            break;
+        }
+        case eActorType::Item:
+        {
+            Ptr<Item> item = SpawnActor<Item>("Item", pos, scale, rot);
+            item->Load(file);
+            break;
+        
+        }
+        case eActorType::Npc:
+        {
+            Ptr<Npc> npc = SpawnActor<Npc>("Npc", pos, scale, rot);
+            npc->Load(file);
+            break;
+        
+        }
+        }
+
     }
 }
 

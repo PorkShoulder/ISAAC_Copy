@@ -49,6 +49,25 @@ private:
     std::vector<Ptr<class Image>> _hearts;
     int32 _heartMax = 4; // 시작 하트 수, 아이템으로 증가 가능.
 
+    // 캐릭터 능력치
+    float _baseDamage = 1.f;
+    float _baseSpeed = 120.f;
+    int32 _baseHp = 8;
+
+    float _bonusDamage = 0.f;
+    float _bonusSpeed = 0.f;
+
+
+    // 아이템 효과적용
+    uint32 _effects = EFFECT_NONE;
+
+    // 총알 외형정보
+    std::string _bulletTextureName;
+    std::wstring _bulletTexturePath;
+    std::vector<FVector4D> _bulletFrames;
+
+    
+
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
     virtual void Tick(float deltaTime);
@@ -58,15 +77,20 @@ public:
 public:
     int GetKey() const { return _consumable.key; }
     int GetCoin() const { return _consumable.coin; }
+    int GetBomb() const { return _consumable.bomb; }
     void AddKey(int amount) { _consumable.key += amount; }
     void AddCoin(int amount) { _consumable.coin += amount; }
+    void AddBomb(int amount) { _consumable.bomb += amount; }
     void OnDeath();
     virtual void SetMaxHp(int32 v) override;
     Ptr<class Image> CreateSingleHeart(int32 idx);
     void CreateHeartUI(); // 체력
     void AddHeartContainer();
-    
-
+    void ApplyItemVisual(const FItemData& data);
+    void ApplyItemStats(const FItemData& data);
+    bool HasEffect(uint32 e) const { return (_effects & e) != 0; }
+    void AddEffect(uint32 e) { _effects |= e; }
+    void AddHp(int32 amount);
 
 private:
     void SetHeadDirection(const std::string& anim, bool flip);
@@ -89,15 +113,14 @@ private:
     void HeadDown(float deltaTime);
     void HeadRelease(float deltaTime);
     void mouseDown(float deltaTime);
-
+    
     void Fire();
 private:
     void BlockCallBack(Weak<class CollisionComponent> dest);
     void OverlapCallBack(Weak<class CollisionComponent> dest);
     void ReleaseCallBack(Weak<class CollisionComponent> dest);
+    
 
 
 
-    // 테스트용
-    void TestDeath(float deltaTime);
 };

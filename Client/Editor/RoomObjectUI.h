@@ -42,16 +42,25 @@ private:
     std::string MakeObjectName(const std::string& typeName);
     bool IsAnimatedObject(eActorType type) const;
     void RenderAnimationSelect();
-
+    void RenderActorList();
+    // Door
     FDoorSpawnData _editDoorData;
     void RenderDoorUI();
-
+    // Monster
     FMonsterData _editMonsterData;
     void RenderMonsterUI();
     void RenderFrameList(const char* label, std::vector<FVector4D>& frames);
     
+    //Obstacle
+    FObstacleData _editObstacleData;
+    void RenderObstacleUI();
     
+    //Item
+    FItemData _editItemData;
+    void RenderItemUI();
 
-
+    //Npc
+    FNpcData _editNpcData;
+    void RenderNpcUI();
 
 };

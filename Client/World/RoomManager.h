@@ -5,33 +5,28 @@
 #include "../Object/Monster.h"
 #include "../Object/Obstacle.h"
 #include "../Object/Item.h"
-
+#include "../Common/Info.h"
 
 #include <functional>
 #include <set>
 
 // 방 이동 방향 (인접 방 연결에 사용)
-enum class eRoomDir 
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	COUTN,
-	END
-};
+
 
 struct FRoomInfo
 {
 	// 그리드 좌표
 	int32 gridX = 1;						
 	int32 gridY = 1;
+
 	// .Room파일 경로
 	std::string roomFilePath;
+
 	//실제 스폰된 타일맵
 	Ptr<class TileMap> tileMap;
 	// 이 망에 속한 몬스터 (미구현)
 	std::vector<Ptr<class Actor>> monsters;
+
 	// 현재 활성화 여부
 	bool isActivated = false;
 	// .room파일 로드 완료 여부 -> 중복방지
@@ -84,6 +79,7 @@ private:
 	// 사용중인 공간
 	std::set<std::pair<int32, int32>> _occupiedGrid;
 
+
 public:
 	int32 GetRoomFileCount() const { return (int32)_roomFiles.size(); }
 	void StartBattle(FRoomInfo* room);
@@ -114,7 +110,7 @@ public:
 	void RegisterDoor(Ptr<Door> door);
 	void RegisterMonster(Ptr<Monster> monster);
 	FRoomInfo* GetCurrentRoom() { return _currentRoom; }
-
+	void MoveToRoom(eRoomDir dir, Ptr<class Player> player);
 private:
 	// 방의 몬스터 활성화 (SetEnable(true))
 	void ActivateRoom(FRoomInfo* cell);

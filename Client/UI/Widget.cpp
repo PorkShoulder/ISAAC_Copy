@@ -194,7 +194,7 @@ Ptr<Widget> Widget::MouseHit(const FVector2D & pos)
         }
     }
 
-    LogManager::Instance().Debug(std::format("Mouse Pos : {}, {}", pos._x, pos._y));
+    //LogManager::Instance().Debug(std::format("Mouse Pos : {}, {}", pos._x, pos._y));
 
     if (IsInteractable() && IsInSide(pos))
         return This<Widget>();

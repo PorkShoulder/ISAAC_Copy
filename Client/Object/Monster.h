@@ -18,20 +18,26 @@ private:
     Ptr<class SphereCollisionComponent> _detectCol;
     Ptr<class MovementComponent> _movement;
     bool _isChasing = false;
-
+    // 렌더
     Ptr<class SpriteComponent> _monsterMesh = nullptr;
     FMonsterData _monsterData;
+    std::string _animName;
     
 
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name) override;
-    virtual void Tick(float deltaTime);
-    virtual void Collision(float deltaTime);
-    virtual void Render(float deltaTime);
+    virtual void Tick(float deltaTime) override;
+    virtual void Collision(float deltaTime) override;
+    virtual void Render(float deltaTime) override;
     virtual void Destroy() override;
+    virtual void Save(std::ofstream& file) override;
+    virtual void Load(std::ifstream& file) override;
+    
     void SetTarget(Ptr<class Player> player);
     void SetMonsterData(const FMonsterData& data);
     float GetAttackPower() const { return _monsterData.attackPower; }
+    eMonsterType GetMonsterType() const { return _monsterData.monsterType; }
+    
 
 private:
     void Fire();

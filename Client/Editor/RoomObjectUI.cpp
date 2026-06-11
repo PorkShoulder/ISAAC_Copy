@@ -113,30 +113,29 @@ void RoomObjectUI::Render(float deltaTime)
 	switch (_placeType)
 	{
 	case eActorType::Obstacle:
-		ImGui::Combo("Type", &_currentIndex, ObstacleTypeName, (int)eObstacleType::END);
+		RenderObstacleUI();
 		break;
 	case eActorType::Door:
 		RenderDoorUI();
 		break;
 	case eActorType::Item:
-		ImGui::Combo("Type", &_currentIndex, ItemTypeName, (int)eItemType::END);
+		RenderItemUI();
 		break;
 	case eActorType::Npc:
-		ImGui::Combo("Type", &_currentIndex, NpcTypeName, (int)eNpcType::END);
+		RenderNpcUI();
 		break;
 	case eActorType::Monster:
 		RenderMonsterUI();
 		break;
 	}
-	if (_placeType == eActorType::Npc)
-	{
-		RenderAnimationSelect();
-	}
-
-
+	
+	//배치된 액터 목록
+	ImGui::Separator();
+	RenderActorList();
 	// 스냅 기능
 	ImGui::Separator();
 	RenderSnapOption();
+	
 	ImGui::Separator();
 	ImGui::Text("Click on tilemap to place object");
 
@@ -178,22 +177,28 @@ void RoomObjectUI::Render(float deltaTime)
 				{
 				case eActorType::Obstacle:
 				{
+					scale = FVector3D(_editObstacleData.renderSize._x, _editObstacleData.renderSize._y, 1.f);
+
 					auto obstacle = level->SpawnActor<Obstacle>(name, pos, scale, rot);
 					if (obstacle)
 					{
-						obstacle->SetTexture(_selectedTextureName);
-						obstacle->SetObstacleType((eObstacleType)_currentIndex);
+						_editObstacleData.textureName = _selectedTextureName;
+						_editObstacleData.texturePath = _selectedTexturePath;
+						obstacle->SetObstacleData(_editObstacleData);
+						
 					}
 
 				}
 				break;
 				case eActorType::Item:
 				{
+					scale = FVector3D(_editItemData.renderSize._x, _editItemData.renderSize._y, 1.f);
 					auto item = level->SpawnActor<Item>(name, pos, scale, rot);
 					if (item)
 					{
-						item->SetTexture(_selectedTextureName);
-						item->SetItemType((eItemType)_currentIndex);
+						_editItemData.textureName = _selectedTextureName;
+						_editItemData.texturePath = _selectedTexturePath;
+						item->SetItemData(_editItemData);
 					}
 				}
 				break;
@@ -229,16 +234,6 @@ void RoomObjectUI::Render(float deltaTime)
 						// 프리셋 능력치 + 텍스처+크기 정보를 몬스터에 전달
 						monster->SetMonsterData(_editMonsterData);
 						
-						//// 애니메이션 등록.
-						//auto sprite = monster->FindSceneComponent<SpriteComponent>("Mesh");
-						//if (sprite && !_animSequences.empty())
-						//{
-						//	for (auto& seq : _animSequences)
-						//	{
-						//		sprite->AddAnimSequence(seq.name, seq.texturePath, seq.frames, seq.loop);
-						//	}
-						//}
-						
 						// RoomManager에 등록 (전투시 몬스터 생존 체크용.) -> 이를 알아야 door활성화 여부 가능.
 						Ptr<RoomManager> roomMgr = level->GetRoomManager();
 						if (roomMgr)
@@ -250,21 +245,15 @@ void RoomObjectUI::Render(float deltaTime)
 
 				case eActorType::Npc:
 				{
+					scale = FVector3D(_editNpcData.renderSize._x, _editNpcData.renderSize._y, 1.f);
 					auto npc = level->SpawnActor<Npc>(name, pos, scale, rot);
 					if (npc)
 					{
-						npc->SetNpcType((eNpcType)_currentIndex);
-
-						auto sprite = npc->FindSceneComponent<SpriteComponent>("Mesh");
-						if (sprite && !_animSequences.empty())
-						{
-							for (auto& seq : _animSequences)
-							{
-								std::wstring wTex(seq.textureName.begin(), seq.textureName.end());
-								sprite->AddAnimSequence(seq.name, wTex, seq.frames, seq.loop);
-							}
-						}
-
+						_editNpcData.textureName = _selectedTextureName;
+						_editNpcData.texturePath = _selectedTexturePath;
+						_editNpcData.rewardItem.textureName = _selectedTextureName;
+						_editNpcData.rewardItem.texturePath = _selectedTexturePath;
+						npc->SetNpcData(_editNpcData);
 					}
 				}
 				break;
@@ -384,6 +373,54 @@ void RoomObjectUI::RenderAnimationSelect() // 애니메이션 프레임 등록
 
 
 }
+void RoomObjectUI::RenderActorList()
+{
+	if (!ImGui::CollapsingHeader("Placed Actors"))
+		return;
+
+	Ptr<Level> level = GameEngine::Instance().GetWorld()->GetCurLevel();
+	if (!level) return;
+
+	std::vector<int32> deleteList;
+
+	for (auto& [id, actor] : level->GetActors())
+	{
+		if (!actor || !actor->IsActive()) continue;
+
+		eActorType type = actor->GetActorType();
+
+		// 편집 대상만 표시 (타일, 플레이어, 카메라 제외)
+		if (type != eActorType::Monster &&
+			type != eActorType::Obstacle &&
+			type != eActorType::Door &&
+			type != eActorType::Item &&
+			type != eActorType::Npc)
+			continue;
+
+		ImGui::PushID(id);
+
+		FVector3D pos = actor->GetWorldPosition();
+		ImGui::Text("[%s] %s (%.0f, %.0f)",
+			actor->GetName().c_str(),
+			// 타입 표시
+			type == eActorType::Monster ? "Monster" :
+			type == eActorType::Obstacle ? "Obstacle" :
+			type == eActorType::Door ? "Door" :
+			type == eActorType::Item ? "Item" :
+			type == eActorType::Npc ? "Npc" : "?",
+			pos._x, pos._y);
+
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+			deleteList.push_back(id);
+
+		ImGui::PopID();
+	}
+
+	// 삭제 처리
+	for (int32 id : deleteList)
+		level->RemoveActor(id);
+}
 void RoomObjectUI::RenderDoorUI()
 {
 	ImGui::SeparatorText("Door Function");
@@ -452,6 +489,11 @@ void RoomObjectUI::RenderDoorUI()
 
 	ImGui::Checkbox("Open (Initial)", &_editDoorData.bOpen);
 	ImGui::Checkbox("Battle Control", &_editDoorData.bBattle);
+	// 방이동 로직
+	const char* dirNames[] = { "UP", "DOWN", "LEFT", "RIGHT" };
+	int dirIdx = (int)_editDoorData.exitDir;
+	if (ImGui::Combo("Exit Direction", &dirIdx, dirNames, 4))
+		_editDoorData.exitDir = (eRoomDir)dirIdx;
 }
 
 void RoomObjectUI::RenderMonsterUI()
@@ -506,4 +548,145 @@ void RoomObjectUI::RenderFrameList(const char* label, std::vector<FVector4D>& fr
 		}
 		ImGui::TreePop();
 	}
+}
+
+void RoomObjectUI::RenderObstacleUI()
+{
+	ImGui::SeparatorText("Obsstacle Setting");
+
+	//타입 선택 -> 프리셋 자동 적용
+	int typeIdx = (int)_editObstacleData.obstacleType;
+	if (ImGui::Combo("Obstacle Type", &typeIdx, ObstacleTypeName, (int)eObstacleType::END))
+	{
+		std::string texName = _editObstacleData.textureName;
+		std::wstring texPath = _editObstacleData.texturePath;
+		_editObstacleData = ObstaclePresets[typeIdx];
+		_editObstacleData.textureName = texName;
+		_editObstacleData.texturePath = texPath;
+	}
+
+	// 렌더 충돌 크기
+	ImGui::DragFloat2("Render Size", &_editObstacleData.renderSize._x, 1.f, 1.f, 512.f);
+	ImGui::DragFloat2("Collision Size", &_editObstacleData.collisionSize._x, 1.f, 1.f, 512.f);
+
+	// 프리셋 능력치 읽기
+	ImGui::SeparatorText("Obstacle Behavior");
+	ImGui::Text("Fly: %s / Walk: &s",
+		_editObstacleData.canFlyPass ? "0" : "X",
+		_editObstacleData.canWalkPass ? "0" : "X");
+	ImGui::Text("BulletBreak: %s / BulletPass: %s",
+		_editObstacleData.bulletBreakable ? "O" : "X",
+		_editObstacleData.bulletPassThrough ? "O" : "X");
+	ImGui::Text("BombBreak: %s / Damage: %s (%.1f)",
+		_editObstacleData.bombBreakable ? "O" : "X",
+		_editObstacleData.damage ? "O" : "X",
+		_editObstacleData.damageAmount);
+	ImGui::Text("HP: %d", _editObstacleData.hp);
+
+	ImGui::SeparatorText("Animation Frames");
+	RenderFrameList("ANIM", _editObstacleData.animFrames);
+
+
+}
+
+void RoomObjectUI::RenderItemUI()
+{
+
+	// 타입 선택
+	int typeIdx = (int)_editItemData.itemType;
+	if (ImGui::Combo("ItemType", &typeIdx, ItemTypeName, (int)eItemType::END))
+		_editItemData.itemType = (eItemType)typeIdx;
+
+	// 렌더/콜리전 크기
+	ImGui::DragFloat2("RenderSize", &_editItemData.renderSize._x, 1.f, 1.f, 512.f);
+	ImGui::DragFloat2("CollisionSize", &_editItemData.collisionSize._x, 1.f, 1.f, 512.f);
+
+	//아이템 자체 프레임
+	RenderFrameList("ItemFrame", _editItemData.itemFrames);
+	//습득시 머리 프레임
+	RenderFrameList("EquipHead", _editItemData.equipHeadFrames);
+	//습득시 몸통 프레임
+	RenderFrameList("EquipBody", _editItemData.equipBodyFrames);
+	//총알 프레임
+	RenderFrameList("BulletFrame", _editItemData.bulletFrames);
+
+	ImGui::SeparatorText("Item Stats");
+	ImGui::DragFloat("BonusDamage", &_editItemData.bonusDamage, 0.1f, 0.f, 100.f);
+	ImGui::DragFloat("BonusSpeed", &_editItemData.bonusSpeed, 1.f, 0.f, 500.f);
+	ImGui::DragInt("BonusHp", &_editItemData.bonusHp, 1, 0, 20);
+	ImGui::CheckboxFlags("Homing", &_editItemData.effect, EFFECT_HOMING);
+
+	ImGui::DragInt("Amount", &_editItemData.consumableAmount, 1, 1, 10);
+
+	ImGui::Text("--- Cost ---");
+	ImGui::SliderInt("Coin##item", &_editItemData.cost.coin, 0, 5);
+	ImGui::SliderInt("Key##item", &_editItemData.cost.key, 0, 5);
+	ImGui::SliderInt("Bomb##item", &_editItemData.cost.bomb, 0, 5);
+	
+}
+
+void RoomObjectUI::RenderNpcUI()
+{
+	// NPC 타입 선택
+	int npcType = (int)_editNpcData.npcType;
+	if (ImGui::Combo("NpcType", &npcType, NpcTypeName, (int)eNpcType::END))
+		_editNpcData.npcType = (eNpcType)npcType;
+
+	// 렌더/충돌 크기
+	ImGui::DragFloat2("RenderSize##npc", &_editNpcData.renderSize._x, 1.f, 1.f, 512.f);
+	ImGui::DragFloat2("CollisionSize##npc", &_editNpcData.collisionSize._x, 1.f, 1.f, 512.f);
+
+	// 비용 (0~5 제한)
+	ImGui::Text("--- Cost ---");
+	ImGui::SliderInt("Coin Cost", &_editNpcData.cost.coin, 0, 5);
+	ImGui::SliderInt("Key Cost", &_editNpcData.cost.key, 0, 5);
+	ImGui::SliderInt("Bomb Cost", &_editNpcData.cost.bomb, 0, 5);
+
+	// 보상 (npcType에 따라)
+	ImGui::Text("--- Reward ---");
+	if (_editNpcData.npcType == eNpcType::CONSUMABLE)
+	{
+		ImGui::SliderInt("Coin Reward", &_editNpcData.rewardConsumable.coin, 0, 5);
+		ImGui::SliderInt("Key Reward", &_editNpcData.rewardConsumable.key, 0, 5);
+		ImGui::SliderInt("Bomb Reward", &_editNpcData.rewardConsumable.bomb, 0, 5);
+	}
+	else if (_editNpcData.npcType == eNpcType::EFFECT_ITEM)
+	{
+		ImGui::Text("--- Reward Item ---");
+
+		// 보상 아이템 타입
+		int riType = (int)_editNpcData.rewardItem.itemType;
+		if (ImGui::Combo("RewardItemType", &riType, ItemTypeName, (int)eItemType::END))
+			_editNpcData.rewardItem.itemType = (eItemType)riType;
+
+		// 소모품이면 수량만
+		if (_editNpcData.rewardItem.itemType == eItemType::COIN ||
+			_editNpcData.rewardItem.itemType == eItemType::KEY ||
+			_editNpcData.rewardItem.itemType == eItemType::BOMB ||
+			_editNpcData.rewardItem.itemType == eItemType::HEART)
+		{
+			ImGui::DragInt("Amount##npc", &_editNpcData.rewardItem.consumableAmount, 1, 1, 10);
+		}
+		else
+		{
+			// 패시브/액티브면 프레임 + 스탯
+			RenderFrameList("ItemFrame##npc", _editNpcData.rewardItem.itemFrames);
+			RenderFrameList("EquipHead##npc", _editNpcData.rewardItem.equipHeadFrames);
+			RenderFrameList("EquipBody##npc", _editNpcData.rewardItem.equipBodyFrames);
+			RenderFrameList("BulletFrame##npc", _editNpcData.rewardItem.bulletFrames);
+
+			ImGui::DragFloat("BonusDamage##npc", &_editNpcData.rewardItem.bonusDamage, 0.1f);
+			ImGui::DragFloat("BonusSpeed##npc", &_editNpcData.rewardItem.bonusSpeed, 0.1f);
+			ImGui::DragInt("BonusHp##npc", &_editNpcData.rewardItem.bonusHp, 1, 0, 10);
+			ImGui::CheckboxFlags("HOMING##npc", &_editNpcData.rewardItem.effect, EFFECT_HOMING);
+		}
+
+		// 보상 아이템 자체 프레임 (바닥에 뿌려질 때 보이는 모습)
+		ImGui::DragFloat2("RewardRenderSize", &_editNpcData.rewardItem.renderSize._x, 1.f, 1.f, 512.f);
+		
+	}
+
+
+	// Idle 프레임
+	RenderFrameList("NpcIdle", _editNpcData.idleFrames);
 }

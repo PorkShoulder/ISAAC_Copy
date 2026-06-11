@@ -1,7 +1,8 @@
 #pragma once
 #include "Actor.h"
 #include "../Common/Info.h"
-
+#include "../World/World.h"
+#include "../World/TitleLevel.h"
 
 
 class Door : public Actor
@@ -18,7 +19,8 @@ private:
 	Ptr<class SpriteComponent> _doorOpen = nullptr;
 
 	Ptr<class AABBCollisionComponent> _col;
-
+	eRoomDir _exitDir = eRoomDir::END;  // 이 문이 어느 방향 출구인지
+	
 
 public:
 	virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, 
@@ -28,6 +30,9 @@ public:
 	virtual void Render(float deltaTime) override;
 	virtual void Destroy() override;
 
+	virtual void Save(std::ofstream& file) override;
+	virtual void Load(std::ifstream& file) override;
+	const FDoorSpawnData& GetDoorData() const { return _doorData; }
 	void SetDoorData(const FDoorSpawnData& data);
 	void SetOpen(bool bOpen);
 	bool IsOpen()const { return _doorData.bOpen; }
@@ -35,8 +40,9 @@ public:
 	void TryOpen(Ptr<class Player> player);
 	eDoorType GetDoorType() const { return _doorData.doorType; }
 	bool IsBattleControl() const { return _doorData.bBattle; }
-	static void RenderDoorUI();
-
+	
+	void SetExitDir(eRoomDir dir) { _exitDir = dir; }
+	eRoomDir GetExitDir() const { return _exitDir; }
 
 private:
 	void UpdateVisibility();

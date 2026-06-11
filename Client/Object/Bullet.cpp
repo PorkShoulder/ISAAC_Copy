@@ -67,6 +67,9 @@ void Bullet::Tick(float deltaTime)
     {
         BulletImpact();
     }
+
+    if (_homing)
+        UpdateHoming(deltaTime);
 }
 
 void Bullet::Collision(float deltaTime)
@@ -87,7 +90,7 @@ void Bullet::Destroy()
 
 void Bullet::SetDir(const FVector3D& dir)
 {
-    //
+    _moveDir = dir;
     Ptr<MovementComponent> foundComp = FindComponent<MovementComponent>("Movement");
     if (nullptr == foundComp)
         return;
@@ -97,11 +100,63 @@ void Bullet::SetDir(const FVector3D& dir)
 
 void Bullet::SetSpeed(const float speed)
 {
+    _maxSpeed = speed;
+    _currentSpeed = speed;
+
     Ptr<MovementComponent> foundComp = FindComponent<MovementComponent>("Movement");
     if (nullptr == foundComp)
         return;
 
     foundComp->SetSpeed(speed);
+}
+
+void Bullet::UpdateHoming(float deltaTime)
+{
+    Ptr<Level> level = GetLevel();
+    if (!level) return;
+
+    float nearestDist = 999999.f;
+    FVector3D nearestPos;
+    bool found = false;
+
+    for (auto& pair : level->GetActors())
+    {
+        Ptr<Actor> actor = pair.second;
+        if (!actor || !actor->IsActive()) continue;
+        if (actor->GetActorType() != eActorType::Monster) continue;
+
+        FVector3D diff = actor->GetWorldPosition() - GetWorldPosition();
+        float dist = diff._x * diff._x + diff._y * diff._y;
+        if (dist < nearestDist)
+        {
+            nearestDist = dist;
+            nearestPos = actor->GetWorldPosition();
+            found = true;
+        }
+    }
+    
+    if (found)
+    {
+        FVector3D toTarget = nearestPos - GetWorldPosition();
+        toTarget.Normalize();
+
+        // 방향 차이 → 급커브일수록 감속
+        float dot = _moveDir._x * toTarget._x + _moveDir._y * toTarget._y;
+        float turnFactor = (dot + 1.f) * 0.5f;
+        _currentSpeed = _maxSpeed * (0.4f + 0.6f * turnFactor);
+
+        // 느리게 회전 (관성 — 값 낮을수록 드리프트 강함)
+        _moveDir = _moveDir + (toTarget - _moveDir) * deltaTime * 2.f;
+    }
+
+    _moveDir.Normalize();
+
+    Ptr<MovementComponent> mv = FindComponent<MovementComponent>("Movement");
+    if (mv)
+    {
+        mv->SetMoveAxis(_moveDir);
+        mv->SetSpeed(_currentSpeed);
+    }
 }
 
 void Bullet::SetAnimation(const std::string& animName)
@@ -171,7 +226,7 @@ void Bullet::BulletImpact()
     }
 
     // 애니 끝날 즈음 제거 (시간은 스플래시 길이에 맞게 조정)
-    TimeManager::Instance().SetTimer(0.3f, false, this, &Bullet::RemoveBullet);
+    TimeManager::Instance().RemoveTimer(_timerID);
     _timerID = TimeManager::Instance().SetTimer(0.3f, false, this, &Bullet::RemoveBullet);
 }
 

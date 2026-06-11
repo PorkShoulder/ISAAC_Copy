@@ -10,52 +10,76 @@ bool CollisionProfileManager::Init()
     CreateChannel(COLLISION_CHANNEL_MONSTER, COLLISION_RESPONSE_IGNORE);
     CreateChannel(COLLISION_CHANNEL_MONSTER_BULLET, COLLISION_RESPONSE_IGNORE);
     CreateChannel(COLLISION_CHANNEL_MONSTER_DETECT, COLLISION_RESPONSE_IGNORE);
+    
+    CreateChannel(COLLISION_CHANNEL_OBSTACLE, COLLISION_RESPONSE_IGNORE);
+
+
+
+
     CreateChannel(COLLISION_CHANNEL_ITEM, COLLISION_RESPONSE_IGNORE);
     CreateChannel(COLLISION_CHANNEL_DOOR, COLLISION_RESPONSE_IGNORE);
     CreateChannel(COLLISION_CHANNEL_BOSS, COLLISION_RESPONSE_IGNORE);
     CreateChannel(COLLISION_CHANNEL_NPC, COLLISION_RESPONSE_IGNORE);
     
 
-    //프로파일 생성 : 이름은 Player, 사용 채널은 PLAYER 채널
+    // 프로파일 생성 : 이름은 Player, 사용 채널은 PLAYER 채널
+    // 플레이어
     CreateProfile("Player", COLLISION_CHANNEL_PLAYER);
     CreateProfile("PlayerBullet", COLLISION_CHANNEL_PLAYER_BULLET);
+    // 몬스터
     CreateProfile("Monster", COLLISION_CHANNEL_MONSTER);
     CreateProfile("MonsterBullet", COLLISION_CHANNEL_MONSTER_BULLET);
     CreateProfile("MonsterDetect", COLLISION_CHANNEL_MONSTER_DETECT);
-    CreateProfile("Item", COLLISION_CHANNEL_ITEM);
-    CreateProfile("Door", COLLISION_CHANNEL_DOOR);
+    // 보스몹
     CreateProfile("Boss", COLLISION_CHANNEL_BOSS);
+    // 장애물
+    CreateProfile("Obstacle", COLLISION_CHANNEL_OBSTACLE);
+    // 아이템
+    CreateProfile("Item", COLLISION_CHANNEL_ITEM);
+    // 문
+    CreateProfile("Door", COLLISION_CHANNEL_DOOR);
+    // NPC
     CreateProfile("Npc", COLLISION_CHANNEL_NPC);
 
     // 플레이어 상호작용
     SetProfileResponse("Player",
+        std::make_pair(COLLISION_CHANNEL_PLAYER_BULLET, COLLISION_RESPONSE_IGNORE),
+
         std::make_pair(COLLISION_CHANNEL_MONSTER, COLLISION_RESPONSE_OVERLAP),
         std::make_pair(COLLISION_CHANNEL_MONSTER_BULLET, COLLISION_RESPONSE_OVERLAP),
         std::make_pair(COLLISION_CHANNEL_MONSTER_DETECT, COLLISION_RESPONSE_OVERLAP),
-        
-        std::make_pair(COLLISION_CHANNEL_PLAYER_BULLET, COLLISION_RESPONSE_IGNORE),
-        std::make_pair(COLLISION_CHANNEL_ITEM, COLLISION_RESPONSE_OVERLAP),
-        std::make_pair(COLLISION_CHANNEL_DOOR, COLLISION_RESPONSE_OVERLAP),
         std::make_pair(COLLISION_CHANNEL_BOSS, COLLISION_RESPONSE_OVERLAP),
+
+        std::make_pair(COLLISION_CHANNEL_OBSTACLE, COLLISION_RESPONSE_OVERLAP),
+        
+        std::make_pair(COLLISION_CHANNEL_ITEM, COLLISION_RESPONSE_OVERLAP),
+
+        std::make_pair(COLLISION_CHANNEL_DOOR, COLLISION_RESPONSE_OVERLAP),
+
         std::make_pair(COLLISION_CHANNEL_NPC, COLLISION_RESPONSE_OVERLAP));
 
     // PlayerBullet 반응
     SetProfileResponse("PlayerBullet",
         std::make_pair(COLLISION_CHANNEL_MONSTER, COLLISION_RESPONSE_OVERLAP),
-        std::make_pair(COLLISION_CHANNEL_BOSS, COLLISION_RESPONSE_OVERLAP));
+        std::make_pair(COLLISION_CHANNEL_BOSS, COLLISION_RESPONSE_OVERLAP),
+        std::make_pair(COLLISION_CHANNEL_OBSTACLE, COLLISION_RESPONSE_OVERLAP));
 
     // Monster 반응
     SetProfileResponse("Monster",
         std::make_pair(COLLISION_CHANNEL_PLAYER, COLLISION_RESPONSE_OVERLAP),
         std::make_pair(COLLISION_CHANNEL_PLAYER_BULLET, COLLISION_RESPONSE_OVERLAP));
+
     // MonsterDetect 반응
     SetProfileResponse("MonsterDetect", 
         std::make_pair(COLLISION_CHANNEL_PLAYER, COLLISION_RESPONSE_OVERLAP));
-    
 
     // MonsterBullet 반응
     SetProfileResponse("MonsterBullet",
         std::make_pair(COLLISION_CHANNEL_PLAYER, COLLISION_RESPONSE_OVERLAP));
+
+    SetProfileResponse("Obstacle",
+        std::make_pair(COLLISION_CHANNEL_PLAYER, COLLISION_RESPONSE_OVERLAP),
+        std::make_pair(COLLISION_CHANNEL_PLAYER_BULLET, COLLISION_RESPONSE_OVERLAP));
 
     // Item 반응
     SetProfileResponse("Item",

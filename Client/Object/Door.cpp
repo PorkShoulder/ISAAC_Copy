@@ -5,6 +5,8 @@
 #include "Player.h"
 #include "../Editor/EditorEngine.h"
 
+#include "../Core//GameEngine.h"
+
 #include "../Component/SceneComponent.h"
 #include "../Component/CollisionComponent.h"
 #include "../Component/SpriteComponent.h"
@@ -139,6 +141,15 @@ void Door::OnOverlap(Weak<class CollisionComponent> dest)
     Ptr<Player> player = Cast<Actor, Player>(owner);
     if (player)
         TryOpen(player);
+
+    // 보스 클리어스 타이틀로 전환 -> 엔딩씬 스킵
+    if (_doorData.doorType == eDoorType::BOSS_CLEAR && _doorData.bOpen)
+    {
+        GameEngine::Instance().GetWorld()->ChangeLevel<TitleLevel>("Title");
+        return;
+    }
+
+    doorOpen(player);
 }
 
 void Door::doorOpen(Ptr<Player> player)
@@ -188,5 +199,71 @@ void Door::Render(float deltaTime)
 void Door::Destroy()
 {
     Actor::Destroy();
+}
+
+void Door::Save(std::ofstream& file)
+{
+    Actor::Save(file);
+
+    // textureName
+    int32 nameLen = (int32)_doorData.textureName.size();
+    file.write((char*)&nameLen, sizeof(int32));
+    file.write(_doorData.textureName.c_str(), nameLen);
+
+    // texturePath
+    int32 pathLen = (int32)_doorData.texturePath.size();
+    file.write((char*)&pathLen, sizeof(int32));
+    file.write((char*)_doorData.texturePath.c_str(), pathLen * sizeof(wchar_t));
+
+    // 프레임 4개
+    file.write((char*)&_doorData.frame, sizeof(FVector4D));
+    file.write((char*)&_doorData.left, sizeof(FVector4D));
+    file.write((char*)&_doorData.right, sizeof(FVector4D));
+    file.write((char*)&_doorData.openImage, sizeof(FVector4D));
+
+    // 설정
+    file.write((char*)&_doorData.doorType, sizeof(eDoorType));
+    file.write((char*)&_doorData.bOpen, sizeof(bool));
+    file.write((char*)&_doorData.bBattle, sizeof(bool));
+
+    // 크기
+    file.write((char*)&_doorData.renderSize, sizeof(FVector2D));
+    file.write((char*)&_doorData.collisionSize, sizeof(FVector2D));
+    //
+    file.write((char*)&_doorData.exitDir, sizeof(eRoomDir));
+}
+
+void Door::Load(std::ifstream& file)
+{
+    Actor::Load(file);
+
+    FDoorSpawnData data;
+
+    int32 nameLen = 0;
+    file.read((char*)&nameLen, sizeof(int32));
+    data.textureName.resize(nameLen);
+    file.read(&data.textureName[0], nameLen);
+
+    int32 pathLen = 0;
+    file.read((char*)&pathLen, sizeof(int32));
+    data.texturePath.resize(pathLen);
+    file.read((char*)&data.texturePath[0], pathLen * sizeof(wchar_t));
+
+    file.read((char*)&data.frame, sizeof(FVector4D));
+    file.read((char*)&data.left, sizeof(FVector4D));
+    file.read((char*)&data.right, sizeof(FVector4D));
+    file.read((char*)&data.openImage, sizeof(FVector4D));
+
+    file.read((char*)&data.doorType, sizeof(eDoorType));
+    file.read((char*)&data.bOpen, sizeof(bool));
+    file.read((char*)&data.bBattle, sizeof(bool));
+
+    file.read((char*)&data.renderSize, sizeof(FVector2D));
+    file.read((char*)&data.collisionSize, sizeof(FVector2D));
+
+    //
+    file.read((char*)&data.exitDir, sizeof(eRoomDir));
+
+    SetDoorData(data);
 }
 

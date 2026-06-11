@@ -4,6 +4,8 @@
 #include "OutLinerUI.h"
 #include "InspectorUI.h"
 #include "EditorTool.h"
+#include "SaveUi.h"
+#include "LoadUi.h"
 
 #include "../Core/GameEngine.h"
 #include "../World/World.h"
@@ -51,12 +53,17 @@ void MainMenuUI::File()
 
         if (ImGui::MenuItem("Save"))
         {
-            //todo : func
+            
+            Ptr<SaveUI> saveUI = EditorEngine::Instance().FindEditorUI<SaveUI>("Save");
+            if (saveUI)
+                saveUI->SetEnable(true);
         }
 
         if (ImGui::MenuItem("Load"))
         {
-            //todo : func
+            Ptr<LoadUI> loadUI = EditorEngine::Instance().FindEditorUI<LoadUI>("Load");
+            if (loadUI)
+                loadUI->SetEnable(true);
         }
 
         ImGui::EndMenu();

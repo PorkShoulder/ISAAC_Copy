@@ -219,12 +219,15 @@ namespace AXIS_TYPE
 //ITME /- MONSTER --> 충돌 x
 enum eCollisionChannel : unsigned char
 {
+    // 플레이어
     COLLISION_CHANNEL_PLAYER,
     COLLISION_CHANNEL_PLAYER_BULLET,
+    // 몬스터
     COLLISION_CHANNEL_MONSTER,
     COLLISION_CHANNEL_MONSTER_BULLET,
     COLLISION_CHANNEL_MONSTER_DETECT,
-    
+    // 장애물
+    COLLISION_CHANNEL_OBSTACLE,
 
     COLLISION_CHANNEL_ITEM,
     COLLISION_CHANNEL_DOOR,
@@ -364,19 +367,32 @@ struct FConsumableStat
     int bomb = 0;
 };
 
-// door.h
-// 문 관련 정보
+// 룸 이동정보
+enum class eRoomDir
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    COUNT,
+    END
+};
+
+
+// ================ Door =======================
 enum class eDoorType
 {
     NORMAL,
     KEY,
     COIN,
+    BOSS_CLEAR,
     END
 };
 inline const char* DoorTypeName[] = {
     "NORMAL",
     "KEY",
-    "COIN"
+    "COIN",
+    "BOSS_CLEAR"
 };
 struct FDoorSpawnData
 {
@@ -394,10 +410,10 @@ struct FDoorSpawnData
 
     FVector2D renderSize = {64.f, 48.f};        // 렌더 크기
     FVector2D collisionSize = { 40.f, 24.f };   // 충돌체 크기
+    eRoomDir exitDir = eRoomDir::UP;
 };
 
-// monster.h
-// 몬스터 관련 정보
+// ================ Monster =======================
 enum class eMonsterType
 {
     Monster_knight,
@@ -465,3 +481,173 @@ inline const FMonsterData MonsterInfo[] =
     }
 
 };
+
+// ================ Obstacle =======================
+enum class eObstacleType
+{
+    PIT,        // 구덩이
+    FIRE,       // 모닥불
+    IRON_WALL,  // 철벽
+    ROCK_WALL,  // 돌벽
+    SPIKE,      // 가시밭
+    WEB,        // 거미줄
+    POOP,       // 똥
+    END
+};
+inline const char* ObstacleTypeName[] = { "Pit", "Fire", "IronWall", "RockWall", "Spike", "Web", "POOP"}; //  enum과 순서가 일치해야함 반드시!.
+
+struct FObstacleData
+{
+    //경로
+    std::string textureName;
+    std::wstring texturePath;
+    
+    //상태 동작
+    bool canFlyPass = false;
+    bool canWalkPass = false;
+    bool bulletBreakable = false;
+    bool bulletPassThrough = false;
+    bool bombBreakable = false;
+    bool damage = false;
+    float damageAmount = 1.f;
+    int32 hp = 1;
+    eObstacleType obstacleType = eObstacleType::END;
+
+    // 렌더 크기 및 충돌체 크기
+    
+    FVector2D renderSize = { 50.f ,50.f };
+    FVector2D collisionSize = { 50.f ,50.f };
+
+    std::vector<FVector4D> animFrames;
+
+};
+
+inline const FObstacleData ObstaclePresets[] = 
+{
+    // PIT
+     {
+         "", L"",
+         true, true, false, true, false, false,
+         0.f, 0,
+         eObstacleType::PIT,
+
+     },
+     // FIRE
+     {
+         "", L"",
+         true, true, true, false, true, true,
+         1.f, 1,
+         eObstacleType::FIRE,
+     },
+     // IRON_WALL
+     {
+         "", L"",
+         true, true, false, false, true, false,
+         0.f, 1,
+         eObstacleType::IRON_WALL,
+     },
+     // ROCK_WALL
+     {
+         "", L"",
+         false, false, false, false, true, false,
+         0.f, 1,
+         eObstacleType::ROCK_WALL,
+     },
+     // SPIKE
+     {
+         "", L"",
+         true, true, false, true, true, true,
+         1.f, 1,
+         eObstacleType::SPIKE,
+     },
+     // WEB
+     {
+         "", L"",
+         true, true, false, true, true, false,
+         0.f, 1,
+         eObstacleType::WEB,
+     },
+     // POOP
+     {
+         "", L"",
+         true, false, true, false, true, false,
+         0.f, 4,
+         eObstacleType::POOP,
+     },
+};
+// ================ Item =======================
+enum class eItemType
+{
+    PASSIVE,    // 패시브 아이템 (능력치, 효과)
+    ACTIVE,     // 액티브 아이템
+    COIN,       // 코인
+    KEY,        // 열쇠
+    BOMB,       // 폭탄
+    HEART,      // 하트 (체력회복)
+    END
+};
+inline const char* ItemTypeName[] = { "PASSIVE", "ACTIVE", "COIN", "KEY", "BOMB", "HEART" };
+
+// 아이템 특수효과.
+enum eItemEffect : uint32
+{
+    EFFECT_NONE     = 0,
+    EFFECT_HOMING   = 1<<0,
+};
+
+struct FItemData
+{
+    std::string textureName;
+    std::wstring texturePath;
+    eItemType itemType = eItemType::PASSIVE;
+    FVector2D renderSize = { 32.f, 32.f };
+    FVector2D collisionSize = { 32.f, 32.f };
+    std::vector<FVector4D> itemFrames;          // 아이템 자체 표시 프레임
+    std::vector<FVector4D> equipHeadFrames;     // 습득시 머리 외형
+    std::vector<FVector4D> equipBodyFrames;     // 습득시 몸통 외형
+    std::vector<FVector4D> bulletFrames;       // 총알 외형 프레임
+
+    // 추가 능력치
+    float bonusDamage = 0.f;
+    float bonusSpeed = 0.f;
+    int32 bonusHp = 0;
+
+    uint32 effect = EFFECT_NONE;
+    FConsumableStat cost;
+    
+    int32 consumableAmount = 1; // 소모품일 때 지급 수량
+
+};
+
+
+// ================ NPC =======================
+enum class eNpcType
+{
+    CONSUMABLE, //코인 열쇠 폭탄 지급
+    EFFECT_ITEM,       //패시브, 액티브 아이템 지급
+    END
+};
+inline const char* NpcTypeName[] = { "CONSUMABLE", "EFFECT_ITEM" };
+
+struct FNpcData
+{
+    std::string textureName;
+    std::wstring texturePath;
+    eNpcType npcType = eNpcType::END;
+
+    FVector2D renderSize = { 32.f, 32.f };
+    FVector2D collisionSize = { 32.f, 32.f };
+
+    // 애니메이션
+    std::vector<FVector4D> idleFrames;
+
+    // 비용 (플레이어가 지불) — 각 최대 5
+    FConsumableStat cost;   // coin, key, bomb
+
+    // 보상
+    FConsumableStat rewardConsumable;   // rewardType == CONSUMABLE일 때
+    FItemData       rewardItem;         // rewardType == ITEM일 때
+};
+
+/// ////////////////////////////////////////
+

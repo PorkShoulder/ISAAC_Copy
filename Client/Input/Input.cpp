@@ -4,7 +4,7 @@
 #include "Core/GameEngine.h"
 #include "World/World.h"
 #include "World/Level.h"
-
+#include "Component/CameraComponent.h"
 bool Input::Init()
 {
 	_hInst = GameEngine::Instance().GetHINSTANCE();
@@ -204,8 +204,13 @@ void Input::UpdateMousePos(float delatTime)
 	_mousePos = mousePos;
 
 	Ptr<World> world = GameEngine::Instance().GetWorld();
+	if (!world)
+		return;
 	Ptr<Level> level = world->GetCurLevel();
 	if (nullptr == level)
+		return;
+	Ptr<CameraComponent> camera = level->GetMainCamera();
+	if (!camera)
 		return;
 
 	FVector3D cameraPos = level->GetCameraWorldPos();

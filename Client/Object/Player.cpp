@@ -9,6 +9,10 @@
 
 #include "../Object/Bullet.h"
 #include "../Object/Monster.h"
+#include "../Object/Obstacle.h"
+#include "../Object/Door.h"
+#include "../Object/Item.h"
+#include "../Object/Npc.h"
 
 
 #include "Component/MovementComponent.h"
@@ -155,11 +159,7 @@ bool Player::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const 
     
     SetMaxHp(8);
     CreateHeartUI();
-
-    // 테스트용입니다 지울 예정
-    auto testDeath = InputSystem::Instance().FindOrAddInputAction("TEST_DEATH");
-    moveContext->BindInputAction(testDeath, 'K');  // K키로 테스트
-    inputComp->BindAction(moveContext->GetName(), testDeath->GetName(), INPUT_TYPE::DOWN, this, &Player::TestDeath);
+    
 
     return true;
 }
@@ -360,6 +360,10 @@ void Player::Fire()
     bullet->SetProfile("PlayerBullet");   // 몬스터를 맞히는 총알
     bullet->SetDir(_headDir);             // 화살표(머리) 방향
     bullet->SetSpeed(200.f);
+    if (HasEffect(EFFECT_HOMING))
+        bullet->SetHoming(true);
+    LogManager::Instance().Debug("Effects: " + std::to_string(_effects));
+    bullet->SetDamage(_baseDamage + _bonusDamage);
     
 }
 
@@ -416,6 +420,47 @@ void Player::AddHeartContainer()
     _hearts.push_back(CreateSingleHeart(idx));
 }
 
+void Player::ApplyItemVisual(const FItemData& data)
+{
+    if (!data.equipHeadFrames.empty())
+    {
+        Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+        if (head)
+        {
+            head->AddAnimSequence("ITEM_HEAD", data.texturePath, data.equipHeadFrames, true);
+            head->ChangeAnimation("ITEM_HEAD");
+        }
+    }
+    if (!data.equipBodyFrames.empty())
+    {
+        Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
+        if (body)
+        {
+            body->AddAnimSequence("ITEM_BODY", data.texturePath, data.equipBodyFrames, true);
+            body->ChangeAnimation("ITEM_BODY");
+        }
+    }
+}
+
+void Player::ApplyItemStats(const FItemData& data)
+{
+    _bonusDamage += data.bonusDamage;
+    _bonusSpeed += data.bonusSpeed;
+    
+
+    if (data.bonusHp > 0)
+        AddHeartContainer();
+
+    if (_movement && data.bonusSpeed != 0.f)
+        _movement->SetMaxSpeed(_baseSpeed + _bonusSpeed);
+}
+
+void Player::AddHp(int32 amount)
+{
+    _hp = min(_hp + amount, _heartMax * 2);  // 최대 체력 초과 방지
+    // 하트 UI 갱신 필요하면 여기서 처리
+}
+
 
 
 void Player::BlockCallBack(Weak<class CollisionComponent> dest)
@@ -441,33 +486,32 @@ void Player::OverlapCallBack(Weak<class CollisionComponent> dest)
     if (!owner)
         return;
 
+    // 몬스터
     Ptr<Monster> monster = Cast<Actor, Monster>(owner);
-    if (!monster)
+    if (monster)
+    {
+        TakeDamage((int32)monster->GetAttackPower());
+        _invincibleTimer = _invincibleTime;
+        if (IsDead())
+            OnDeath();
         return;
-    
-    //데미지 적용
-    TakeDamage((int32)monster->GetAttackPower());
-    _invincibleTimer = _invincibleTime;
+    }
 
-    if (IsDead())
-        OnDeath();
+    // 장애물
+    Ptr<Obstacle> obstacle = Cast<Actor, Obstacle>(owner);
+    if (obstacle && obstacle->GetDamageAmount() > 0.f)
+    {
+        TakeDamage((int32)obstacle->GetDamageAmount());
+        _invincibleTimer = _invincibleTime;
+        if (IsDead())
+            OnDeath();
+        return;
+    }
+ 
 }
 
 void Player::ReleaseCallBack(Weak<class CollisionComponent> dest)
 {
     LogManager::Instance().Debug("충돌 해제!");
-}
-
-void Player::TestDeath(float deltaTime)
-{
-    Ptr<SpriteComponent> body = FindSceneComponent<SpriteComponent>("Body");
-    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
-    if (head) head->SetEnable(false);  // 머리 숨기기
-    if (body)
-    {
-        body->SetRelativeScale(64.f, 64.f, 1.f);  // 64 → 128 (2배)
-        body->ChangeAnimation("IASSC_DEATH");
-        body->SetPlay("IASSC_DEATH", true);
-    }
 }
 

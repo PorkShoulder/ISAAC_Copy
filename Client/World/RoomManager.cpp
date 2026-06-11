@@ -2,9 +2,14 @@
 #include "RoomManager.h"
 #include "Level.h"
 
+
+#include "../World/World.h"
+
 #include "../Object/TileMap.h"
+#include"../Object/Player.h"
 
 #include "../Core/DirectoryManager.h"
+#include "../Core/GameEngine.h"
 
 #include "../Component/TileComponent.h"
 
@@ -328,22 +333,46 @@ void RoomManager::DeactivateRoom(FRoomInfo* cell)
 
 void RoomManager::Tick(float deltaTime)
 {
-    if (!_currentRoom)
+    if (!_currentRoom || !_level)
         return;
-    if (!_currentRoom->isBattleActive)
-        return;
-    // 살아있는 몬스터 확인
-    bool allDead = true;
-    for (auto& monster : _currentRoom->monsters)
+
+    // 전투 체크 (기존)
+    if (_currentRoom->isBattleActive)
     {
-        if (monster && monster->IsEnable())
+        bool allDead = true;
+        for (auto& monster : _currentRoom->monsters)
         {
-            allDead = false;
-            break;
+            if (monster && monster->IsEnable())
+            {
+                allDead = false;
+                break;
+            }
         }
+        if (allDead)
+            EndBattle(_currentRoom);
+        return;  // 전투 중에는 방 이동 불가
     }
-    if (allDead)
-        EndBattle(_currentRoom);
+
+    // 플레이어 위치로 방 전환 감지
+    Ptr<Player> player = Cast<Actor, Player>(GameEngine::Instance().GetWorld()->GetPlayer());
+    if (!player) return;
+
+    FVector2D playerPos;
+    playerPos._x = player->GetWorldPosition()._x;
+    playerPos._y = player->GetWorldPosition()._y;
+
+    FRoomInfo* nextRoom = FindCellAtWorldPos(playerPos);
+
+    if (nextRoom && nextRoom != _currentRoom)
+    {
+        DeactivateRoom(_currentRoom);
+        _currentRoom = nextRoom;
+        ActivateRoom(_currentRoom);
+
+        // 타일맵 전환
+        if (_currentRoom->tileMap)
+            _level->SetTileMap(_currentRoom->tileMap);
+    }
 }
 
 FRoomInfo* RoomManager::FindCellAtWorldPos(const FVector2D& pos)
@@ -374,11 +403,57 @@ void RoomManager::RegisterMonster(Ptr<Monster> monster)
     _currentRoom->monsters.push_back(monster);
 }
 
+void RoomManager::MoveToRoom(eRoomDir dir, Ptr<class Player> player)
+{
+    if (!_currentRoom) return;
+
+    FRoomInfo* nextRoom = _currentRoom->neighbors[(int)dir];
+    if (!nextRoom || !nextRoom->tileMap) return;
+
+    // 현재 방 비활성화
+    DeactivateRoom(_currentRoom);
+    _currentRoom = nextRoom;
+    ActivateRoom(_currentRoom);
+
+    if (_currentRoom->tileMap)
+        _level->SetTileMap(_currentRoom->tileMap);
+
+    // 플레이어를 반대편 입구로 텔레포트
+    FVector3D newPos;
+    newPos._x = nextRoom->gridX * (_roomWorldWidth + _roomGap);
+    newPos._y = nextRoom->gridY * (_roomWorldHeight + _roomGap);
+    newPos._z = player->GetWorldPosition()._z;
+
+    // 방향에 따라 반대편 위치
+    switch (dir)
+    {
+    case eRoomDir::UP:
+        newPos._x += _roomWorldWidth * 0.5f;
+        newPos._y += 40.f;  // 아래쪽 입구
+        break;
+    case eRoomDir::DOWN:
+        newPos._x += _roomWorldWidth * 0.5f;
+        newPos._y += _roomWorldHeight - 40.f;  // 위쪽 입구
+        break;
+    case eRoomDir::LEFT:
+        newPos._x += _roomWorldWidth - 40.f;  // 오른쪽 입구
+        newPos._y += _roomWorldHeight * 0.5f;
+        break;
+    case eRoomDir::RIGHT:
+        newPos._x += 40.f;  // 왼쪽 입구
+        newPos._y += _roomWorldHeight * 0.5f;
+        break;
+    }
+
+    player->SetWorldPosition(newPos);
+}
+
 void RoomManager::StartBattle(FRoomInfo* room)
 {
     if (!room || room->isBattleActive)
         return;
     room->isBattleActive = true;
+
     for (auto& door : room->doors)
     {
         if (door && door->IsBattleControl())
@@ -388,18 +463,64 @@ void RoomManager::StartBattle(FRoomInfo* room)
 
 void RoomManager::EndBattle(FRoomInfo* room)
 {
-    if (!room || !room->isBattleActive)
-        return;
-
+    if (!room) return;
     room->isBattleActive = false;
 
+    // 전투 종료 시 문 열기
     for (auto& door : room->doors)
     {
-        if (!door || !door->IsBattleControl())
-            continue;
-        if (door->GetDoorType() == eDoorType::NORMAL)
+        if (door && door->IsBattleControl())
             door->SetOpen(true);
-        else
-            door->SetOpen(false);
+    }
+
+    // 보스 방이었는지 확인
+    bool wasBossRoom = false;
+    for (auto& monster : room->monsters)
+    {
+        if (monster)
+        {
+            Ptr<Monster> mon = Cast<Actor, Monster>(monster);
+            if (mon && mon->GetMonsterType() == eMonsterType::Monster_BOSS)
+            {
+                wasBossRoom = true;
+                break;
+            }
+        }
+    }
+
+    // 보스 방이면 엔딩 문 스폰
+    if (wasBossRoom && _level)
+    {
+        // 방 중앙에 엔딩 문 생성
+        FVector3D roomCenter;
+        roomCenter._x = room->gridX * (_roomWorldWidth + _roomGap) + _roomWorldWidth * 0.5f;
+        roomCenter._y = room->gridY * (_roomWorldHeight + _roomGap) + _roomWorldHeight * 0.5f;
+        roomCenter._z = 2.f;
+
+        auto exitDoor = _level->SpawnActor<Door>("BossClearDoor", roomCenter,
+            FVector3D(64.f, 48.f, 1.f), FRotator(0, 0, 0));
+
+        if (exitDoor)
+        {
+            FDoorSpawnData exitData;
+            exitData.doorType = eDoorType::BOSS_CLEAR;
+            exitData.bOpen = true;
+            exitData.bBattle = false;
+            // 텍스처는 기존 문 것을 재사용하거나 별도 지정
+            if (!room->doors.empty() && room->doors[0])
+            {
+                // 기존 문의 데이터에서 텍스처 복사
+                auto& srcData = room->doors[0]->GetDoorData();
+                exitData.textureName = srcData.textureName;
+                exitData.texturePath = srcData.texturePath;
+                exitData.frame = srcData.frame;
+                exitData.openImage = srcData.openImage;
+                exitData.left = srcData.left;
+                exitData.right = srcData.right;
+                exitData.renderSize = srcData.renderSize;
+                exitData.collisionSize = srcData.collisionSize;
+            }
+            exitDoor->SetDoorData(exitData);
+        }
     }
 }

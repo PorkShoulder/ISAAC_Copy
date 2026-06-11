@@ -29,10 +29,8 @@ protected:
     Weak<class Level> _level;
     std::map<int, Ptr<class ActorComponent>> _actorComponents; //액터 컴포넌트 목록
     std::unordered_map<std::string, int> _componentFinder;      //컴포넌트를 찾기 위한 자료구조
+
     
-    //ex) 몬스터, 고블린, 엘리트 등급
-    //몬스터라는 애들을 전부 찾아올수 있게
-    //혹은 해당 액터가 몬스터인지? 고블린인지?
 
 public:
     virtual bool Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FRotator& rot, const std::string& name);
@@ -44,7 +42,7 @@ public:
 
     virtual void Save(std::ofstream& file);
     virtual void Load(std::ifstream& file);
-
+    
     Ptr<class SceneComponent> GetRoot() const;
     void SetRootComponent(const Ptr<class SceneComponent> comp);
 
@@ -65,12 +63,13 @@ public:
     const int32 GetActorID() const { return _id; }
     bool IsTag(const std::string& tag);
     void AddTag(const std::string& tag);
-
+    eActorType GetActorType() const { return _type; }
     template<typename...Args>
     void AddTags(Args&&...args)
     {
         (AddTag(std::forward<Args>(args)), ...);
     }
+
 
 public:
     //===================

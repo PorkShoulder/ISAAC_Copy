@@ -25,6 +25,13 @@ private:
     Ptr<class AABBCollisionComponent> _col;
     Ptr<class SpriteComponent> _mesh = nullptr;
     bool _removeRequested = false;
+    
+    // 유도탄
+    bool _homing = false;
+    FVector3D _moveDir;
+    float _maxSpeed = 200.f;
+    float _currentSpeed = 200.f;
+    
 
 
 
@@ -38,6 +45,8 @@ public:
 
     void SetDir(const FVector3D& dir);
     void SetSpeed(const float speed);
+    void SetHoming(bool v) { _homing = v; }
+    void UpdateHoming(float deltaTime);
 public: 
     void SetDamage(int32 dmg) { _damage = dmg; }
     void SetAnimation(const std::string& animName); // 외형 교체

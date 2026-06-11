@@ -9,6 +9,8 @@ public:
 
 private:
     char _fileName[64] = {};
+    std::vector<std::string> _fileList;
+    int32 _selectedIdx = -1;
 
 public:
     virtual bool Init(const std::string& name);
@@ -17,5 +19,7 @@ public:
 
 private:
     void Load(const std::string& fileName);
+    void RefreshFileList();
+    
 };
 

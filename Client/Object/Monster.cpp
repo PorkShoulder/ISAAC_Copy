@@ -118,6 +118,94 @@ void Monster::Destroy()
     TimeManager::Instance().RemoveTimer(_rotBulletTimer);
 }
 
+void Monster::Save(std::ofstream& file)
+{
+    Actor::Save(file);  // type, name, pos, scale, rot
+
+    // --- FMonsterData ---
+    // textureName
+    int32 nameLen = (int32)_monsterData.textureName.size();
+    file.write((char*)&nameLen, sizeof(int32));
+    file.write(_monsterData.textureName.c_str(), nameLen);
+
+    // texturePath (wstring)
+    int32 pathLen = (int32)_monsterData.texturePath.size();
+    file.write((char*)&pathLen, sizeof(int32));
+    file.write((char*)_monsterData.texturePath.c_str(), pathLen * sizeof(wchar_t));
+
+    // 수치 데이터
+    file.write((char*)&_monsterData.moveSpeed, sizeof(float));
+    file.write((char*)&_monsterData.chargeSpeed, sizeof(float));
+    file.write((char*)&_monsterData.detectRange, sizeof(float));
+    file.write((char*)&_monsterData.attackPower, sizeof(float));
+    file.write((char*)&_monsterData.hp, sizeof(float));
+    file.write((char*)&_monsterData.monsterType, sizeof(eMonsterType));
+    file.write((char*)&_monsterData.renderSize, sizeof(FVector2D));
+    file.write((char*)&_monsterData.collisionSize, sizeof(FVector2D));
+
+    // 애니메이션 프레임 (5종)
+    auto saveFrames = [&](const std::vector<FVector4D>& frames)
+        {
+            int32 count = (int32)frames.size();
+            file.write((char*)&count, sizeof(int32));
+            for (auto& f : frames)
+                file.write((char*)&f, sizeof(FVector4D));
+        };
+
+    saveFrames(_monsterData.idleFrames);
+    saveFrames(_monsterData.moveFrontFrames);
+    saveFrames(_monsterData.moveSideFrames);
+    saveFrames(_monsterData.moveBackFrames);
+    saveFrames(_monsterData.deathFrames);
+}
+
+void Monster::Load(std::ifstream& file)
+{
+    Actor::Load(file);  // name, pos, scale, rot
+
+    FMonsterData data;
+
+    // textureName
+    int32 nameLen = 0;
+    file.read((char*)&nameLen, sizeof(int32));
+    data.textureName.resize(nameLen);
+    file.read(&data.textureName[0], nameLen);
+
+    // texturePath
+    int32 pathLen = 0;
+    file.read((char*)&pathLen, sizeof(int32));
+    data.texturePath.resize(pathLen);
+    file.read((char*)&data.texturePath[0], pathLen * sizeof(wchar_t));
+
+    // 수치 데이터
+    file.read((char*)&data.moveSpeed, sizeof(float));
+    file.read((char*)&data.chargeSpeed, sizeof(float));
+    file.read((char*)&data.detectRange, sizeof(float));
+    file.read((char*)&data.attackPower, sizeof(float));
+    file.read((char*)&data.hp, sizeof(float));
+    file.read((char*)&data.monsterType, sizeof(eMonsterType));
+    file.read((char*)&data.renderSize, sizeof(FVector2D));
+    file.read((char*)&data.collisionSize, sizeof(FVector2D));
+
+    // 애니메이션 프레임
+    auto loadFrames = [&](std::vector<FVector4D>& frames)
+        {
+            int32 count = 0;
+            file.read((char*)&count, sizeof(int32));
+            frames.resize(count);
+            for (int32 i = 0; i < count; i++)
+                file.read((char*)&frames[i], sizeof(FVector4D));
+        };
+
+    loadFrames(data.idleFrames);
+    loadFrames(data.moveFrontFrames);
+    loadFrames(data.moveSideFrames);
+    loadFrames(data.moveBackFrames);
+    loadFrames(data.deathFrames);
+
+    SetMonsterData(data);  // 충돌체, 이동속도, 애니메이션 전부 갱신
+}
+
 void Monster::SetTarget(Ptr<class Player> player)
 {
     _target = player;
@@ -141,19 +229,21 @@ void Monster::SetMonsterData(const FMonsterData& data)
     //애니메이션 등록
     if (_monsterMesh && !data.texturePath.empty())
     {
-        if (!data.idleFrames.empty())
-            _monsterMesh->AddAnimSequence("IDLE", data.texturePath, data.idleFrames, true);
-        if (!data.moveFrontFrames.empty())
-            _monsterMesh->AddAnimSequence("MOVE_FRONT", data.texturePath, data.moveFrontFrames, true);
-        if (!data.moveBackFrames.empty())
-            _monsterMesh->AddAnimSequence("MOVE_BACK", data.texturePath, data.moveBackFrames, true);
-        if (!data.moveSideFrames.empty())
-            _monsterMesh->AddAnimSequence("MOVE_SIDE", data.texturePath, data.moveSideFrames, true);
-        if (!data.deathFrames.empty())
-            _monsterMesh->AddAnimSequence("DEATH", data.texturePath, data.deathFrames, false);
+        _animName = GetName() + "_ANIM";
 
         if (!data.idleFrames.empty())
-            _monsterMesh->ChangeAnimation("IDLE");
+            _monsterMesh->AddAnimSequence(_animName, data.texturePath, data.idleFrames, true);
+        if (!data.moveFrontFrames.empty())
+            _monsterMesh->AddAnimSequence(_animName, data.texturePath, data.moveFrontFrames, true);
+        if (!data.moveBackFrames.empty())
+            _monsterMesh->AddAnimSequence(_animName, data.texturePath, data.moveBackFrames, true);
+        if (!data.moveSideFrames.empty())
+            _monsterMesh->AddAnimSequence(_animName, data.texturePath, data.moveSideFrames, true);
+        if (!data.deathFrames.empty())
+            _monsterMesh->AddAnimSequence(_animName, data.texturePath, data.deathFrames, false);
+
+        if (!data.idleFrames.empty())
+            _monsterMesh->ChangeAnimation(_animName);
     }
 
 }
@@ -214,12 +304,14 @@ void Monster::UpdateAnimation(const FVector3D& dir)
     if (!_monsterMesh)
         return;
 
+    _animName = GetName() + "_";
+
+
     // 타겟(플레이어) 가져오기 
-    
     if (dir._x == 0.f && dir._y ==0.f)
     {
         // 플레이어가 없으면 대기 애니메이션
-        _monsterMesh->ChangeAnimation("IDLE");
+        _monsterMesh->ChangeAnimation(_animName + "IDLE");
         return;
     }
 
@@ -227,18 +319,18 @@ void Monster::UpdateAnimation(const FVector3D& dir)
     if (abs(dir._x) > abs(dir._y))
     {
         // dir._x < 0 -> 플레이어가 왼쪽 -> 스프라이트 좌우 반전.
-        _monsterMesh->ChangeAnimation("MOVE_SIDE");
+        _monsterMesh->ChangeAnimation(_animName + "MOVE_SIDE");
         _monsterMesh->SetAnimFilp(dir._x < 0.f);
     }
     // y차이가 더 크면 정면/뒷면 이동 애니메이션
     else if(dir._y > 0.f)
     {
-        _monsterMesh->ChangeAnimation("MOVE_BACK");
+        _monsterMesh->ChangeAnimation(_animName + "MOVE_BACK");
         
     }
     else 
     {
-        _monsterMesh->ChangeAnimation("MOVE_FRONT");
+        _monsterMesh->ChangeAnimation(_animName + "MOVE_FRONT");
         
     }
 }

@@ -340,6 +340,9 @@ void Player::HeadDown(float deltaTime)
 void Player::HeadRelease(float deltaTime)
 {
     _headKeyActive = false;
+    Ptr<SpriteComponent> head = FindSceneComponent<SpriteComponent>("Head");
+    if (head)
+        head->ChangeAnimation("IASSC_HEAD_FRONT");  // 기본 정면 애니메이션
 }
 
 
@@ -375,8 +378,9 @@ void Player::OnDeath()
         body->ChangeAnimation("IASSC_DEATH");
         body->SetPlay("IASSC_DEATH", false);
     }
-
-    // 일정 시간 이후 타이틀 복귀 or 복귀 버튼 구현.
+    //타이틀로복귀
+    
+    GameEngine::Instance().GetWorld()->ChangeLevel<TitleLevel>("Title");
 }
 
 void Player::SetMaxHp(int32 v)

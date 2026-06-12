@@ -2,7 +2,7 @@
 #include "RoomManager.h"
 #include "Level.h"
 
-
+#include "../Core/Device.h"
 #include "../World/World.h"
 
 #include "../Object/TileMap.h"
@@ -12,7 +12,7 @@
 #include "../Core/GameEngine.h"
 
 #include "../Component/TileComponent.h"
-
+#include "../Component/CameraComponent.h"
 
 
 
@@ -31,8 +31,8 @@ void RoomManager::Init(Ptr<class Level > level)
 	// 초기화 레벨 참조 저장, 방 크기 설정.
 	_level = level;
     // To do 타일 자동으로 계산되도록 향후 변경
-	_roomWorldWidth =780.f;
-	_roomWorldHeight =468.f;
+	_roomWorldWidth = 780.f;
+	_roomWorldHeight = 4689.f;
 }
 
 void RoomManager::CollectRoomFiles()
@@ -274,15 +274,41 @@ void RoomManager::LoadAllRooms()
             }
         }
     }
+    FVector3D mapOrigin(0.f, 0.f, 0.f);
 
+    Ptr<Player> player = Cast<Actor, Player>(
+        GameEngine::Instance().GetWorld()->GetPlayer());
+
+    auto startIt = _roomPos.find({ _startX, _startY });
+
+    if (player && startIt != _roomPos.end() && startIt->second.tileMap)
+    {
+        Ptr<TileComponent> tc = startIt->second.tileMap->GetTileComponent();
+        if (tc)
+        {
+            float mapW = tc->GetTileCountX() * tc->GetTileSize()._x;
+            float mapH = tc->GetTileCountY() * tc->GetTileSize()._y;
+
+            float centerOffsetX = (mapW - tc->GetTileSize()._x) * 0.5f;
+            float centerOffsetY = (mapH - tc->GetTileSize()._y) * 0.5f;
+
+            FVector3D playerPos = player->GetWorldPosition();
+
+            mapOrigin._x = playerPos._x - centerOffsetX
+                - _startX * (_roomWorldWidth + _roomGap);
+
+            mapOrigin._y = playerPos._y - centerOffsetY
+                - _startY * (_roomWorldHeight + _roomGap);
+        }
+    }
     // 2차: 실제 크기 기반으로 위치 재배치
     for (auto& [key, cell] : _roomPos)
     {
         if (cell.tileMap)
         {
             FVector3D worldPos;
-            worldPos._x = cell.gridX * (_roomWorldWidth + _roomGap);
-            worldPos._y = cell.gridY * (_roomWorldHeight + _roomGap);
+            worldPos._x = mapOrigin._x + cell.gridX * (_roomWorldWidth + _roomGap);
+            worldPos._y = mapOrigin._y + cell.gridY * (_roomWorldHeight + _roomGap);
             worldPos._z = 0.f;
             cell.tileMap->SetWorldPosition(worldPos);
             cell.tileMap->SetEnable(true);  // ← 활성화
@@ -302,6 +328,27 @@ void RoomManager::ActivateStartRoom()
             _level->SetTileMap(_currentRoom->tileMap);
 
         ActivateRoom(_currentRoom);
+        // 플레이어를 시작방 중앙으로 이동
+
+        Ptr<Player> player = Cast<Actor, Player>(
+            GameEngine::Instance().GetWorld()->GetPlayer());
+        if (player && _currentRoom->tileMap)
+        {
+            Ptr<TileComponent> tc = _currentRoom->tileMap->GetTileComponent();
+            if (tc)
+            {
+                FVector3D tilePos = _currentRoom->tileMap->GetWorldPosition();
+
+                float mapW = tc->GetTileCountX() * tc->GetTileSize()._x;
+                float mapH = tc->GetTileCountY() * tc->GetTileSize()._y;
+
+                float centerX = tilePos._x + (mapW - tc->GetTileSize()._x) * 0.5f;
+                float centerY = tilePos._y + (mapH - tc->GetTileSize()._y) * 0.5f;
+
+                player->SetWorldPosition(FVector3D(centerX, centerY, player->GetWorldPosition()._z));
+            }
+        }
+
     }
 
 }
@@ -310,12 +357,20 @@ void RoomManager::ActivateRoom(FRoomInfo* cell)
     
     if (!cell || cell->isActivated)
         return;
-    
+
     cell->isActivated = true;
+
+    if (cell->tileMap)
+        cell->tileMap->SetEnable(true);
+
+    if (_level && cell->tileMap)
+        _level->SetTileMap(cell->tileMap);
+
+    FocusCameraOnRoom(cell);
 
     for (auto& monster : cell->monsters)
         monster->SetEnable(true);
-    // 몬스터가 있으면 전투 시작
+
     if (!cell->monsters.empty())
         StartBattle(cell);
 
@@ -387,6 +442,24 @@ FRoomInfo* RoomManager::FindCellAtWorldPos(const FVector2D& pos)
 void RoomManager::Destroy()
 {
 
+}
+
+void RoomManager::FocusCameraOnRoom(FRoomInfo* cell)
+{
+    if (!cell || !_level || !cell->tileMap)
+        return;
+    Ptr<CameraComponent> camera = _level->GetMainCamera();
+    if (!camera)
+        return;
+    Ptr<TileComponent> tc = cell->tileMap->GetTileComponent();
+    float mapW = tc->GetTileCountX() * tc->GetTileSize()._x;
+    float mapH = tc->GetTileCountY() * tc->GetTileSize()._y;
+
+    FVector3D tilePos = cell->tileMap->GetWorldPosition();
+    FVector3D camPos = camera->GetWorldPosition();
+    camPos._x = tilePos._x + (mapW - tc->GetTileSize()._x) / 2.f;
+    camPos._y = tilePos._y + (mapH - tc->GetTileSize()._y) / 2.f;
+    camera->SetWorldPosition(camPos);
 }
 
 void RoomManager::RegisterDoor(Ptr<Door> door)
@@ -523,4 +596,35 @@ void RoomManager::EndBattle(FRoomInfo* room)
             exitDoor->SetDoorData(exitData);
         }
     }
+}
+
+void RoomManager::UpdateCamera()
+{
+    if (!_currentRoom || !_level)
+        return;
+    Ptr<CameraComponent> cam = _level->GetMainCamera();
+    if (!cam)
+        return;
+    if (_currentRoom->tileMap)
+    {
+        Ptr<TileComponent> tc = _currentRoom->tileMap->GetTileComponent();
+        float mapW = tc->GetTileCountX() * tc->GetTileSize()._x;
+        float mapH = tc->GetTileCountY() * tc->GetTileSize()._y;
+
+        FVector3D tilePos = _currentRoom->tileMap->GetWorldPosition();
+        float centerX = tilePos._x + (mapW - tc->GetTileSize()._x) / 2.f;
+        float centerY = tilePos._y + (mapH - tc->GetTileSize()._y) / 2.f;
+        cam->SetWorldPosition(FVector3D(centerX, centerY, 0.f));
+
+        float viewW = mapW + tc->GetTileSize()._x;
+        float viewH = viewW / 1.6f;
+        if (viewH < mapH + tc->GetTileSize()._y)
+        {
+            viewH = mapH + tc->GetTileSize()._y;
+            viewW = viewH * 1.6f;
+        }
+        cam->SetViewResolution(viewW, viewH);
+    }
+    cam->SetProjectionType(Ortho);
+    cam->Tick(0.f);
 }

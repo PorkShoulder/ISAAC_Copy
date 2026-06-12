@@ -25,7 +25,7 @@ private:
 	HDC			_hdc  = nullptr;					// 그리기 위한 핸들
 	TCHAR		_className[256] = {};				// 클래스 이름
 	TCHAR		_titleName[256] = {};				// 윈도우 창 타이틀 이름
-	float		_clearColor[4] = { 1,1,1,1 };		// 바탕을 초기화 할 색상
+	float		_clearColor[4] = { 0,0,0,1 };		// 바탕을 초기화 할 색상
 
 	inline static std::function<void(int, int)> _onWindowSizeChanged;
 

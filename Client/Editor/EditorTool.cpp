@@ -55,6 +55,8 @@ bool EditorTool::Init(const std::string& name)
 
 void EditorTool::Render(float deltaTime)
 {
+  
+
     if (!IsOpen())
         return;
 
@@ -62,6 +64,22 @@ void EditorTool::Render(float deltaTime)
 
     if (open)
     {
+        
+
+        static float fpsDisplayTimer = 0.f;
+        static float displayedFPS = 0.f;
+
+        fpsDisplayTimer += deltaTime;
+
+        if (fpsDisplayTimer >= 0.5f)
+        {
+            displayedFPS = TimeManager::Instance().GetFPS();
+            fpsDisplayTimer = 0.f;
+        }
+
+        ImGui::SeparatorText("Frame Info");
+        ImGui::Text("FPS: %.1f", displayedFPS);
+
         if (ImGui::BeginTabBar("##EditorTabs"))
         {
             for (const auto& tab : EditorTabs)

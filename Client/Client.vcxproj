@@ -329,6 +329,7 @@
     <ClInclude Include="UI\UIManager.h" />
     <ClInclude Include="UI\Widget.h" />
     <ClInclude Include="World\CameraManager.h" />
+    <ClInclude Include="World\EditorLevel.h" />
     <ClInclude Include="World\GameLevel.h" />
     <ClInclude Include="World\Level.h" />
     <ClInclude Include="World\RoomManager.h" />
@@ -507,6 +508,7 @@
     <ClCompile Include="UI\UIManager.cpp" />
     <ClCompile Include="UI\Widget.cpp" />
     <ClCompile Include="World\CameraManager.cpp" />
+    <ClCompile Include="World\EditorLevel.cpp" />
     <ClCompile Include="World\GameLevel.cpp" />
     <ClCompile Include="World\Level.cpp" />
     <ClCompile Include="World\RoomManager.cpp" />

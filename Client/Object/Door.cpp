@@ -37,13 +37,13 @@ bool Door::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const FR
     _doorLeft->AttachToComponent(_doorFrame);
 
     _doorRight = CreateSceneComponent<SpriteComponent>("DoorRight");
-    _doorLeft->SetRenderLayer("DoorPanel");
     _doorRight->SetRelativeScale(1.f, 1.f, 1.f);  // 추가
+    _doorLeft->SetRenderLayer("DoorPanel");
     _doorRight->AttachToComponent(_doorFrame);
 
     _doorOpen = CreateSceneComponent<SpriteComponent>("DoorOpen");
-    _doorLeft->SetRenderLayer("DoorPanel");
     _doorOpen->SetRelativeScale(1.f, 1.f, 1.f);  // 추가
+    _doorLeft->SetRenderLayer("DoorPanel");
     _doorOpen->AttachToComponent(_doorFrame);
     _doorOpen->SetEnable(false);
 

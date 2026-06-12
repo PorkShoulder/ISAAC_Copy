@@ -585,6 +585,7 @@
     </ClInclude>
     <ClInclude Include="World\GameLevel.h" />
     <ClInclude Include="World\TitleLevel.h" />
+    <ClInclude Include="World\EditorLevel.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Common\LogManager.cpp">
@@ -1001,6 +1002,7 @@
     </ClCompile>
     <ClCompile Include="World\GameLevel.cpp" />
     <ClCompile Include="World\TitleLevel.cpp" />
+    <ClCompile Include="World\EditorLevel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Client.ico">

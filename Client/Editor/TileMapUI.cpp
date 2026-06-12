@@ -340,7 +340,18 @@ void TileMapUI::RenderTileFrameEditor()
                 if (_flipY) { float t = pUv0.y; pUv0.y = pUv1.y; pUv1.y = t; }
                 ImGui::Image(texID, ImVec2(48.f, 48.f), pUv0, pUv1);
             }
+            ImGui::SeparatorText("Tile Option");
 
+            bool changedFlip = false;
+            changedFlip |= ImGui::Checkbox("Flip X", &_flipX);
+            ImGui::SameLine();
+            changedFlip |= ImGui::Checkbox("Flip Y", &_flipY);
+
+            if (changedFlip && _targetTileMap)
+            {
+                _targetTileMap->SetViewFlipX(_flipX);
+                _targetTileMap->SetViewFlipY(_flipY);
+            }
             // Add Frame
             if (ImGui::Button("Add Frame"))
             {

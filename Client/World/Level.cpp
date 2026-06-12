@@ -54,7 +54,7 @@ bool Level::Init(const std::string& path)
     _uiManager = New<UIManager>();
     _uiManager->Init(This<Level>());
 
-    SpawnPlayer();
+    
     
     //todo : level save & load
     
@@ -101,6 +101,10 @@ void Level::Tick(float deltaTime)
 
         it.second->Tick(deltaTime);
     }
+
+    // 액터 Tick 이후 카메라를 방 중앙으로 고정
+    if (_roomManager)
+        _roomManager->UpdateCamera();
 
     _uiManager->Tick(deltaTime);
     

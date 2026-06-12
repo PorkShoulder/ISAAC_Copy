@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "World.h"
 #include "Level.h"
+#include "EditorLevel.h"
 
 #include "../Object/Actor.h"
 
@@ -14,8 +15,8 @@ World::~World()
 
 void World::Init(const std::string& name)
 {
-    //todo save & load
-    _curLevel = CreateLevel<Level>(name);
+    _curLevel = CreateLevel<EditorLevel>(name);
+    //_curLevel = CreateLevel<TitleLevel>(name);
 }
 
 void World::Tick(float deltaTime)

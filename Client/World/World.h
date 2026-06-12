@@ -1,5 +1,6 @@
 #pragma once
 #include "../Core/Object.h"
+#include "TitleLevel.h"
 
 //Level ---> 맵(unity에서 Scene)
 class World : public Object

@@ -30,7 +30,7 @@ bool TileMap::Init(int32 id, const FVector3D& pos, const FVector3D& scale, const
 void TileMap::Tick(float deltaTime)
 {
     Actor::Tick(deltaTime);
-
+#ifdef _EDITOR
     if (!ImGui::GetIO().WantCaptureMouse)
     {
         FVector2D mousePos = InputSystem::Instance().GetMouseWorldPos();
@@ -121,7 +121,7 @@ void TileMap::Tick(float deltaTime)
         //}
 
     }
-   
+#endif
 }
 
 void TileMap::Collision(float deltaTime)

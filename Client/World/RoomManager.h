@@ -84,6 +84,7 @@ public:
 	int32 GetRoomFileCount() const { return (int32)_roomFiles.size(); }
 	void StartBattle(FRoomInfo* room);
 	void EndBattle(FRoomInfo* room);
+	void UpdateCamera();
 public:
 	// 초기화 -> 레벨참조와 방 월드 크기 설정
 	void Init(Ptr<class Level> level);
@@ -105,6 +106,10 @@ public:
 	// 매 프레임 호출 — 플레이어 위치로 방 전환 감지
 	void Tick(float deltaTime);
 	virtual void Destroy() override;
+
+	//카메라
+	void FocusCameraOnRoom(FRoomInfo* cell);
+
 
 	// 
 	void RegisterDoor(Ptr<Door> door);

@@ -1,6 +1,8 @@
 #pragma once
 #include "EditorUI.h"
 #include "RoomEditor.h"
+
+#include "Core/TimeManager.h"
 #include "../Common/Info.h"
 
 // 에디터들의 탭 관리 

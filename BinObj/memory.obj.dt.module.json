@@ -1,0 +1,15 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "C:\\Users\\assort_037\\Desktop\\ISAAC_Copy\\BinObj\\memory.obj",
+            "outputs": [
+                "C:\\Users\\assort_037\\Desktop\\ISAAC_Copy\\BinObj\\memory.obj.dt.module.json",
+                "C:\\Users\\assort_037\\Desktop\\ISAAC_Copy\\BinObj\\memory.obj.dt.d.json",
+                "C:\\Users\\assort_037\\Desktop\\ISAAC_Copy\\BinObj/Client.pch"
+            ],
+            "requires": []
+        }
+    ]
+}

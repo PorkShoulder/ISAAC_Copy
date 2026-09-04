@@ -2,27 +2,27 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Client.exe</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\Client.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\ColorMesh.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\ColorMesh.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Mesh.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\Mesh.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\Sprite.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\Sprite.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\TileInstance.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\TileInstance.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\TileMap.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\TileMap.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\assort_037\Desktop\KDT6\KDT6_DX\ISAAC_Copy\Bin\UI.cso</FullPath>
+      <FullPath>C:\Users\assort_037\Desktop\ISAAC_Copy\Bin\UI.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

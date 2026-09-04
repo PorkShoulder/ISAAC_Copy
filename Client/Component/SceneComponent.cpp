@@ -127,6 +127,7 @@ void SceneComponent::Destroy()
     if (_isRender)
     {
         Ptr<Actor> owner = Lock<Actor>(_owner);
+
         if (!owner)
             return;
 

@@ -5,6 +5,11 @@
 
 #include "../Object/TileMap.h"
 #include "../Object/Actor.h"
+#include "../Object/Monster.h"
+#include "../Object/Obstacle.h"
+#include "../Object/Door.h"
+#include "../Object/Item.h"
+#include "../Object/Npc.h"
 
 #include "../Core/GameEngine.h"
 #include "../Core/Texture.h"
@@ -236,6 +241,27 @@ void TileMapUI::Render(float deltaTime)
                         _targetTileMap->SetEmptyCells(_emptyCells);
                     _targetTileMap->Save(file);
 
+                    // 방에 배치된 액터(몬스터/장애물/문/아이템/NPC) 저장
+                    // (TileMap/Player/베이스 타입은 제외 — Level::Save와 동일한 필터)
+                    std::vector<Ptr<Actor>> saveActors;
+                    for (auto& it : actors)
+                    {
+                        Ptr<Actor> actor = it.second;
+                        if (!actor || !actor->IsActive())
+                            continue;
+                        eActorType t = actor->GetActorType();
+                        if (t == eActorType::Tile || t == eActorType::Player ||
+                            t == eActorType::Actor || t == eActorType::Pawn)
+                            continue;
+
+                        saveActors.push_back(actor);
+                    }
+
+                    int32 actorCount = (int32)saveActors.size();
+                    file.write((char*)&actorCount, sizeof(int32));
+                    for (auto& actor : saveActors)
+                        actor->Save(file);   // 각 Save가 타입을 먼저 기록함
+
                     file.close();
                 }
             }
@@ -288,6 +314,28 @@ void TileMapUI::Render(float deltaTime)
                         Ptr<TileMap> room = level->SpawnActor<TileMap>("Room_Editor", pos, scale, rot);
                         if (room)
                             room->Load(file);
+
+                        // 방에 배치된 액터 복원 (편집기 좌표 = 저장된 절대좌표 그대로)
+                        int32 actorCount = 0;
+                        file.read((char*)&actorCount, sizeof(int32));
+                        for (int32 a = 0; a < actorCount; ++a)
+                        {
+                            eActorType type;
+                            file.read((char*)&type, sizeof(eActorType));
+
+                            Ptr<Actor> actor = nullptr;
+                            switch (type)
+                            {
+                            case eActorType::Monster:  actor = level->SpawnActor<Monster>("Monster", pos, scale, rot);   break;
+                            case eActorType::Obstacle: actor = level->SpawnActor<Obstacle>("Obstacle", pos, scale, rot); break;
+                            case eActorType::Door:     actor = level->SpawnActor<Door>("Door", pos, scale, rot);         break;
+                            case eActorType::Item:     actor = level->SpawnActor<Item>("Item", pos, scale, rot);         break;
+                            case eActorType::Npc:      actor = level->SpawnActor<Npc>("Npc", pos, scale, rot);           break;
+                            default: break;
+                            }
+                            if (actor)
+                                actor->Load(file);
+                        }
                     }
                     file.close();
                 }
@@ -452,6 +500,17 @@ void TileMapUI::RenderRoomShapeEditor()
                             _emptyCells.erase(
                                 std::remove(_emptyCells.begin(), _emptyCells.end(),
                                     std::make_pair(x, y)), _emptyCells.end());
+                        //// 렌더에 반영
+                        //if (_targetTileMap)
+                        //{
+                        //    _targetTileMap->SetEmptyCells(_emptyCells);
+                        //    Ptr<TileComponent> tc = _targetTileMap->GetTileComponent();
+                        //    if (tc)
+                        //    {
+                        //        tc->SetEmptyCells(_emptyCells);
+                        //        tc->SetTileInstRefresh(true);
+                        //    }
+                        //}
                     }
                     ImGui::PopID();
 

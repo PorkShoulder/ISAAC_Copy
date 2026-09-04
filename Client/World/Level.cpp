@@ -401,11 +401,11 @@ void Level::GenerateRandomMap()
 {
     _roomManager = New<RoomManager>();
     _roomManager->Init(This<Level>());
-    _roomManager->CollectRoomFiles();
-    int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount());
-    _roomManager->GenerateLayout(count);
-    _roomManager->AssignRooms();
-    _roomManager->LoadAllRooms();
+    _roomManager->CollectRoomFiles();   // .room 파일 경로와 목록을 확인하여 불러옴
+    int32 count = min(_roomManager->GetRoomFileCount(), _roomManager->GetMaxRoomCount()); // 랜덤맵 최대 크기 지정 몇개의 맵을 불러올지 지정함 
+    _roomManager->GenerateLayout(count);    // 방이 배치될 공간 확보 및 맵 형태 확정
+    _roomManager->AssignRooms();            // 확정된 맵에 .room파일의 정보를 넣음 (현재 기준으로는 이미 넣음 맵이 다시 못 들어가게 막아둠)
+    _roomManager->LoadAllRooms();           
     _roomManager->ActivateStartRoom();
 }
 

@@ -258,9 +258,11 @@ bool TileComponent::IsBlocked(const FVector2D& worldPos)
 {
     Ptr<Tile> tile = GetTile(worldPos);
 
-    if (!tile)
+    // 맵 밖 -> 벽 취급
+    if (!tile)  
         return true;
 
+    // Block로 판정되면 막힘.
     return tile->GetTileType() == eTileType::BLOCK;
 
 }
@@ -612,7 +614,7 @@ void TileComponent::CreateTile(int32 countX, int32 countY, const FVector2D& tile
 
     _mapSize._x = _countX * _tileSize._x;
     _mapSize._y = _countY * _tileSize._y;
-
+    
     _tiles.resize(countX * countY);
 
     for (int32 i = 0; i < _countY; ++i)

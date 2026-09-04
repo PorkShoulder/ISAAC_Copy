@@ -16,16 +16,18 @@
 struct FRoomInfo
 {
 	// 그리드 좌표
-	int32 gridX = 1;						
-	int32 gridY = 1;
+	int32 gridX = 0;						
+	int32 gridY = 0;
 
 	// .Room파일 경로
 	std::string roomFilePath;
 
 	//실제 스폰된 타일맵
 	Ptr<class TileMap> tileMap;
-	// 이 망에 속한 몬스터 (미구현)
+	// 이 망에 속한 몬스터 (전투 생존 체크용)
 	std::vector<Ptr<class Actor>> monsters;
+	// 이 방에 배치된 모든 액터(몬스터/장애물/문/아이템/NPC) - 위치 보정용
+	std::vector<Ptr<class Actor>> roomActors;
 
 	// 현재 활성화 여부
 	bool isActivated = false;

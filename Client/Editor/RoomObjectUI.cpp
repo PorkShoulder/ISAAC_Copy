@@ -48,7 +48,7 @@ void RoomObjectUI::Render(float deltaTime)
 	ImGui::Separator();
 
 	// 카테고리 선택
-	const char* categories[] = { "Tile", "Obstacle", "Door", "Item", "Npc", "Monster" };
+	const char* categories[] = {"Tile","Obstacle", "Door", "Item", "Npc", "Monster" };
 	eActorType categoryTypes[] = {
 		eActorType::Tile,
 		eActorType::Obstacle,

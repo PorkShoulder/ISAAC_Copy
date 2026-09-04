@@ -7,6 +7,7 @@
 
 #include "../Object/TileMap.h"
 #include"../Object/Player.h"
+#include "../Object/Npc.h"
 
 #include "../Core/DirectoryManager.h"
 #include "../Core/GameEngine.h"
@@ -207,6 +208,25 @@ void RoomManager::AssignRooms()
     }
 
     int32 idx = 0;
+    //// 임시 보완용
+    {
+        auto startIt = _roomPos.find({ _startX, _startY });
+        if (startIt != _roomPos.end() && idx < (int32)shuffled.size())
+        {
+            FRoomInfo& cell = startIt->second;
+            cell.occupiedCells.clear();
+            for (int32 gy = 0; gy < shuffled[idx].girdH; ++gy)
+                for (int32 gx = 0; gx < shuffled[idx].gridW; ++gx)
+                {
+                    bool skip = false;
+                    for (auto& e : shuffled[idx].emptyCells)
+                        if (e.first == gx && e.second == gy) { skip = true; break; }
+                    if (!skip) cell.occupiedCells.push_back({ gx, gy });
+                }
+            if (TryPlaceRoom(cell)) { cell.roomFilePath = shuffled[idx].filePath; ++idx; }
+        }
+    }
+    ////
     for (auto& [key, cell] : _roomPos)
     {
         if (idx >= (int32)shuffled.size())
@@ -270,6 +290,49 @@ void RoomManager::LoadAllRooms()
                     cell.tileMap->Load(file);
                     cell.isLoaded = true;
 
+                    // 방에 배치된 액터 복원
+                    // 저장은 절대좌표지만, 방은 런타임에 격자 위치로 재배치되므로
+                    // 여기서는 "타일맵 기준 상대좌표"로 바꿔 두고, 2차 배치 루프에서
+                    // 방의 최종 월드좌표를 더해 확정한다.
+                    FVector3D savedTileMapPos = cell.tileMap->GetWorldPosition();
+
+                    int32 actorCount = 0;
+                    file.read((char*)&actorCount, sizeof(int32));
+                    for (int32 a = 0; a < actorCount; ++a)
+                    {
+                        eActorType type;
+                        file.read((char*)&type, sizeof(eActorType));
+
+                        Ptr<Actor> actor = nullptr;
+                        switch (type)
+                        {
+                        case eActorType::Monster:  actor = _level->SpawnActor<Monster>("Monster", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));   break;
+                        case eActorType::Obstacle: actor = _level->SpawnActor<Obstacle>("Obstacle", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0)); break;
+                        case eActorType::Door:     actor = _level->SpawnActor<Door>("Door", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));         break;
+                        case eActorType::Item:     actor = _level->SpawnActor<Item>("Item", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));         break;
+                        case eActorType::Npc:      actor = _level->SpawnActor<Npc>("Npc", FVector3D(0, 0, 0), FVector3D(1, 1, 1), FRotator(0, 0, 0));           break;
+                        default: break;
+                        }
+                        if (!actor)
+                            continue;
+
+                        actor->Load(file);   // 저장된 절대좌표로 복원됨
+
+                        // 타일맵 기준 상대좌표로 변환 (2차 루프에서 월드좌표 보정)
+                        actor->SetWorldPosition(actor->GetWorldPosition() - savedTileMapPos);
+
+                        cell.roomActors.push_back(actor);
+                        if (type == eActorType::Monster)
+                        {
+                            actor->SetEnable(false);        // 방 진입 시 ActivateRoom에서 활성화
+                            cell.monsters.push_back(actor);
+                        }
+                        else if (type == eActorType::Door)
+                        {
+                            if (Ptr<Door> door = Cast<Actor, Door>(actor))
+                                cell.doors.push_back(door);
+                        }
+                    }
                 }
             }
         }
@@ -280,6 +343,7 @@ void RoomManager::LoadAllRooms()
         GameEngine::Instance().GetWorld()->GetPlayer());
 
     auto startIt = _roomPos.find({ _startX, _startY });
+    
 
     if (player && startIt != _roomPos.end() && startIt->second.tileMap)
     {
@@ -312,6 +376,13 @@ void RoomManager::LoadAllRooms()
             worldPos._z = 0.f;
             cell.tileMap->SetWorldPosition(worldPos);
             cell.tileMap->SetEnable(true);  // ← 활성화
+
+            // 방 액터를 최종 월드 위치로 배치 (상대좌표 + 방 월드좌표)
+            for (auto& actor : cell.roomActors)
+            {
+                if (actor)
+                    actor->SetWorldPosition(actor->GetWorldPosition() + worldPos);
+            }
         }
     }
 }
@@ -452,6 +523,7 @@ void RoomManager::FocusCameraOnRoom(FRoomInfo* cell)
     if (!camera)
         return;
     Ptr<TileComponent> tc = cell->tileMap->GetTileComponent();
+    if (!tc) return;
     float mapW = tc->GetTileCountX() * tc->GetTileSize()._x;
     float mapH = tc->GetTileCountY() * tc->GetTileSize()._y;
 

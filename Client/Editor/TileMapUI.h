@@ -18,9 +18,10 @@ protected:
     int _countY = 9;
     float _tileSize[2] = { 52.f, 52.f };
 
-    // 그리드 레이아웃 (ㄱ/ㄴ형 빈칸 편집용)
+    // 그리드 레이아웃 (ㄱ/ㄴ형 빈칸 편집용) 
     int32 _gridW = 1;
     int32 _gridH = 1;
+    
     std::vector<std::pair<int32, int32>> _emptyCells;
 
     // 이름
@@ -36,7 +37,7 @@ public:
 private:
     void RenderTileFrameEditor();
     void RenderRoomShapeEditor();
-
+    //void SetEmptyCells(const std::vector<std::pair<int32, int32>& cells) { _emptyCells = cells; }
 
     
 

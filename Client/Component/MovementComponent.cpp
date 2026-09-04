@@ -49,7 +49,9 @@ void MovementComponent::Tick(float deltaTime)
     }
     else
     {
-        _speed -= _friction * deltaTime;
+        // 미입력 시 마찰 시간에 따라 감속-> 점차적으로 감속함.
+        _speed -= _friction * deltaTime; 
+
         if (_speed <= 0.f)
         {
             _speed = 0.f;
@@ -130,9 +132,6 @@ void MovementComponent::Tick(float deltaTime)
     //이동량을 통해 도달할 위치
     _nextPosition = result;
     _updateComponent->SetWorldPosition(_nextPosition);
-
-
-
 
 }
 

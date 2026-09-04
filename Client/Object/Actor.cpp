@@ -614,10 +614,11 @@ void Actor::Destroy()
 {
     DESTROY(_root)
 
-        for (auto& it : _actorComponents)
-            DESTROY(it.second)
-
-            _actorComponents.clear();
+    for (auto& it : _actorComponents)
+    {
+        DESTROY(it.second)
+    }
+    _actorComponents.clear();
     _componentFinder.clear();
 }
 void Actor::Save(std::ofstream& file)

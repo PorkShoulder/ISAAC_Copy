@@ -60,7 +60,8 @@ void Bullet::Tick(float deltaTime)
     if (!level) return;                 // ← 이 줄은 유지 (안전)
 
     Ptr<TileMap> tileMap = level->GetTileMap();
-    if (!tileMap) { LogManager::Instance().Debug("BULLET: tileMap NULL"); return; }
+    if (!tileMap) 
+    { LogManager::Instance().Debug("BULLET: tileMap NULL"); return; }
 
     Ptr<TileComponent> tileComp = tileMap->GetTileComponent();
     if (tileComp && tileComp->IsBlocked(GetWorldPosition()))
